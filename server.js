@@ -37,14 +37,14 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // --- CONEXIONES A SERVICIOS EXTERNOS ---
-const pool = new Pool({
+const pool = process.env.DATABASE_URL ? new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
-});
+}) : null;
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
-const culqi = new Culqi({ privateKey: process.env.CULQI_PRIVATE_KEY });
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+const bot = process.env.TELEGRAM_BOT_TOKEN ? new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false }) : null;
+const culqi = process.env.CULQI_PRIVATE_KEY ? new Culqi({ privateKey: process.env.CULQI_PRIVATE_KEY }) : null;
 
 // --- MIDDLEWARE DE AUTENTICACIÓN JWT ---
 const authenticateToken = (req, res, next) => {
