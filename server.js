@@ -42,7 +42,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 const culqi = new Culqi({ privateKey: process.env.CULQI_PRIVATE_KEY });
 
