@@ -98,3 +98,7 @@ app.post('/api/login', async (req, res) => {
 
 // --- RUTA CORTAFUEGOS & ANALISIS GUSS IA ---
   
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+});
