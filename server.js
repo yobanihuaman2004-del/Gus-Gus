@@ -7,9 +7,6 @@ const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const TelegramBot = require('node-telegram-bot-api');
-const Culqi = require('culqi-node');
 
 const app = express();
 
@@ -18,42 +15,31 @@ app.use(helmet());
 app.use(xss());
 app.use(express.json());
 
-const whitelist = ['https://gusgus.pe', 'http://localhost:3000', 'http://127.0.0.1:5500'];
+const whitelist = ['https://gusgus.pe', 'http://localhost:3000'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Acceso no permitido por política CORS'));
+      callback(new Error('No permitido por CORS'));
     }
   }
 }));
 
-const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutos
-  max: 100, // Máximo 100 peticiones por IP
-  message: { error: 'Demasiadas solicitudes, por favor intente más tarde.' }
-});
-app.use(limiter);
-
-// --- CONEXIONES A SERVICIOS EXTERNOS ---
-const pool = process.env.DATABASE_URL ? new Pool({
+// --- CONEXIÓN A BASE DE DATOS POSTGRESQL ---
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-}) : null;
-
-const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-const bot = process.env.TELEGRAM_BOT_TOKEN ? new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false }) : null;
-const culqi = process.env.CULQI_PRIVATE_KEY ? new Culqi({ privateKey: process.env.CULQI_PRIVATE_KEY }) : null;
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
 // --- MIDDLEWARE DE AUTENTICACIÓN JWT ---
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(0x191).json({ error: 'Acceso denegado, token requerido' });
+  if (!token) return res.status(401).json({ error: 'Acceso denegado, token requerido' });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(0x193).json({ error: 'Token inválido o expirado' });
+  jwt.verify(token, process.env.JWT_SECRET || 'secret_key', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
     req.user = user;
     next();
   });
@@ -75,7 +61,8 @@ app.post('/api/register', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: 'Error al registrar usuario: ' + err.message });
+    console.error("Error en registro:", err);
+    res.status(500).json({ error: 'Error en el servidor', detalle: err.message });
   }
 });
 
@@ -83,14 +70,12 @@ app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
     const user = result.rows[0];
     const validPassword = await bcrypt.compare(password, user.password);
-    
     if (!validPassword) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
@@ -99,12 +84,11 @@ app.post('/api/login', async (req, res) => {
     res.json({ token, user: { id: user.id, email: user.email } });
   } catch (err) {
     console.error("Error en login:", err);
-    res.status(500).json({ error: 'Error interno del servidor', detalle: err.message });
-  }
+    res.status(500).json({ error: 'Error en el servidor', detalle: err.message });
   }
 });
-// --- RUTA CORTAFUEGOS & ANALISIS GUSS IA ---
-  
+
+// --- INICIO DEL SERVIDOR ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto ${PORT}`);
