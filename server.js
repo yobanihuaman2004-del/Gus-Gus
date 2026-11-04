@@ -45,9 +45,11 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// --- RUTA BASE DE PRUEBA ---
+// --- SERVIR PÁGINA WEB (FRONTEND) ---
+app.use(express.static(__dirname));
+
 app.get('/', (req, res) => {
-  res.json({ status: 'OK', message: 'Servidor Gus Gus funcionando correctamente.' });
+  res.sendFile(__dirname + '/index.html');
 });
 
 // --- AUTENTICACIÓN ---
