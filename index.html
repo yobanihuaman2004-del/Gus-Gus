@@ -59,12 +59,12 @@
       color: var(--text-muted);
       font-size: 14px;
       line-height: 1.5;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .form-group {
       text-align: left;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-group label {
@@ -122,10 +122,14 @@
       color: var(--text-muted);
     }
 
-    .footer-text a {
+    .footer-text button {
+      background: none;
+      border: none;
       color: var(--accent-color);
-      text-decoration: none;
       font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: underline;
     }
 
     #mensaje {
@@ -137,52 +141,107 @@
 
     .error { color: #B33A3A; }
     .exito { color: #3A7A56; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
   <div class="app-card">
     <h1 class="brand-title">Gus Gus</h1>
-    <p class="brand-subtitle">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma intermediaria.</p>
+    <p class="brand-subtitle" id="formSubtitle">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma intermediaria.</p>
 
+    <!-- FORMULARIO DE INICIO DE SESIÓN -->
     <form id="loginForm">
       <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" placeholder="tu@correo.com" required>
+        <label for="loginEmail">Correo Electrónico</label>
+        <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
       </div>
 
       <div class="form-group">
-        <label for="dni">Número de DNI</label>
-        <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
+        <label for="loginDni">Número de DNI</label>
+        <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
       </div>
 
       <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
       </div>
 
       <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
     </form>
 
+    <!-- FORMULARIO DE REGISTRO (OCULTO POR DEFECTO) -->
+    <form id="registerForm" class="hidden">
+      <div class="form-group">
+        <label for="regNombre">Nombre Completo</label>
+        <input type="text" id="regNombre" placeholder="Tu nombre y apellido" required>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Correo Electrónico</label>
+        <input type="email" id="regEmail" placeholder="tu@correo.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="regDni">Número de DNI</label>
+        <input type="text" id="regDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Crear Contraseña</label>
+        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Crear Mi Cuenta</button>
+    </form>
+
     <div id="mensaje"></div>
 
-    <div class="footer-text">
-      ¿No tienes una cuenta? <a href="#">Regístrate aquí</a>
+    <div class="footer-text" id="footerToggle">
+      <span id="toggleQuestion">¿No tienes una cuenta?</span> 
+      <button id="toggleBtn" type="button">Regístrate aquí</button>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById('loginForm');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const formSubtitle = document.getElementById('formSubtitle');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleQuestion = document.getElementById('toggleQuestion');
     const mensajeDiv = document.getElementById('mensaje');
 
-    form.addEventListener('submit', async (e) => {
+    let esModoRegistro = false;
+
+    // Cambiar entre Login y Registro
+    toggleBtn.addEventListener('click', () => {
+      esModoRegistro = !esModoRegistro;
+      mensajeDiv.textContent = "";
+
+      if (esModoRegistro) {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        formSubtitle.textContent = "Crea tu cuenta en segundos para empezar a usar la plataforma.";
+        toggleQuestion.textContent = "¿Ya tienes una cuenta?";
+        toggleBtn.textContent = "Inicia sesión aquí";
+      } else {
+        registerForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        formSubtitle.textContent = "Ingresa a tu cuenta para operar de forma segura en nuestra plataforma intermediaria.";
+        toggleQuestion.textContent = "¿No tienes una cuenta?";
+        toggleBtn.textContent = "Regístrate aquí";
+      }
+    });
+
+    // Enviar Login
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensajeDiv.textContent = "Verificando...";
       mensajeDiv.className = "";
 
-      const email = document.getElementById('email').value;
-      const dni = document.getElementById('dni').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('loginEmail').value;
+      const dni = document.getElementById('loginDni').value;
+      const password = document.getElementById('loginPassword').value;
 
       try {
         const response = await fetch('/api/login', {
@@ -190,7 +249,6 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, dni, password })
         });
-
         const data = await response.json();
 
         if (response.ok) {
@@ -198,6 +256,39 @@
           mensajeDiv.className = "exito";
         } else {
           mensajeDiv.textContent = data.error || "Error al iniciar sesión";
+          mensajeDiv.className = "error";
+        }
+      } catch (err) {
+        mensajeDiv.textContent = "No se pudo conectar con el servidor.";
+        mensajeDiv.className = "error";
+      }
+    });
+
+    // Enviar Registro
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mensajeDiv.textContent = "Registrando...";
+      mensajeDiv.className = "";
+
+      const nombre = document.getElementById('regNombre').value;
+      const email = document.getElementById('regEmail').value;
+      const dni = document.getElementById('regDni').value;
+      const password = document.getElementById('regPassword').value;
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, email, dni, password })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          mensajeDiv.textContent = "¡Cuenta creada con éxito! Ya puedes iniciar sesión.";
+          mensajeDiv.className = "exito";
+          setTimeout(() => toggleBtn.click(), 2000);
+        } else {
+          mensajeDiv.textContent = data.error || "Error al crear la cuenta";
           mensajeDiv.className = "error";
         }
       } catch (err) {
