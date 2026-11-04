@@ -1,97 +1,171 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { Pool } = require('pg');
-
-const app = express();
-
-// --- CONFIGURACIÓN DE SEGURIDAD Y MIDDLEWARES ---
-app.use(helmet());
-app.use(xss());
-app.use(express.json());
-
-const whitelist = ['https://gusgus.pe', 'http://localhost:3000'];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gus Gus - Iniciar Sesión</title>
+  <!-- SEO Básico -->
+  <meta name="description" content="Inicia sesión en Gus Gus. Compra y vende tus productos con total seguridad.">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-  }
-}));
-
-// --- CONEXIÓN A BASE DE DATOS POSTGRESQL ---
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
-
-// --- MIDDLEWARE DE AUTENTICACIÓN JWT ---
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Acceso denegado, token requerido' });
-
-  jwt.verify(token, process.env.JWT_SECRET || 'secret_key', (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
-    req.user = user;
-    next();
-  });
-};
-
-// --- SERVIR PÁGINA WEB (FRONTEND) ---
-app.use(express.static(__dirname));
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-// --- AUTENTICACIÓN ---
-app.post('/api/register', async (req, res) => {
-  const { name, email, password } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
-      [name, email, hashedPassword]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error("Error en registro:", err);
-    res.status(500).json({ error: 'Error en el servidor', detalle: err.message });
-  }
-});
-
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+    body {
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
-
-    const user = result.rows[0];
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    .card {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
     }
+    .card h1 {
+      color: #1a2a3a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .card p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 25px;
+      line-height: 1.4;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      border-color: #4CAF50;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+    .btn-submit:hover {
+      background-color: #45a049;
+    }
+    .footer-text {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #777;
+    }
+    .footer-text a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    #mensaje {
+      margin-top: 15px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .error { color: #d9534f; }
+    .exito { color: #5cb85c; }
+  </style>
+</head>
+<body>
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'secret_key');
-    res.json({ token, user: { id: user.id, email: user.email } });
-  } catch (err) {
-    console.error("Error en login:", err);
-    res.status(500).json({ error: 'Error en el servidor', detalle: err.message });
-  }
-});
+  <div class="card">
+    <h1>Gus Gus</h1>
+    <p>Ingresa a tu cuenta para operar con la seguridad de nuestra plataforma intermediaria.</p>
 
-// --- INICIO DEL SERVIDOR ---
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
-});
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" placeholder="tu@correo.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="dni">Número de DNI:</label>
+        <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
+    </form>
+
+    <div id="mensaje"></div>
+
+    <div class="footer-text">
+      ¿No tienes una cuenta? <a href="#">Regístrate aquí</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const mensajeDiv = document.getElementById('mensaje');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mensajeDiv.textContent = "Verificando...";
+      mensajeDiv.className = "";
+
+      const email = document.getElementById('email').value;
+      const dni = document.getElementById('dni').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, dni, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          mensajeDiv.textContent = "¡Inicio de sesión exitoso!";
+          mensajeDiv.className = "exito";
+        } else {
+          mensajeDiv.textContent = data.error || "Error al iniciar sesión";
+          mensajeDiv.className = "error";
+        }
+      } catch (err) {
+        mensajeDiv.textContent = "No se pudo conectar con el servidor.";
+        mensajeDiv.className = "error";
+      }
+    });
+  </script>
+
+</body>
+</html>      
