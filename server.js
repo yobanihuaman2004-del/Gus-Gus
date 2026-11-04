@@ -16,7 +16,7 @@ app.use(xss());
 app.use(express.json());
 app.use(cors());
 
-// Limitador de peticiones para evitar abusos
+// Limitador de peticiones
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
@@ -42,25 +42,24 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// --- SERVIR PÁGINA WEB (FRONTEND) ---
+// --- SERVIR ARCHIVOS ESTÁTICOS ---
 app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// --- RUTA DE PRUEBA DE LOGIN ---
+// --- RUTA DE LOGIN ---
 app.post('/api/login', async (req, res) => {
   const { email, dni, password } = req.body;
   if (!email || !dni || !password) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
   }
-  // Respuesta de prueba exitosa
   res.json({ message: 'Inicio de sesión exitoso', user: { email, dni } });
 });
 
 // --- PUERTO Y ARRANQUE DEL SERVIDOR ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor de Gus Gus corriendo en el puerto ${PORT}`);
 });
