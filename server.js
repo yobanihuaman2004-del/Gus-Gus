@@ -49,6 +49,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+// --- RUTA DE REGISTRO ---
+app.post('/api/register', async (req, res) => {
+  const { nombre, email, dni, password } = req.body;
+  if (!nombre || !email || !dni || !password) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  }
+  // Respuesta simulada de éxito
+  res.json({ message: 'Usuario registrado con éxito', user: { nombre, email, dni } });
+});
+
 // --- RUTA DE LOGIN ---
 app.post('/api/login', async (req, res) => {
   const { email, dni, password } = req.body;
