@@ -1,171 +1,66 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Iniciar Sesión</title>
-  <!-- SEO Básico -->
-  <meta name="description" content="Inicia sesión en Gus Gus. Compra y vende tus productos con total seguridad.">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #f4f6f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .card {
-      background: #ffffff;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-    }
-    .card h1 {
-      color: #1a2a3a;
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-    .card p {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 25px;
-      line-height: 1.4;
-    }
-    .form-group {
-      text-align: left;
-      margin-bottom: 18px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 6px;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus {
-      border-color: #4CAF50;
-    }
-    .btn-submit {
-      width: 100%;
-      padding: 14px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.2s;
-    }
-    .btn-submit:hover {
-      background-color: #45a049;
-    }
-    .footer-text {
-      margin-top: 20px;
-      font-size: 13px;
-      color: #777;
-    }
-    .footer-text a {
-      color: #4CAF50;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    #mensaje {
-      margin-top: 15px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .error { color: #d9534f; }
-    .exito { color: #5cb85c; }
-  </style>
-</head>
-<body>
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
 
-  <div class="card">
-    <h1>Gus Gus</h1>
-    <p>Ingresa a tu cuenta para operar con la seguridad de nuestra plataforma intermediaria.</p>
+const app = express();
 
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" placeholder="tu@correo.com" required>
-      </div>
+// --- CONFIGURACIÓN DE SEGURIDAD Y MIDDLEWARES ---
+app.use(helmet());
+app.use(xss());
+app.use(express.json());
+app.use(cors());
 
-      <div class="form-group">
-        <label for="dni">Número de DNI:</label>
-        <input type="text" id="dni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-      </div>
+// Limitador de peticiones para evitar abusos
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
 
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" placeholder="••••••••" required>
-      </div>
+// Base de Datos PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-      <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
-    </form>
+// --- MIDDLEWARE DE AUTENTICACIÓN JWT ---
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
 
-    <div id="mensaje"></div>
+  jwt.verify(token, process.env.JWT_SECRET || 'secret_key', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Token inválido o expirado.' });
+    req.user = user;
+    next();
+  });
+};
 
-    <div class="footer-text">
-      ¿No tienes una cuenta? <a href="#">Regístrate aquí</a>
-    </div>
-  </div>
+// --- SERVIR PÁGINA WEB (FRONTEND) ---
+app.use(express.static(__dirname));
 
-  <script>
-    const form = document.getElementById('loginForm');
-    const mensajeDiv = document.getElementById('mensaje');
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      mensajeDiv.textContent = "Verificando...";
-      mensajeDiv.className = "";
+// --- RUTA DE PRUEBA DE LOGIN ---
+app.post('/api/login', async (req, res) => {
+  const { email, dni, password } = req.body;
+  if (!email || !dni || !password) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  }
+  // Respuesta de prueba exitosa
+  res.json({ message: 'Inicio de sesión exitoso', user: { email, dni } });
+});
 
-      const email = document.getElementById('email').value;
-      const dni = document.getElementById('dni').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, dni, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          mensajeDiv.textContent = "¡Inicio de sesión exitoso!";
-          mensajeDiv.className = "exito";
-        } else {
-          mensajeDiv.textContent = data.error || "Error al iniciar sesión";
-          mensajeDiv.className = "error";
-        }
-      } catch (err) {
-        mensajeDiv.textContent = "No se pudo conectar con el servidor.";
-        mensajeDiv.className = "error";
-      }
-    });
-  </script>
-
-</body>
-</html>      
+// --- PUERTO Y ARRANQUE DEL SERVIDOR ---
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
