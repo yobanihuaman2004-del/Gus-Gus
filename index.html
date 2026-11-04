@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Acceso Principal</title>
-  <meta name="description" content="Gus Gus - Plataforma segura de intermediación.">
+  <title>Gus Gus - Iniciar Sesión</title>
   <style>
     :root {
       --bg-color: #F4EFEA;
@@ -16,7 +15,6 @@
       --text-muted: #6E6366;
       --border-color: #E2DAD5;
       --input-bg: #FAF7F5;
-      --focus-ring: #8C6551;
     }
 
     * {
@@ -38,7 +36,7 @@
 
     .app-card {
       background: var(--card-bg);
-      padding: 40px 28px;
+      padding: 36px 24px;
       border-radius: 24px;
       box-shadow: 0 10px 30px rgba(58, 39, 45, 0.05);
       max-width: 420px;
@@ -51,7 +49,6 @@
       color: var(--primary-color);
       font-size: 32px;
       font-weight: 700;
-      letter-spacing: -0.5px;
       margin-bottom: 8px;
     }
 
@@ -59,20 +56,19 @@
       color: var(--text-muted);
       font-size: 14px;
       line-height: 1.5;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .form-group {
       text-align: left;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .form-group label {
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .form-group input {
@@ -84,11 +80,6 @@
       font-size: 15px;
       color: var(--text-main);
       outline: none;
-    }
-
-    .form-group input:focus {
-      border-color: var(--focus-ring);
-      background-color: #FFFFFF;
     }
 
     .btn-submit {
@@ -104,125 +95,80 @@
       margin-top: 8px;
     }
 
-    .footer-text {
-      margin-top: 24px;
-      font-size: 13px;
-      color: var(--text-muted);
+    .divider {
+      margin: 24px 0 16px 0;
+      border-top: 1px solid var(--border-color);
+      position: relative;
     }
 
-    .footer-link {
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: transparent;
       color: var(--accent-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 14px;
+      font-size: 15px;
       font-weight: 700;
-      text-decoration: underline;
-      cursor: pointer;
+      text-decoration: none;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:active {
+      background-color: var(--accent-color);
+      color: #FFFFFF;
     }
 
     #mensaje {
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 14px;
       font-weight: 600;
     }
-
     .error { color: #B33A3A; }
     .exito { color: #3A7A56; }
-    .oculto { display: none !important; }
   </style>
 </head>
 <body>
 
   <div class="app-card">
     <h1 class="brand-title">Gus Gus</h1>
-    <p class="brand-subtitle" id="subtitulo">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.</p>
+    <p class="brand-subtitle">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.</p>
 
-    <!-- FORMULARIO 1: INICIO DE SESIÓN -->
-    <div id="vistaLogin">
-      <form id="formLogin">
-        <div class="form-group">
-          <label>Correo Electrónico</label>
-          <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
-        </div>
-
-        <div class="form-group">
-          <label>Número de DNI</label>
-          <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-        </div>
-
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required>
-        </div>
-
-        <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
-      </form>
-
-      <div class="footer-text">
-        ¿No tienes una cuenta? <span class="footer-link" id="irARegistro">Regístrate aquí</span>
+    <form id="formLogin">
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
       </div>
-    </div>
 
-    <!-- FORMULARIO 2: REGISTRO -->
-    <div id="vistaRegistro" class="oculto">
-      <form id="formRegistro">
-        <div class="form-group">
-          <label>Nombre Completo</label>
-          <input type="text" id="regNombre" placeholder="Tu nombre y apellido" required>
-        </div>
-
-        <div class="form-group">
-          <label>Correo Electrónico</label>
-          <input type="email" id="regEmail" placeholder="tu@correo.com" required>
-        </div>
-
-        <div class="form-group">
-          <label>Número de DNI</label>
-          <input type="text" id="regDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-        </div>
-
-        <div class="form-group">
-          <label>Crear Contraseña</label>
-          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
-        </div>
-
-        <button type="submit" class="btn-submit">Crear Mi Cuenta</button>
-      </form>
-
-      <div class="footer-text">
-        ¿Ya tienes una cuenta? <span class="footer-link" id="irALogin">Inicia sesión aquí</span>
+      <div class="form-group">
+        <label>Número de DNI</label>
+        <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
       </div>
-    </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
+    </form>
 
     <div id="mensaje"></div>
+
+    <div class="divider"></div>
+
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">¿Aún no tienes una cuenta?</p>
+    <a href="/register.html" class="btn-secondary">Crear una cuenta nueva</a>
   </div>
 
   <script>
-    const vistaLogin = document.getElementById('vistaLogin');
-    const vistaRegistro = document.getElementById('vistaRegistro');
-    const subtitulo = document.getElementById('subtitulo');
-    const irARegistro = document.getElementById('irARegistro');
-    const irALogin = document.getElementById('irALogin');
-    const mensaje = document.getElementById('mensaje');
-
-    // Cambiar a Registro
-    irARegistro.onclick = function() {
-      vistaLogin.classList.add('oculto');
-      vistaRegistro.classList.remove('oculto');
-      subtitulo.textContent = "Crea tu cuenta en segundos para empezar a usar la plataforma.";
-      mensaje.textContent = "";
-    };
-
-    // Cambiar a Login
-    irALogin.onclick = function() {
-      vistaRegistro.classList.add('oculto');
-      vistaLogin.classList.remove('oculto');
-      subtitulo.textContent = "Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.";
-      mensaje.textContent = "";
-    };
-
-    // Petición Login
     document.getElementById('formLogin').onsubmit = async function(e) {
       e.preventDefault();
-      mensaje.textContent = "Verificando...";
-      mensaje.className = "";
+      const msg = document.getElementById('mensaje');
+      msg.textContent = "Verificando...";
+      msg.className = "";
 
       try {
         const res = await fetch('/api/login', {
@@ -236,47 +182,15 @@
         });
         const data = await res.json();
         if (res.ok) {
-          mensaje.textContent = "¡Inicio de sesión exitoso!";
-          mensaje.className = "exito";
+          msg.textContent = "¡Inicio de sesión exitoso!";
+          msg.className = "exito";
         } else {
-          mensaje.textContent = data.error || "Error al iniciar sesión";
-          mensaje.className = "error";
+          msg.textContent = data.error || "Error al iniciar sesión";
+          msg.className = "error";
         }
       } catch (err) {
-        mensaje.textContent = "Error de conexión con el servidor.";
-        mensaje.className = "error";
-      }
-    };
-
-    // Petición Registro
-    document.getElementById('formRegistro').onsubmit = async function(e) {
-      e.preventDefault();
-      mensaje.textContent = "Registrando usuario...";
-      mensaje.className = "";
-
-      try {
-        const res = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre: document.getElementById('regNombre').value,
-            email: document.getElementById('regEmail').value,
-            dni: document.getElementById('regDni').value,
-            password: document.getElementById('regPassword').value
-          })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          mensaje.textContent = "¡Cuenta creada! Redirigiendo...";
-          mensaje.className = "exito";
-          setTimeout(() => { irALogin.click(); }, 1500);
-        } else {
-          mensaje.textContent = data.error || "Error al registrar cuenta";
-          mensaje.className = "error";
-        }
-      } catch (err) {
-        mensaje.textContent = "Error de conexión con el servidor.";
-        mensaje.className = "error";
+        msg.textContent = "Error de conexión con el servidor.";
+        msg.className = "error";
       }
     };
   </script>
