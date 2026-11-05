@@ -1,51 +1,42 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 
 const app = express();
 
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(xss());
-app.use(express.json({ limit: '15mb' }));
+app.use(express.json({ limit: '20mb' }));
 app.use(cors());
-
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 150 });
-app.use(limiter);
+app.use(express.static(__dirname));
 
 // BASE DE DATOS EN MEMORIA
 const operacionesDB = new Map();
 const mensajesDB = new Map();
 const codigosRecuperacion = new Map();
 
-// CUENTAS RECAUDACIÓN
 const CUENTAS_RECAUDACION_GUSGUS = {
   yape: "987-654-321 (Gus Gus Escrow SAC)",
   plin: "987-654-321 (Gus Gus Escrow SAC)",
   cci_bcp: "002-191-000123456789-54 (BCP Soles)"
 };
 
-const TARIFA_COMISION_PORCENTAJE = 0.04;
+const TARIFA_COMISION_PORCENTAJE = 0.04; // 4% Total (2% Comprador / 2% Vendedor)
 
-// IA SEGURIDAD Y CUSTODIA
+// 🤖 MÓDULO 1: IA SEGURIDAD Y CUSTODIA EN CHAT
 function analizarMensajeConIA(texto, foto, tipoAccion) {
   let analisis = { respuestaIA: null };
-  const patronesRiesgo = /(whatsapp|llámame al|pago por fuera|transferencia directa|bcp directo)/i;
+  const patronesRiesgo = /(whatsapp|llámame al|pago por fuera|transferencia directa|bcp directo|caja piura)/i;
   
   if (texto && patronesRiesgo.test(texto)) {
-    analisis.respuestaIA = "🤖 **IA Guardián:** Detectamos intención de coordinar por fuera. Realiza tus pagos dentro de Gus Gus para mantener la protección de tu dinero.";
+    analisis.respuestaIA = "🤖 **IA Guardián:** Detectamos intención de coordinar fuera de la app. Recuerda realizar los pagos dentro de Gus Gus para mantener la protección de tu dinero.";
   } else if (tipoAccion === 'SUBIR_ENVIO' && foto) {
     analisis.respuestaIA = "🤖 **IA Guardián:** Comprobante de envío registrado y auditado correctamente.";
   } else if (tipoAccion === 'SUBIR_RECEPCION' && foto) {
-    analisis.respuestaIA = "🤖 **IA Guardián:** Recepción confirmada. Fondos autorizados para liberación.";
+    analisis.respuestaIA = "🤖 **IA Guardián:** Recepción confirmada. Fondos autorizados para liberación al Vendedor.";
   }
   return analisis;
 }
 
-// IA REPORTES
+// 📊 MÓDULO 2: IA REPORTES Y BLINDAJE FISCAL
 function generarReporteIA(filtroEmail = null, periodo = 'mensual') {
   let totalMontoMovido = 0;
   let gananciasGusGusTotal = 0;
@@ -86,8 +77,8 @@ function generarReporteIA(filtroEmail = null, periodo = 'mensual') {
       volumenTransaccionado: `S/ ${totalMontoMovido.toFixed(2)}`,
       gananciaNetaGusGus: `S/ ${gananciasGusGusTotal.toFixed(2)}`,
       sustentoFiscalSUNAT: {
-        ingresoDeclarable: `S/ ${gananciasGusGusTotal.toFixed(2)} (Comisiones por servicios de intermediación)`,
-        fondosCustodiaTerceros: `S/ ${totalMontoMovido.toFixed(2)} (Fondos exentos de tributación propia - Custodia de usuarios)`
+        ingresoDeclarable: `S/ ${gananciasGusGusTotal.toFixed(2)} (Comisiones por intermediación)`,
+        fondosCustodiaTerceros: `S/ ${totalMontoMovido.toFixed(2)} (Fondos de usuarios en custodia)`
       }
     };
   }
@@ -100,13 +91,12 @@ function generarReporteIA(filtroEmail = null, periodo = 'mensual') {
   };
 }
 
-app.use(express.static(__dirname));
-
+// RUTAS PRINCIPALES
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
 app.get('/register.html', (req, res) => res.sendFile(__dirname + '/register.html'));
 app.get('/dashboard', (req, res) => res.sendFile(__dirname + '/dashboard.html'));
 
-// ENDPOINTS
+// LOGIN Y AUTENTICACIÓN
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Ingresa correo y contraseña.' });
@@ -144,6 +134,7 @@ app.post('/api/restablecer-password', (req, res) => {
   res.json({ message: 'Contraseña actualizada con éxito.' });
 });
 
+// OPERACIONES Y MULTICHAT
 app.post('/api/operaciones/crear', (req, res) => {
   const { email, contraparteEmail, rol, monto, descripcion, fotoProducto } = req.body;
   if (!email || !monto || !descripcion) {
@@ -273,33 +264,4 @@ app.post('/api/operaciones/:codigoOp/depositar', (req, res) => {
   if (!op) return res.status(404).json({ error: 'Operación no encontrada.' });
 
   op.estado = 'EN_CUSTODIA';
-  operacionesDB.set(codigoOp, op);
-
-  const mensajes = mensajesDB.get(codigoOp) || [];
-  mensajes.push({
-    remitente: '🤖 IA Gus Gus Guardián',
-    texto: `🟢 **Depósito Verificado:** S/ ${op.totalAPagarComprador} retenidos en custodia. Vendedor, ya puedes enviar el producto.`,
-    tipo: 'sistema',
-    fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  });
-
-  mensajesDB.set(codigoOp, mensajes);
-  res.json({ message: 'Depósito procesado.', operacion: op, chat: mensajes });
-});
-
-app.get('/api/reportes/admin', (req, res) => {
-  const periodo = req.query.periodo || 'mensual';
-  res.json(generarReporteIA(null, periodo));
-});
-
-app.get('/api/reportes/usuario/:email', (req, res) => {
-  const { email } = req.params;
-  const periodo = req.query.periodo || 'mensual';
-  res.json(generarReporteIA(email, periodo));
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor Gus Gus corriendo en puerto ${PORT}`);
-});
-             
+  
