@@ -10,7 +10,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(__dirname));
 
-// Base de datos en memoria con soporte de DNI
+// Usuarios registrados con DNI
 const users = [
   { id: 1, name: "Gus (Creador Maestro)", dni: "12345678", email: "admin@gusgus.com", phone: "999888777", pass: "admin123", role: "ADMIN_MAESTRO", verified: true },
   { id: 2, name: "Usuario Cliente", dni: "87654321", email: "user@gusgus.com", phone: "912345678", pass: "user123", role: "USUARIO_ESTANDAR", verified: true }
@@ -40,11 +40,11 @@ const deals = [
 ];
 
 const auditLogs = [
-  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Inicio de sesión directo con DNI y Gmail activo." }
+  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Inicio de sesión optimizado con DNI y Correo." }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Gus (Creador)", receiver: "user@gusgus.com", text: "¡Hola! Bienvenido a GG. La app está lista con soporte de DNI.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Gus (Creador)", receiver: "user@gusgus.com", text: "¡Hola! Bienvenido a GG. La app está 100% activa.", image: null, type: "text", time: "10:30 AM" }
 ];
 
 const verifyAdmin = (req, res, next) => {
@@ -56,12 +56,12 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-// --- AUTENTICACIÓN CON DNI ---
+// --- AUTENTICACIÓN ---
 
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
   if (!email || !pass || !phone || !dni) {
-    return res.status(400).json({ error: "DNI, Correo, Teléfono y Contraseña son obligatorios." });
+    return res.status(400).json({ error: "Debes completar DNI, Nombre, Gmail, Celular y Contraseña." });
   }
 
   const cleanDni = dni.trim();
@@ -69,17 +69,26 @@ app.post('/api/auth/register', (req, res) => {
   const cleanPhone = phone.trim();
 
   if (users.find(u => u.email.toLowerCase() === cleanEmail || u.phone === cleanPhone || u.dni === cleanDni)) {
-    return res.status(400).json({ error: "El DNI, Correo o Teléfono ya se encuentra registrado." });
+    return res.status(400).json({ error: "El DNI, Correo o Teléfono ya está registrado." });
   }
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   verificationCodes[cleanEmail] = code;
 
-  const newUser = { id: users.length + 1, name: name || "Usuario", dni: cleanDni, email: cleanEmail, phone: cleanPhone, pass: pass.trim(), role: "USUARIO_ESTANDAR", verified: false };
+  const newUser = { 
+    id: users.length + 1, 
+    name: name.trim() || "Usuario", 
+    dni: cleanDni, 
+    email: cleanEmail, 
+    phone: cleanPhone, 
+    pass: pass.trim(), 
+    role: "USUARIO_ESTANDAR", 
+    verified: false 
+  };
   users.push(newUser);
 
-  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "VERIFICACIÓN", detail: `Código para ${cleanEmail} (DNI: ${cleanDni}): [${code}]` });
-  res.json({ message: "Código generado con éxito.", email: cleanEmail, demoCode: code });
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "VERIFICACIÓN", detail: `Código para ${cleanEmail}: [${code}]` });
+  res.json({ message: "Código generado.", email: cleanEmail, demoCode: code });
 });
 
 app.post('/api/auth/verify', (req, res) => {
@@ -105,26 +114,28 @@ app.post('/api/auth/verify', (req, res) => {
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { inputVal, pass } = req.body;
-  const input = (inputVal || '').trim();
+  const { dni, email, pass } = req.body;
+  const cleanDni = (dni || '').trim();
+  const cleanEmail = (email || '').trim().toLowerCase();
   const password = (pass || '').trim();
 
-  if (!input || !password) {
-    return res.status(400).json({ error: "Ingresa tu DNI, Correo o Teléfono y tu Contraseña." });
+  if (!password) {
+    return res.status(400).json({ error: "Por favor ingresa tu contraseña." });
   }
 
-  const user = users.find(u => 
-    (u.email.toLowerCase() === input.toLowerCase() || u.phone === input || u.dni === input) && u.pass === password
-  );
+  const user = users.find(u => {
+    const matchDni = cleanDni ? (u.dni === cleanDni) : false;
+    const matchEmail = cleanEmail ? (u.email.toLowerCase() === cleanEmail || u.phone === cleanEmail) : false;
+    return (matchDni || matchEmail || (!cleanDni && !cleanEmail)) && u.pass === password;
+  });
 
   if (!user) {
-    return res.status(401).json({ error: "Credenciales incorrectas. Revisa tu DNI/Correo y clave." });
+    return res.status(401).json({ error: "Credenciales incorrectas. Verifica tu DNI, Correo o Contraseña." });
   }
 
   user.verified = true;
-
-  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "LOGIN OK", detail: `Acceso concedido a ${user.name} (DNI: ${user.dni})` });
-  res.json({ message: "Sesión iniciada correctamente.", user });
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "LOGIN OK", detail: `Acceso: ${user.name}` });
+  res.json({ message: "¡Bienvenido!", user });
 });
 
 app.get('/api/users/search', (req, res) => {
@@ -256,3 +267,4 @@ app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => console.log(`[GG] Servidor listo en puerto ${PORT}`));
+                                         
