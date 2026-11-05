@@ -5,7 +5,6 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 
 const app = express();
@@ -26,7 +25,6 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Memoria para códigos de verificación
 const codigosVerificacion = new Map();
 const codigosRecuperacion = new Map();
 
@@ -44,7 +42,7 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(__dirname + '/dashboard.html');
 });
 
-// --- PASO 1: ENVIAR CÓDIGO DE REGISTRO (CON CÓDIGO DE PRUEBA EN RESPUESTA) ---
+// APIs
 app.post('/api/enviar-codigo', (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'El correo es requerido.' });
@@ -60,7 +58,6 @@ app.post('/api/enviar-codigo', (req, res) => {
   });
 });
 
-// --- PASO 2: ENVIAR CÓDIGO DE RECUPERACIÓN ---
 app.post('/api/recuperar-codigo', (req, res) => {
   const { contacto } = req.body;
   if (!contacto) return res.status(400).json({ error: 'Ingresa correo o teléfono.' });
@@ -76,7 +73,6 @@ app.post('/api/recuperar-codigo', (req, res) => {
   });
 });
 
-// --- RESTABLECER CONTRASEÑA ---
 app.post('/api/restablecer-password', async (req, res) => {
   const { contacto, codigo, nuevaPassword } = req.body;
   if (!contacto || !codigo || !nuevaPassword) {
@@ -92,7 +88,6 @@ app.post('/api/restablecer-password', async (req, res) => {
   res.json({ message: 'Contraseña actualizada con éxito.' });
 });
 
-// --- REGISTRO DE USUARIO ---
 app.post('/api/register', async (req, res) => {
   const { nombre, email, dni, password, codigo } = req.body;
   if (!nombre || !email || !dni || !password || !codigo) {
@@ -108,22 +103,26 @@ app.post('/api/register', async (req, res) => {
   res.json({ message: 'Registro exitoso.', user: { nombre, email, dni } });
 });
 
-// --- INICIO DE SESIÓN ---
+// --- INICIO DE SESIÓN SIMPLIFICADO (SOLO REQUIERE EMAIL Y CONTRASEÑA) ---
 app.post('/api/login', (req, res) => {
-  const { email, dni, password } = req.body;
-  if (!email || !dni || !password) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Ingresa tu correo y contraseña.' });
   }
 
   const token = jwt.sign({ email }, process.env.JWT_SECRET || 'secret_key', { expiresIn: '2h' });
+  
   res.json({
     message: 'Login exitoso',
     token,
-    user: { nombre: email.split('@')[0], email, dni }
+    user: { 
+      nombre: email.split('@')[0], 
+      email: email, 
+      dni: req.body.dni || 'Sin DNI' 
+    }
   });
 });
 
-// --- CREAR OPERACIÓN ---
 app.post('/api/operaciones/crear', (req, res) => {
   const { email, tipo, monto, descripcion, codigoOp } = req.body;
   res.json({ message: 'Operación registrada con éxito.', codigoOp });
