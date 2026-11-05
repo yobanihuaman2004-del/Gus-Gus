@@ -300,41 +300,5 @@
         msg.textContent = "Error de conexión con el servidor.";
         msg.className = "error";
       }
-    };
 
-    document.getElementById('formLogin').onsubmit = async function(e) {
-      e.preventDefault();
-      msg.textContent = "Verificando...";
-      msg.className = "";
-
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: document.getElementById('loginEmail').value,
-            dni: document.getElementById('loginDni').value,
-            password: document.getElementById('loginPassword').value
-          })
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          msg.textContent = "¡Inicio de sesión exitoso!";
-          msg.className = "exito";
-          localStorage.setItem('gusgus_token', data.token);
-          localStorage.setItem('gusgus_user', JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = "/dashboard"; }, 1000);
-        } else {
-          msg.textContent = data.error || "Error al iniciar sesión.";
-          msg.className = "error";
-        }
-      } catch (err) {
-        msg.textContent = "Error de conexión con el servidor.";
-        msg.className = "error";
-      }
-    };
-  </script>
-
-</body>
-</html>
+    
