@@ -189,7 +189,7 @@
     .hidden { display: none !important; }
     .search-results { background: var(--wine-dark); border: var(--border-white); border-radius: 8px; margin-top: 5px; max-height: 120px; overflow-y: auto; }
     .search-item { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.9rem; }
-    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; padding: 6px; display: inline-block; }
   </style>
 </head>
 <body>
@@ -203,7 +203,7 @@
         <p style="color: var(--white-muted); font-size: 0.9rem; margin-top: 10px; font-weight: bold; letter-spacing: 1px;">SISTEMA DE INTERMEDIACIÓN & CUSTODIA</p>
       </div>
 
-      <!-- FORMULARIO DE INICIO DE SESIÓN DIRECTO -->
+      <!-- FORMULARIO DE INICIAR SESIÓN -->
       <form id="loginForm" onsubmit="ejecutarLogin(event)">
         <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Iniciar Sesión</h3>
         
@@ -219,7 +219,7 @@
         <button type="submit" class="btn-gg">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" onclick="toggleAuthView('register')">¿No tienes cuenta? Regístrate aquí</span>
+          <span class="link-toggle" role="button" onclick="toggleAuthView('register', event)">¿No tienes cuenta? Regístrate aquí</span>
         </div>
       </form>
 
@@ -245,7 +245,7 @@
         <button type="submit" class="btn-gg">REGISTRAR MI CUENTA</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" onclick="toggleAuthView('login')">¿Ya tienes cuenta? Inicia sesión</span>
+          <span class="link-toggle" role="button" onclick="toggleAuthView('login', event)">¿Ya tienes cuenta? Inicia sesión</span>
         </div>
       </form>
 
@@ -291,5 +291,29 @@
         <h3>🛡️ Registrar Trato en Custodia</h3>
         <select id="dealPaymentMethod">
           <option value="YAPE">Yape</option>
-          <option value="CULQI">
+          <option value="CULQI">Culqi (Tarjetas)</option>
+          <option value="PLIN">Plin</option>
+          <option value="LEMON_CASH">Lemon Cash (CCI)</option>
+        </select>
+        <input type="text" id="dealSeller" placeholder="DNI, Celular o Correo del vendedor">
+        <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)">
+        <input type="text" id="dealDesc" placeholder="Descripción del producto o servicio">
+        <button type="button" class="btn-gg" onclick="crearTrato()">Pagar y Custodiar Fondos</button>
+        <p id="dealStatus" style="color: var(--white); font-size: 0.85rem; margin-top: 8px; font-weight: bold;"></p>
+
+        <h4 style="color: var(--white); margin-top: 18px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;">Mis Tratos y Envíos:</h4>
+        <div id="dealsList"></div>
+      </div>
+
+      <div class="card-section" id="chatSection">
+        <h3>💬 Mensajería Directa & Comprobantes</h3>
+        <div id="chatBox" class="chat-box"></div>
+        
+        <div id="imgPreviewBox" class="hidden" style="margin-top: 8px; text-align: center;">
+          <img id="imgPreview" style="max-height: 80px; border-radius: 6px; border: 1px solid var(--white);">
+          <button type="button" onclick="cancelarImagen()" style="background: none; border: none; color: #ff8a80; cursor: pointer; font-size: 0.75rem;">✕ Quitar foto</button>
+        </div>
+
+        <div style="display: flex; gap: 6px; margin-top: 10px; align-items: center;">
+          <label for="chatFileInput" style="background: rgba(255,255,255,0.2); border: 1px solid var(--white); padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 1.
             
