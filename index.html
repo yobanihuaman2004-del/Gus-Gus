@@ -21,15 +21,13 @@
       box-sizing: border-box;
       -webkit-user-select: none;
       -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
       touch-action: manipulation;
     }
 
-    input, textarea, select {
+    input, select {
       -webkit-user-select: text !important;
       -moz-user-select: text !important;
-      -ms-user-select: text !important;
       user-select: text !important;
     }
 
@@ -122,6 +120,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: block;
+      user-select: none;
     }
 
     .btn-gg:active {
@@ -204,7 +203,7 @@
       </div>
 
       <!-- FORMULARIO DE INICIAR SESIÓN -->
-      <form id="loginForm" onsubmit="ejecutarLogin(event)">
+      <div id="loginForm">
         <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Iniciar Sesión</h3>
         
         <label>Número de DNI:</label>
@@ -216,15 +215,15 @@
         <label>Contraseña:</label>
         <input type="password" id="loginPass" placeholder="******" value="admin123">
         
-        <button type="submit" class="btn-gg">INGRESAR A LA APP</button>
+        <button type="button" id="btnDoLogin" class="btn-gg">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" role="button" onclick="toggleAuthView('register', event)">¿No tienes cuenta? Regístrate aquí</span>
+          <span id="btnToRegister" class="link-toggle">¿No tienes cuenta? Regístrate aquí</span>
         </div>
-      </form>
+      </div>
 
       <!-- FORMULARIO DE REGISTRO DIRECTO -->
-      <form id="viewRegister" class="hidden" onsubmit="ejecutarRegistro(event)">
+      <div id="viewRegister" class="hidden">
         <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Crear Cuenta Nueva</h3>
         
         <label>Número de DNI:</label>
@@ -242,12 +241,12 @@
         <label>Contraseña:</label>
         <input type="password" id="regPass" placeholder="Crea tu contraseña">
 
-        <button type="submit" class="btn-gg">REGISTRAR MI CUENTA</button>
+        <button type="button" id="btnDoRegister" class="btn-gg">REGISTRAR MI CUENTA</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" role="button" onclick="toggleAuthView('login', event)">¿Ya tienes cuenta? Inicia sesión</span>
+          <span id="btnToLogin" class="link-toggle">¿Ya tienes cuenta? Inicia sesión</span>
         </div>
-      </form>
+      </div>
 
       <!-- VERIFICACIÓN DE CÓDIGO -->
       <div id="viewVerify" class="hidden">
@@ -255,7 +254,7 @@
         <p style="font-size: 0.85rem; color: var(--white-muted);">Ingresa el código de 6 dígitos generado:</p>
         <input type="text" id="verifyCode" placeholder="Código (Ej: 123456)" maxlength="6">
         <p id="demoCodeNotice" style="color: var(--white); font-size: 0.85rem; font-weight: bold; text-align: center;"></p>
-        <button type="button" class="btn-gg" onclick="confirmarVerificacion()">CONFIRMAR E INGRESAR</button>
+        <button type="button" id="btnDoVerify" class="btn-gg">CONFIRMAR E INGRESAR</button>
       </div>
 
       <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold;"></p>
@@ -315,5 +314,214 @@
         </div>
 
         <div style="display: flex; gap: 6px; margin-top: 10px; align-items: center;">
-          <label for="chatFileInput" style="background: rgba(255,255,255,0.2); border: 1px solid var(--white); padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 1.
-            
+          <label for="chatFileInput" style="background: rgba(255,255,255,0.2); border: 1px solid var(--white); padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;">📷</label>
+          <input type="file" id="chatFileInput" accept="image/*" onchange="seleccionarImagen(event)" class="hidden">
+          
+          <input type="text" id="chatInput" placeholder="Escribe un mensaje..." style="margin-bottom: 0;">
+          <button type="button" class="btn-gg" style="width: auto; padding: 10px 18px;" onclick="enviarChat()">Enviar</button>
+        </div>
+      </div>
+
+      <div id="adminPanel" class="card-section hidden" style="border: var(--border-white-strong);">
+        <h3>👑 Panel de Control Creador (Gus)</h3>
+        <label style="font-size: 0.8rem;">Número Yape:</label>
+        <input type="text" id="cfgYape">
+        <label style="font-size: 0.8rem;">Número Plin:</label>
+        <input type="text" id="cfgPlin">
+        <label style="font-size: 0.8rem;">CCI Lemon Cash:</label>
+        <input type="text" id="cfgLemon">
+        <label style="font-size: 0.8rem;">Llave Pública Culqi:</label>
+        <input type="text" id="cfgCulqi">
+        <button type="button" class="btn-gg" onclick="guardarPagos()">Guardar Configuración</button>
+
+        <h4 style="color: var(--white); margin-top: 15px;">Logs de Auditoría (Nor #2):</h4>
+        <button type="button" class="btn-gg btn-outline-white" onclick="cargarAuditoria()">Consultar Historial</button>
+        <ul id="auditList" style="font-size: 0.75rem; color: var(--white-muted); padding-left: 15px; margin-top: 10px;"></ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentUser = null;
+    let tempEmail = "";
+    let selectedImageBase64 = null;
+
+    function addTouchClick(elementId, callback) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      let handled = false;
+      
+      const fire = function(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (!handled) {
+          handled = true;
+          setTimeout(() => { handled = false; }, 300);
+          callback();
+        }
+      };
+
+      el.addEventListener('touchend', fire, { passive: false });
+      el.addEventListener('click', fire);
+    }
+
+    function toggleAuthView(view) {
+      document.getElementById('loginForm').classList.toggle('hidden', view !== 'login');
+      document.getElementById('viewRegister').classList.toggle('hidden', view !== 'register');
+      document.getElementById('viewVerify').classList.toggle('hidden', view !== 'verify');
+      document.getElementById('authStatus').innerText = "";
+    }
+
+    async function ejecutarLogin() {
+      const dni = document.getElementById('loginDni').value;
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+      const status = document.getElementById('authStatus');
+
+      status.innerText = "Verificando datos...";
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dni, email, pass })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.user) {
+          currentUser = data.user;
+          iniciarApp();
+        } else {
+          status.innerText = data.error || "Credenciales incorrectas.";
+        }
+      } catch (err) {
+        status.innerText = "Error de conexión con el servidor.";
+      }
+    }
+
+    async function ejecutarRegistro() {
+      const dni = document.getElementById('regDni').value;
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const pass = document.getElementById('regPass').value;
+      const status = document.getElementById('authStatus');
+
+      status.innerText = "Registrando cuenta...";
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dni, name, email, phone, pass })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          tempEmail = data.email;
+          document.getElementById('demoCodeNotice').innerText = `Código generado: ${data.demoCode}`;
+          toggleAuthView('verify');
+        } else {
+          status.innerText = data.error || "Error al registrar cuenta.";
+        }
+      } catch (err) {
+        status.innerText = "Error de red al conectar.";
+      }
+    }
+
+    async function confirmarVerificacion() {
+      const code = document.getElementById('verifyCode').value;
+      const status = document.getElementById('authStatus');
+
+      try {
+        const res = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: tempEmail, code })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.user) {
+          currentUser = data.user;
+          iniciarApp();
+        } else {
+          status.innerText = data.error || "Código incorrecto.";
+        }
+      } catch (err) {
+        status.innerText = "Error procesando verificación.";
+      }
+    }
+
+    function iniciarApp() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+      document.getElementById('userDisplay').innerText = `${currentUser.name} (DNI: ${currentUser.dni || 'S/D'})`;
+
+      if (currentUser.role === 'ADMIN_MAESTRO') {
+        document.getElementById('adminPanel').classList.remove('hidden');
+      } else {
+        document.getElementById('adminPanel').classList.add('hidden');
+      }
+
+      cargarMetodosPago();
+      cargarTratos();
+      cargarChat();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+      toggleAuthView('login');
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function buscarUsuario() {
+      const query = document.getElementById('searchInput').value;
+      const resultsDiv = document.getElementById('searchResults');
+      if (query.length < 2) { resultsDiv.classList.add('hidden'); return; }
+
+      const res = await fetch(`/api/users/search?query=${query}`);
+      const data = await res.json();
+      resultsDiv.innerHTML = "";
+
+      if (data.users && data.users.length > 0) {
+        resultsDiv.classList.remove('hidden');
+        data.users.forEach(u => {
+          const div = document.createElement('div');
+          div.className = "search-item";
+          div.innerText = `👤 ${u.name} - DNI: ${u.dni} - 📞 ${u.phone}`;
+          div.onclick = () => {
+            document.getElementById('dealSeller').value = u.dni || u.phone;
+            resultsDiv.classList.add('hidden');
+          };
+          resultsDiv.appendChild(div);
+        });
+      } else { resultsDiv.classList.add('hidden'); }
+    }
+
+    async function cargarMetodosPago() {
+      const res = await fetch('/api/payments/methods');
+      const data = await res.json();
+      if(currentUser && currentUser.role === 'ADMIN_MAESTRO') {
+        document.getElementById('cfgYape').value = data.yapeNumber || '';
+        document.getElementById('cfgPlin').value = data.plinNumber || '';
+        document.getElementById('cfgLemon').value = data.lemonCashCCI || '';
+        document.getElementById('cfgCulqi').value = data.culqiPublicKey || '';
+      }
+    }
+
+    async function guardarPagos() {
+      const res = await fetch('/api/payments/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-role': currentUser.role },
+        body: JSON.stringify({
+          yapeNumber: document.getElementById('cfgYape').value,
+         
