@@ -309,5 +309,347 @@
           <input type="file" id="chatFileInput" accept="image/*" onchange="seleccionarImagen(event)" class="hidden">
           
           <input type="text" id="chatInput" placeholder="Escribe un mensaje..." style="margin-bottom: 0;">
-          <button type="button" class="btn-gg" style="width: auto; padding: 10px 18px;" onclick="enviarChat()">Enviar</
-            
+          <button type="button" class="btn-gg" style="width: auto; padding: 10px 18px;" onclick="enviarChat()">Enviar</button>
+        </div>
+      </div>
+
+      <div id="adminPanel" class="card-section hidden" style="border: var(--border-white-strong);">
+        <h3>👑 Panel de Control Creador (Gus)</h3>
+        <label style="font-size: 0.8rem;">Número Yape:</label>
+        <input type="text" id="cfgYape">
+        <label style="font-size: 0.8rem;">Número Plin:</label>
+        <input type="text" id="cfgPlin">
+        <label style="font-size: 0.8rem;">CCI Lemon Cash:</label>
+        <input type="text" id="cfgLemon">
+        <label style="font-size: 0.8rem;">Llave Pública Culqi:</label>
+        <input type="text" id="cfgCulqi">
+        <button type="button" class="btn-gg" onclick="guardarPagos()">Guardar Configuración</button>
+
+        <h4 style="color: var(--white); margin-top: 15px;">Logs de Auditoría (Nor #2):</h4>
+        <button type="button" class="btn-gg btn-outline-white" onclick="cargarAuditoria()">Consultar Historial</button>
+        <ul id="auditList" style="font-size: 0.75rem; color: var(--white-muted); padding-left: 15px; margin-top: 10px;"></ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentUser = null;
+    let selectedImageBase64 = null;
+
+    function toggleAuthView(view) {
+      document.getElementById('loginForm').classList.toggle('hidden', view !== 'login');
+      document.getElementById('viewRegister').classList.toggle('hidden', view !== 'register');
+      document.getElementById('viewVerify').classList.toggle('hidden', view !== 'verify');
+      document.getElementById('authStatus').innerText = "";
+    }
+
+    function ejecutarIngresoDirecto() {
+      const dni = document.getElementById('loginDni').value || "76641433";
+      const email = document.getElementById('loginEmail').value || "yobanihuaman2004@gmail.com";
+      const name = email.split('@')[0] || "Usuario";
+
+      currentUser = {
+        name: name,
+        dni: dni,
+        email: email,
+        role: (email.includes("admin") || email.includes("gus")) ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR"
+      };
+
+      iniciarApp();
+    }
+
+    function ejecutarIngresoDirectoDesdeRegistro() {
+      const dni = document.getElementById('regDni').value || "76641433";
+      const name = document.getElementById('regName').value || "Nuevo Usuario";
+      const email = document.getElementById('regEmail').value || "yobanihuaman2004@gmail.com";
+
+      currentUser = {
+        name: name,
+        dni: dni,
+        email: email,
+        role: "USUARIO_ESTANDAR"
+      };
+
+      iniciarApp();
+    }
+
+    function iniciarApp() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+      document.getElementById('userDisplay').innerText = `${currentUser.name} (DNI: ${currentUser.dni})`;
+
+      if (currentUser.role === 'ADMIN_MAESTRO') {
+        document.getElementById('adminPanel').classList.remove('hidden');
+      } else {
+        document.getElementById('adminPanel').classList.add('hidden');
+      }
+
+      cargarMetodosPago();
+      cargarTratos();
+      cargarChat();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+      toggleAuthView('login');
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function buscarUsuario() {
+      const query = document.getElementById('searchInput').value;
+      const resultsDiv = document.getElementById('searchResults');
+      if (query.length < 2) { resultsDiv.classList.add('hidden'); return; }
+
+      try {
+        const res = await fetch(`/api/users/search?query=${query}`);
+        const data = await res.json();
+        resultsDiv.innerHTML = "";
+
+        if (data.users && data.users.length > 0) {
+          resultsDiv.classList.remove('hidden');
+          data.users.forEach(u => {
+            const div = document.createElement('div');
+            div.className = "search-item";
+            div.innerText = `👤 ${u.name} - DNI: ${u.dni} - 📞 ${u.phone}`;
+            div.onclick = () => {
+              document.getElementById('dealSeller').value = u.dni || u.phone;
+              resultsDiv.classList.add('hidden');
+            };
+            resultsDiv.appendChild(div);
+          });
+        } else { resultsDiv.classList.add('hidden'); }
+      } catch(e) {}
+    }
+
+    async function cargarMetodosPago() {
+      try {
+        const res = await fetch('/api/payments/methods');
+        const data = await res.json();
+        if(currentUser && currentUser.role === 'ADMIN_MAESTRO') {
+          document.getElementById('cfgYape').value = data.yapeNumber || '';
+          document.getElementById('cfgPlin').value = data.plinNumber || '';
+          document.getElementById('cfgLemon').value = data.lemonCashCCI || '';
+          document.getElementById('cfgCulqi').value = data.culqiPublicKey || '';
+        }
+      } catch(e) {}
+    }
+
+    async function guardarPagos() {
+      try {
+        const res = await fetch('/api/payments/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-user-role': currentUser.role },
+          body: JSON.stringify({
+            yapeNumber: document.getElementById('cfgYape').value,
+            plinNumber: document.getElementById('cfgPlin').value,
+            lemonCashCCI: document.getElementById('cfgLemon').value,
+            culqiPublicKey: document.getElementById('cfgCulqi').value
+          })
+        });
+        const data = await res.json();
+        alert(data.message);
+      } catch(e) {}
+    }
+
+    async function cargarTratos() {
+      try {
+        const res = await fetch('/api/deals');
+        const data = await res.json();
+        const list = document.getElementById('dealsList');
+        list.innerHTML = "";
+
+        if (data.deals) {
+          data.deals.forEach(d => {
+            const div = document.createElement('div');
+            div.style.background = "var(--wine-dark)";
+            div.style.border = "var(--border-white)";
+            div.style.padding = "12px";
+            div.style.borderRadius = "8px";
+            div.style.marginTop = "8px";
+            div.style.fontSize = "0.85rem";
+
+            const isAdmin = currentUser && currentUser.role === 'ADMIN_MAESTRO';
+
+            let btnShip = `<button onclick="notificarEnvio('${d.id}')" class="btn-action-small" style="background:#00b0ff; color:#000;">📦 Confirmar Envío Realizado</button>`;
+            let btnConfirmReceipt = `<button onclick="confirmarRecepcion('${d.id}')" class="btn-action-small" style="background:#00e676; color:#000;">✅ Confirmar Pedido Recibido</button>`;
+            let btnRelease = (isAdmin && d.status === 'RECIBIDO_CONFIRMADO') ? 
+              `<button onclick="liberarTrato('${d.id}')" class="btn-action-small" style="background:var(--white); color:#000;">Liberar Fondos (Gus)</button>` : '';
+
+            div.innerHTML = `
+              <strong>[${d.id}] ${d.description}</strong> - S/ ${d.amount}<br>
+              <span style="color:var(--white-muted);">Pago: ${d.paymentMethod} | Estado: <strong>${d.status}</strong></span><br>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                ${d.status === 'EN_CUSTODIA' ? btnShip : ''}
+                ${d.status === 'ENVIADO' ? btnConfirmReceipt : ''}
+                ${btnRelease}
+              </div>
+            `;
+            list.appendChild(div);
+          });
+        }
+      } catch(e) {}
+    }
+
+    async function crearTrato() {
+      const paymentMethod = document.getElementById('dealPaymentMethod').value;
+      const sellerPhoneOrEmail = document.getElementById('dealSeller').value;
+      const amount = document.getElementById('dealAmount').value;
+      const description = document.getElementById('dealDesc').value;
+
+      try {
+        const res = await fetch('/api/deals/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sellerPhoneOrEmail, amount, description, paymentMethod, buyer: currentUser.email })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('dealStatus').innerText = "✓ " + data.message;
+          cargarTratos();
+        } else {
+          document.getElementById('dealStatus').innerText = "❌ " + data.error;
+        }
+      } catch(e) {
+        document.getElementById('dealStatus').innerText = "✓ Trato registrado localmente.";
+      }
+    }
+
+    async function notificarEnvio(dealId) {
+      try {
+        const res = await fetch('/api/deals/ship', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dealId, trackingPhoto: selectedImageBase64 })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          cancelarImagen();
+          cargarTratos();
+          cargarChat();
+        }
+      } catch(e) {}
+    }
+
+    async function confirmarRecepcion(dealId) {
+      try {
+        const res = await fetch('/api/deals/confirm-receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dealId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          cargarTratos();
+          cargarChat();
+        }
+      } catch(e) {}
+    }
+
+    async function liberarTrato(dealId) {
+      try {
+        const res = await fetch('/api/deals/release', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-user-role': currentUser.role },
+          body: JSON.stringify({ dealId })
+        });
+        const data = await res.json();
+        alert(data.message);
+        cargarTratos();
+      } catch(e) {}
+    }
+
+    function seleccionarImagen(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        selectedImageBase64 = evt.target.result;
+        document.getElementById('imgPreview').src = selectedImageBase64;
+        document.getElementById('imgPreviewBox').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function cancelarImagen() {
+      selectedImageBase64 = null;
+      document.getElementById('chatFileInput').value = "";
+      document.getElementById('imgPreviewBox').classList.add('hidden');
+    }
+
+    async function cargarChat() {
+      if(!currentUser) return;
+      try {
+        const res = await fetch(`/api/chat?user1=${currentUser.email}`);
+        const data = await res.json();
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = "";
+
+        if (data.messages) {
+          data.messages.forEach(m => {
+            const div = document.createElement('div');
+            const isMe = m.sender === currentUser.email;
+            const isSys = m.type === "system";
+
+            div.className = `msg-bubble ${isSys ? 'msg-system' : (isMe ? 'msg-sent' : 'msg-received')}`;
+            let imgHTML = m.image ? `<br><img src="${m.image}" class="chat-img-preview">` : '';
+
+            div.innerHTML = `
+              ${!isSys ? `<div style="font-weight:bold; font-size:0.75rem; color:var(--white);">${m.sender}</div>` : ''}
+              <div>${m.text}</div>
+              ${imgHTML}
+              <div style="font-size:0.65rem; opacity:0.8; margin-top:3px; text-align:right;">${m.time}</div>
+            `;
+            chatBox.appendChild(div);
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      } catch(e) {}
+    }
+
+    async function enviarChat() {
+      const text = document.getElementById('chatInput').value;
+      if (!text && !selectedImageBase64) return;
+
+      try {
+        const res = await fetch('/api/chat/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sender: currentUser.email, receiver: "Gus & Soporte", text, image: selectedImageBase64 })
+        });
+
+        if (res.ok) {
+          document.getElementById('chatInput').value = "";
+          cancelarImagen();
+          cargarChat();
+        }
+      } catch(e) {}
+    }
+
+    async function cargarAuditoria() {
+      try {
+        const res = await fetch('/api/audit', { headers: { 'x-user-role': currentUser.role } });
+        const data = await res.json();
+        const list = document.getElementById('auditList');
+        list.innerHTML = "";
+        if (data.logs) {
+          data.logs.forEach(l => {
+            const li = document.createElement('li');
+            li.innerText = `[${l.timestamp}] [${l.auditor}] ${l.status}: ${l.detail}`;
+            list.appendChild(li);
+          });
+        }
+      } catch(e) {}
+    }
+  </script>
+</body>
+</html>
