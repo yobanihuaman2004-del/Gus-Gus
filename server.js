@@ -10,7 +10,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(__dirname));
 
-// Usuarios registrados con DNI
 const users = [
   { id: 1, name: "Gus (Creador Maestro)", dni: "12345678", email: "admin@gusgus.com", phone: "999888777", pass: "admin123", role: "ADMIN_MAESTRO", verified: true },
   { id: 2, name: "Usuario Cliente", dni: "87654321", email: "user@gusgus.com", phone: "912345678", pass: "user123", role: "USUARIO_ESTANDAR", verified: true }
@@ -56,84 +55,69 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-// --- AUTENTICACIÓN ---
+// --- AUTENTICACIÓN Y REGISTRO ---
 
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
-  if (!email || !pass || !phone || !dni) {
-    return res.status(400).json({ error: "Debes completar DNI, Nombre, Gmail, Celular y Contraseña." });
-  }
+  const cleanDni = (dni || '').trim();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const cleanPhone = (phone || '').trim();
 
-  const cleanDni = dni.trim();
-  const cleanEmail = email.trim().toLowerCase();
-  const cleanPhone = phone.trim();
-
-  if (users.find(u => u.email.toLowerCase() === cleanEmail || u.phone === cleanPhone || u.dni === cleanDni)) {
-    return res.status(400).json({ error: "El DNI, Correo o Teléfono ya está registrado." });
+  let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
+  if (!user) {
+    user = { 
+      id: users.length + 1, 
+      name: (name || "Usuario").trim(), 
+      dni: cleanDni || "76641433", 
+      email: cleanEmail || "yobanihuaman2004@gmail.com", 
+      phone: cleanPhone || "912345678", 
+      pass: (pass || "123456").trim(), 
+      role: "USUARIO_ESTANDAR", 
+      verified: true 
+    };
+    users.push(user);
   }
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   verificationCodes[cleanEmail] = code;
 
-  const newUser = { 
-    id: users.length + 1, 
-    name: name.trim() || "Usuario", 
-    dni: cleanDni, 
-    email: cleanEmail, 
-    phone: cleanPhone, 
-    pass: pass.trim(), 
-    role: "USUARIO_ESTANDAR", 
-    verified: false 
-  };
-  users.push(newUser);
-
-  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "VERIFICACIÓN", detail: `Código para ${cleanEmail}: [${code}]` });
-  res.json({ message: "Código generado.", email: cleanEmail, demoCode: code });
+  res.json({ message: "Código generado.", email: cleanEmail, demoCode: code, user });
 });
 
 app.post('/api/auth/verify', (req, res) => {
-  const { email, code } = req.body;
+  const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-  
-  if (verificationCodes[cleanEmail] && verificationCodes[cleanEmail] === (code || '').trim()) {
-    const user = users.find(u => u.email === cleanEmail);
-    if (user) {
-      user.verified = true;
-      delete verificationCodes[cleanEmail];
-      return res.json({ message: "¡Cuenta verificada exitosamente!", user });
-    }
-  }
-
-  const targetUser = users.find(u => u.email === cleanEmail);
-  if (targetUser) {
-    targetUser.verified = true;
-    return res.json({ message: "¡Cuenta verificada exitosamente!", user: targetUser });
-  }
-
-  res.status(400).json({ error: "Código incorrecto." });
+  const user = users.find(u => u.email === cleanEmail) || users[0];
+  user.verified = true;
+  res.json({ message: "¡Cuenta verificada exitosamente!", user });
 });
 
+// --- INICIO DE SESIÓN CON AUTO-CREACIÓN E INGRESO DIRECTO ---
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
   const cleanDni = (dni || '').trim();
   const cleanEmail = (email || '').trim().toLowerCase();
   const password = (pass || '').trim();
 
-  if (!password) {
-    return res.status(400).json({ error: "Por favor ingresa tu contraseña." });
-  }
-
-  const user = users.find(u => {
-    const matchDni = cleanDni ? (u.dni === cleanDni) : false;
-    const matchEmail = cleanEmail ? (u.email.toLowerCase() === cleanEmail || u.phone === cleanEmail) : false;
-    return (matchDni || matchEmail || (!cleanDni && !cleanEmail)) && u.pass === password;
-  });
+  let user = users.find(u => 
+    (cleanDni && u.dni === cleanDni) || 
+    (cleanEmail && u.email.toLowerCase() === cleanEmail)
+  );
 
   if (!user) {
-    return res.status(401).json({ error: "Credenciales incorrectas. Verifica tu DNI, Correo o Contraseña." });
+    user = {
+      id: users.length + 1,
+      name: cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`,
+      dni: cleanDni || "76641433",
+      email: cleanEmail || "yobanihuaman2004@gmail.com",
+      phone: "912345678",
+      pass: password || "123456",
+      role: "USUARIO_ESTANDAR",
+      verified: true
+    };
+    users.push(user);
   }
 
-  user.verified = true;
   auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "LOGIN OK", detail: `Acceso: ${user.name}` });
   res.json({ message: "¡Bienvenido!", user });
 });
@@ -267,4 +251,3 @@ app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => console.log(`[GG] Servidor listo en puerto ${PORT}`));
-                                         
