@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GG - Plataforma de Intermediación</title>
   <style>
     :root {
@@ -11,10 +11,14 @@
       --wine-card: #450c14;
       --wine-light: #721925;
       --white: #ffffff;
-      --off-white: #f8f1f2;
       --white-muted: #e0cfd2;
       --border-white: 1px solid rgba(255, 255, 255, 0.25);
       --border-white-strong: 2px solid #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
     }
 
     body {
@@ -23,6 +27,7 @@
       font-family: system-ui, -apple-system, Roboto, sans-serif;
       margin: 0;
       padding: 0;
+      user-select: none;
     }
 
     .app-container {
@@ -30,7 +35,6 @@
       margin: 0 auto;
       background-color: var(--wine-main);
       min-height: 100vh;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
       position: relative;
       padding-bottom: 70px;
       border-left: var(--border-white);
@@ -82,7 +86,6 @@
       margin: 18px 15px;
       padding: 20px;
       text-align: center;
-      position: relative;
     }
 
     .balance-amount {
@@ -92,31 +95,38 @@
       margin: 10px 0;
     }
 
+    /* BOTONES MÓVILES OPTIMIZADOS */
     .btn-gg {
       background: var(--white);
       color: var(--wine-dark);
       border: none;
-      padding: 12px 20px;
+      padding: 14px 20px;
       border-radius: 25px;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       cursor: pointer;
       width: 100%;
-      margin: 6px 0;
+      margin: 8px 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: block;
-      box-sizing: border-box;
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-gg:active {
+      opacity: 0.8;
+      transform: scale(0.98);
     }
 
     .btn-outline-white {
-      background: transparent;
-      color: var(--white);
-      border: 1px solid var(--white);
+      background: transparent !important;
+      color: var(--white) !important;
+      border: 1px solid var(--white) !important;
     }
 
     .btn-action-small {
-      padding: 6px 12px;
+      padding: 8px 12px;
       font-size: 0.78rem;
       border-radius: 6px;
       font-weight: bold;
@@ -127,13 +137,13 @@
 
     input, select {
       width: 100%;
-      padding: 11px;
+      padding: 12px;
       background: var(--wine-dark);
       border: var(--border-white);
       border-radius: 8px;
       color: var(--white);
       margin-bottom: 12px;
-      box-sizing: border-box;
+      font-size: 1rem;
       outline: none;
     }
 
@@ -143,6 +153,8 @@
       border-radius: 12px;
       margin: 15px;
       padding: 18px;
+      position: relative;
+      z-index: 5;
     }
 
     h3 {
@@ -187,24 +199,24 @@
     .hidden { display: none !important; }
     .search-results { background: var(--wine-dark); border: var(--border-white); border-radius: 8px; margin-top: 5px; max-height: 120px; overflow-y: auto; }
     .search-item { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem; }
-    .link-btn { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.85rem; }
+    .link-btn { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.85rem; display: inline-block; padding: 5px; }
   </style>
 </head>
 <body>
 
   <div class="app-container">
 
-    <!-- AUTENTICACIÓN -->
+    <!-- SECCIÓN AUTHENTICACIÓN INICIAL -->
     <div id="authSection" class="card-section" style="margin-top: 35px; border: var(--border-white-strong);">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge-gg">GG</div>
         <p style="color: var(--white-muted); font-size: 0.85rem; margin-top: 10px; font-weight: bold;">SISTEMA DE CUSTODIA & MENSAJERÍA</p>
       </div>
 
-      <!-- VISTA BIENVENIDA -->
+      <!-- BOTONES INICIALES DE NAVEGACIÓN -->
       <div id="viewWelcome">
-        <button type="button" class="btn-gg" onclick="mostrarAuthForm('login')">Ingresar a mi Cuenta</button>
-        <button type="button" class="btn-gg btn-outline-white" onclick="mostrarAuthForm('register')">Crear Cuenta Nueva</button>
+        <button type="button" class="btn-gg" id="btnGoLogin">INGRESAR A MI CUENTA</button>
+        <button type="button" class="btn-gg btn-outline-white" id="btnGoRegister">CREAR CUENTA NUEVA</button>
       </div>
 
       <!-- INICIAR SESIÓN -->
@@ -212,7 +224,7 @@
         <h3>Iniciar Sesión</h3>
         <input type="text" id="loginInput" placeholder="Correo o Número Celular" value="admin@gusgus.com">
         <input type="password" id="loginPass" placeholder="Contraseña" value="admin123">
-        <button type="button" class="btn-gg" onclick="ejecutarLogin()">Entrar a la App</button>
+        <button type="button" class="btn-gg" id="btnLoginSubmit">ENTRAR A LA APP</button>
         <p style="text-align: center; margin-top: 12px;"><span class="link-btn" onclick="mostrarAuthForm('welcome')">← Volver al Menú</span></p>
       </div>
 
@@ -223,7 +235,7 @@
         <input type="text" id="regPhone" placeholder="Número Celular">
         <input type="email" id="regEmail" placeholder="Correo Electrónico">
         <input type="password" id="regPass" placeholder="Contraseña">
-        <button type="button" class="btn-gg" onclick="ejecutarRegistro()">Registrarme</button>
+        <button type="button" class="btn-gg" id="btnRegisterSubmit">REGISTRARME</button>
         <p style="text-align: center; margin-top: 12px;"><span class="link-btn" onclick="mostrarAuthForm('welcome')">← Volver al Menú</span></p>
       </div>
 
@@ -232,20 +244,20 @@
         <h3>Verificación de Código</h3>
         <input type="text" id="verifyCode" placeholder="Código de 6 dígitos">
         <p id="demoCodeNotice" style="color: var(--white); font-size: 0.8rem; font-weight: bold; text-align: center;"></p>
-        <button type="button" class="btn-gg" onclick="confirmarVerificacion()">Confirmar e Ingresar</button>
+        <button type="button" class="btn-gg" id="btnVerifySubmit">CONFIRMAR E INGRESAR</button>
       </div>
 
       <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL INTERIOR -->
+    <!-- PANTALLA PRINCIPAL DE LA APP -->
     <div id="appSection" class="hidden">
       
       <div class="gg-header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div class="logo-badge-gg" style="font-size: 1.4rem; padding: 2px 10px;">GG</div>
           <span id="userDisplay" style="font-size: 0.8rem; border: var(--border-white); padding: 4px 10px; border-radius: 15px; background: rgba(0,0,0,0.3);"></span>
-          <button type="button" onclick="logout()" style="background: none; border: 1px solid var(--white); color: #fff; border-radius: 12px; padding: 3px 8px; cursor: pointer; font-size: 0.75rem;">Salir</button>
+          <button type="button" onclick="logout()" style="background: none; border: 1px solid var(--white); color: #fff; border-radius: 12px; padding: 4px 10px; cursor: pointer; font-size: 0.75rem;">Salir</button>
         </div>
 
         <div class="search-box">
@@ -339,6 +351,32 @@
       if (vista === 'verify') document.getElementById('viewVerify').classList.remove('hidden');
     }
 
+    // EVENTOS DIRECTOS Y TÁCTILES
+    document.addEventListener('DOMContentLoaded', function() {
+      const btnGoLogin = document.getElementById('btnGoLogin');
+      const btnGoRegister = document.getElementById('btnGoRegister');
+      const btnLoginSubmit = document.getElementById('btnLoginSubmit');
+      const btnRegisterSubmit = document.getElementById('btnRegisterSubmit');
+      const btnVerifySubmit = document.getElementById('btnVerifySubmit');
+
+      const bindClick = (elem, fn) => {
+        if (!elem) return;
+        elem.addEventListener('click', fn);
+        elem.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          fn();
+        });
+      };
+
+      bindClick(btnGoLogin, () => mostrarAuthForm('login'));
+      bindClick(btnGoRegister, () => mostrarAuthForm('register'));
+      bindClick(btnLoginSubmit, ejecutarLogin);
+      bindClick(btnRegisterSubmit, ejecutarRegistro);
+      bindClick(btnVerifySubmit, confirmarVerificacion);
+
+      mostrarAuthForm('welcome');
+    });
+
     async function ejecutarLogin() {
       const emailOrPhone = document.getElementById('loginInput').value;
       const pass = document.getElementById('loginPass').value;
@@ -356,7 +394,7 @@
           currentUser = data.user;
           iniciarApp();
         } else {
-          status.innerText = data.error || "Error al iniciar sesión.";
+          status.innerText = data.error || "Error al ingresar.";
         }
       } catch (err) {
         status.innerText = "Error de conexión con el servidor.";
@@ -380,10 +418,10 @@
 
         if (res.ok) {
           tempEmail = data.email;
-          document.getElementById('demoCodeNotice').innerText = `Código enviado: ${data.demoCode}`;
+          document.getElementById('demoCodeNotice').innerText = `Código: ${data.demoCode}`;
           mostrarAuthForm('verify');
         } else {
-          status.innerText = data.error || "No se pudo registrar la cuenta.";
+          status.innerText = data.error || "No se pudo registrar.";
         }
       } catch (err) {
         status.innerText = "Error de conexión.";
@@ -409,7 +447,7 @@
           status.innerText = data.error || "Código erróneo.";
         }
       } catch (err) {
-        status.innerText = "Error procesando verificación.";
+        status.innerText = "Error de conexión.";
       }
     }
 
@@ -445,73 +483,5 @@
       const resultsDiv = document.getElementById('searchResults');
       if (query.length < 2) { resultsDiv.classList.add('hidden'); return; }
 
-      const res = await fetch(`/api/users/search?query=${query}`);
-      const data = await res.json();
-      resultsDiv.innerHTML = "";
-
-      if (data.users && data.users.length > 0) {
-        resultsDiv.classList.remove('hidden');
-        data.users.forEach(u => {
-          const div = document.createElement('div');
-          div.className = "search-item";
-          div.innerText = `👤 ${u.name} - 📞 ${u.phone}`;
-          div.onclick = () => {
-            document.getElementById('dealSeller').value = u.phone;
-            resultsDiv.classList.add('hidden');
-          };
-          resultsDiv.appendChild(div);
-        });
-      } else { resultsDiv.classList.add('hidden'); }
-    }
-
-    async function cargarMetodosPago() {
-      const res = await fetch('/api/payments/methods');
-      const data = await res.json();
-      if(currentUser && currentUser.role === 'ADMIN_MAESTRO') {
-        document.getElementById('cfgYape').value = data.yapeNumber || '';
-        document.getElementById('cfgPlin').value = data.plinNumber || '';
-        document.getElementById('cfgLemon').value = data.lemonCashCCI || '';
-        document.getElementById('cfgCulqi').value = data.culqiPublicKey || '';
-      }
-    }
-
-    async function guardarPagos() {
-      const res = await fetch('/api/payments/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-user-role': currentUser.role },
-        body: JSON.stringify({
-          yapeNumber: document.getElementById('cfgYape').value,
-          plinNumber: document.getElementById('cfgPlin').value,
-          lemonCashCCI: document.getElementById('cfgLemon').value,
-          culqiPublicKey: document.getElementById('cfgCulqi').value
-        })
-      });
-      const data = await res.json();
-      alert(data.message);
-    }
-
-    async function cargarTratos() {
-      const res = await fetch('/api/deals');
-      const data = await res.json();
-      const list = document.getElementById('dealsList');
-      list.innerHTML = "";
-
-      if (data.deals) {
-        data.deals.forEach(d => {
-          const div = document.createElement('div');
-          div.style.background = "var(--wine-dark)";
-          div.style.border = "var(--border-white)";
-          div.style.padding = "10px";
-          div.style.borderRadius = "8px";
-          div.style.marginTop = "8px";
-          div.style.fontSize = "0.85rem";
-
-          const isAdmin = currentUser && currentUser.role === 'ADMIN_MAESTRO';
-
-          let btnShip = `<button onclick="notificarEnvio('${d.id}')" class="btn-action-small" style="background:#00b0ff; color:#000;">📦 Confirmar Envío Realizado</button>`;
-          let btnConfirmReceipt = `<button onclick="confirmarRecepcion('${d.id}')" class="btn-action-small" style="background:#00e676; color:#000;">✅ Confirmar Pedido Recibido</button>`;
-          let btnRelease = (isAdmin && d.status === 'RECIBIDO_CONFIRMADO') ? 
-            `<button onclick="liberarTrato('${d.id}')" class="btn-action-small" style="background:var(--white); color:#000;">Liberar Fondos (Gus)</button>` : '';
-
-          div.innerHTML = `
-            <strong>[${d.id}] $
+      const res = await fetch(`/api/users/search?query=${query}`); const data = await res.json(); resultsDiv.innerHTML = "";  if (data.users && data.users.length > 0) { resultsDiv.classList.remove('hidden'); data.users.forEach(u => { const div = document.createElement('div'); div.className = "search-item"; div.innerText = `👤 ${u.name} - 
+    
