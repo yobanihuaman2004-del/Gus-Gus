@@ -2,368 +2,226 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gus Gus Escrow - Acceso Seguro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gus Gus - Aplicación Principal</title>
   <style>
     :root {
-      --bg-color: #0F172A;
-      --card-bg: #1E293B;
-      --primary-cyan: #06B6D4;
-      --accent-purple: #8B5CF6;
-      --text-main: #F8FAFC;
-      --text-muted: #94A3B8;
-      --border-color: #334155;
-      --input-bg: #0F172A;
+      --bg-color: #121212;
+      --card-bg: #1e1e24;
+      --accent: #ffb703;
+      --text: #e0e0e0;
+      --border: 1px solid #333344;
+      --admin-badge: #d4af37;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
     body {
       background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      width: 100%;
-      padding: 20px 16px;
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 20px;
     }
-
-    .app-card {
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: var(--border);
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .role-selector {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    select {
+      background: #000;
+      color: var(--accent);
+      border: var(--border);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .card {
       background: var(--card-bg);
-      padding: 28px 22px;
-      border-radius: 24px;
-      box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+      border: var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: var(--accent);
+      margin-top: 0;
+    }
+    input[type="text"], textarea {
       width: 100%;
       max-width: 400px;
-      text-align: center;
-      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #000;
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 10px;
     }
-
-    /* LOGO CENTRADO CON GG */
-    .logo-container {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 16px auto;
-      background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
-      border-radius: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-    }
-
-    .logo-text {
-      font-size: 28px;
-      font-weight: 900;
-      color: #FFFFFF;
-      letter-spacing: 2px;
-    }
-
-    .brand-title {
-      color: var(--text-main);
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .brand-subtitle {
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.4;
-      margin-bottom: 22px;
-    }
-
-    .form-group {
-      text-align: left;
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--primary-cyan);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 14px 16px;
-      background-color: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 15px;
-      color: var(--text-main);
-      outline: none;
-    }
-
-    .form-group input:focus {
-      border-color: var(--primary-cyan);
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
-    }
-
-    .input-code-wrapper {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
-      color: #FFFFFF;
+    button {
+      background: var(--accent);
+      color: #000;
       border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 700;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 4px;
       cursor: pointer;
-      margin-top: 8px;
-      touch-action: manipulation;
     }
-
-    .btn-secondary {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background-color: transparent;
-      color: var(--primary-cyan);
-      border: 2px solid var(--primary-cyan);
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      text-align: center;
-      touch-action: manipulation;
+    button:hover {
+      opacity: 0.9;
     }
-
-    .btn-text-action {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 10px 0;
-      display: block;
-      width: 100%;
-      text-align: right;
-      touch-action: manipulation;
+    .status-msg {
+      margin-top: 10px;
+      font-weight: bold;
     }
-
-    .btn-code {
-      background: var(--accent-purple);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 0 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      touch-action: manipulation;
+    .admin-only {
+      display: none;
+      border-left: 4px solid var(--admin-badge);
     }
-
-    .divider {
-      margin: 20px 0 16px 0;
-      border-top: 1px solid var(--border-color);
+    ul {
+      padding-left: 20px;
     }
-
-    .oculto { display: none !important; }
-
-    #mensaje {
-      margin-top: 16px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .error { color: #EF4444; }
-    .exito { color: #10B981; }
   </style>
 </head>
 <body>
 
-  <div class="app-card">
-    <!-- LOGO CENTRAL GG -->
-    <div class="logo-container">
-      <span class="logo-text">GG</span>
+  <div class="header">
+    <div class="logo">🐭 Gus Gus</div>
+    <div class="role-selector">
+      <label for="roleSelect">Vista Actual:</label>
+      <select id="roleSelect" onchange="cambiarRol()">
+        <option value="ADMIN_MAESTRO">Creador / Admin Maestro</option>
+        <option value="USUARIO_ESTANDAR">Usuario Estándar</option>
+      </select>
     </div>
+  </div>
 
-    <h1 class="brand-title">Gus Gus</h1>
-    <p class="brand-subtitle" id="subtituloCard">Plataforma de Intermediación y Custodia Digital.</p>
+  <div class="card">
+    <h2>Módulo Financiero - Lemon Cash</h2>
+    <p>CCI registrado para la cuenta Gus Gus (20 dígitos):</p>
+    <input type="text" id="cciInput" maxlength="20" placeholder="Ej: 92200300000022201629">
+    <br>
+    <button onclick="guardarCCI()">Actualizar CCI (Solo Admin)</button>
+    <div id="cciStatus" class="status-msg"></div>
+  </div>
 
-    <!-- INICIO DE SESIÓN -->
-    <div id="vistaLogin">
-      <form id="formLogin">
-        <div class="form-group">
-          <label>Correo Electrónico</label>
-          <input type="email" id="loginEmail" placeholder="usuario@correo.com" required>
-        </div>
+  <div class="card admin-only" id="adminPanel">
+    <h2>Panel Exclusivo Creador - Supervisión Gus & Nor #2</h2>
+    <p>Logs y eventos del sistema en tiempo real:</p>
+    <button onclick="cargarAuditoria()">Cargar Logs de Auditoría</button>
+    <ul id="auditList"></ul>
+  </div>
 
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required>
-        </div>
-
-        <button type="button" class="btn-text-action" id="btnAbrirRecuperar">¿Olvidaste tu contraseña?</button>
-
-        <button type="submit" class="btn-submit" id="btnIngresarSubmit">INGRESAR A GUS GUS</button>
-      </form>
-
-      <div class="divider"></div>
-
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">¿Aún no tienes cuenta?</p>
-      <a href="/register.html" class="btn-secondary">Crear Cuenta Nueva</a>
-    </div>
-
-    <!-- RECUPERAR CONTRASEÑA -->
-    <div id="vistaRecuperar" class="oculto">
-      <form id="formRecuperar">
-        <div class="form-group">
-          <label>Correo o Teléfono Móvil</label>
-          <div class="input-code-wrapper">
-            <input type="text" id="recContacto" placeholder="Correo o celular" required>
-            <button type="button" class="btn-code" id="btnEnviarCodigoRec">Código</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Código de Verificación (6 dígitos)</label>
-          <input type="text" id="recCodigo" placeholder="Ej. 123456" maxlength="6" required>
-        </div>
-
-        <div class="form-group">
-          <label>Nueva Contraseña</label>
-          <input type="password" id="recNuevaPass" placeholder="Mínimo 6 caracteres" minlength="6" required>
-        </div>
-
-        <button type="submit" class="btn-submit">ACTUALIZAR CONTRASEÑA</button>
-      </form>
-
-      <div class="divider"></div>
-
-      <button type="button" class="btn-secondary" id="btnVolverLogin">Volver al Inicio</button>
-    </div>
-
-    <div id="mensaje"></div>
+  <div class="card">
+    <h2>Centro de Ayuda y Mensajería</h2>
+    <p>Envía un mensaje directo al Administrador Maestro:</p>
+    <textarea id="msgInput" rows="3" placeholder="Escribe tu consulta..."></textarea>
+    <br>
+    <button onclick="enviarMensaje()">Enviar Mensaje</button>
+    <div id="msgStatus" class="status-msg"></div>
   </div>
 
   <script>
-    const vistaLogin = document.getElementById('vistaLogin');
-    const vistaRecuperar = document.getElementById('vistaRecuperar');
-    const subtituloCard = document.getElementById('subtituloCard');
-    const msg = document.getElementById('mensaje');
+    let currentRole = "ADMIN_MAESTRO";
 
-    document.getElementById('btnAbrirRecuperar').onclick = function() {
-      vistaLogin.classList.add('oculto');
-      vistaRecuperar.classList.remove('oculto');
-      subtituloCard.textContent = "Ingresa tus datos para restablecer tu contraseña.";
-      msg.textContent = "";
-    };
-
-    document.getElementById('btnVolverLogin').onclick = function() {
-      vistaRecuperar.classList.add('oculto');
-      vistaLogin.classList.remove('oculto');
-      subtituloCard.textContent = "Plataforma de Intermediación y Custodia Digital.";
-      msg.textContent = "";
-    };
-
-    document.getElementById('btnEnviarCodigoRec').onclick = async function() {
-      const contacto = document.getElementById('recContacto').value;
-      if (!contacto) {
-        msg.textContent = "Ingresa tu correo o teléfono.";
-        msg.className = "error";
-        return;
+    function cambiarRol() {
+      currentRole = document.getElementById('roleSelect').value;
+      const adminPanel = document.getElementById('adminPanel');
+      if (currentRole === 'ADMIN_MAESTRO') {
+        adminPanel.style.display = 'block';
+      } else {
+        adminPanel.style.display = 'none';
       }
+    }
 
-      msg.textContent = "Generando código...";
+    async function cargarConfig() {
       try {
-        const res = await fetch('/api/recuperar-codigo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contacto })
-        });
+        const res = await fetch('/api/config');
         const data = await res.json();
-        
-        if (data.codigoPrueba) {
-          alert(`Tu código de prueba es: ${data.codigoPrueba}`);
-          msg.textContent = `Código enviado: ${data.codigoPrueba}`;
-          msg.className = "exito";
-        }
+        document.getElementById('cciInput').value = data.lemonCashCCI || '';
       } catch (err) {
-        msg.textContent = "Error al conectar con el servidor.";
-        msg.className = "error";
+        console.error("Error al cargar configuración", err);
       }
-    };
+    }
 
-    document.getElementById('formRecuperar').onsubmit = async function(e) {
-      e.preventDefault();
-      msg.textContent = "Procesando...";
+    async function guardarCCI() {
+      const cci = document.getElementById('cciInput').value;
+      const statusDiv = document.getElementById('cciStatus');
+      
+      const res = await fetch('/api/config/cci', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-role': currentRole
+        },
+        body: JSON.stringify({ cci })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        statusDiv.style.color = '#4caf50';
+        statusDiv.innerText = "✓ " + data.message;
+      } else {
+        statusDiv.style.color = '#f44336';
+        statusDiv.innerText = "❌ " + data.error;
+      }
+    }
 
-      try {
-        const res = await fetch('/api/restablecer-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contacto: document.getElementById('recContacto').value,
-            codigo: document.getElementById('recCodigo').value,
-            nuevaPassword: document.getElementById('recNuevaPass').value
-          })
+    async function cargarAuditoria() {
+      const list = document.getElementById('auditList');
+      const res = await fetch('/api/audit', {
+        headers: { 'x-user-role': currentRole }
+      });
+      const data = await res.json();
+      list.innerHTML = "";
+      
+      if (res.ok && data.logs) {
+        data.logs.forEach(log => {
+          const li = document.createElement('li');
+          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
+          list.appendChild(li);
         });
-
-        if (res.ok) {
-          msg.textContent = "¡Contraseña actualizada con éxito!";
-          msg.className = "exito";
-          setTimeout(() => { document.getElementById('btnVolverLogin').click(); }, 1500);
-        } else {
-          msg.textContent = "Código o datos incorrectos.";
-          msg.className = "error";
-        }
-      } catch (err) {
-        msg.textContent = "Error de servidor.";
-        msg.className = "error";
+      } else {
+        list.innerHTML = `<li style="color:red;">${data.error}</li>`;
       }
-    };
+    }
 
-    // PROCESO DE LOGIN SENSIBLE A TOQUES MÓVILES
-    document.getElementById('formLogin').onsubmit = async function(e) {
-      e.preventDefault();
-      msg.textContent = "Iniciando sesión...";
-      msg.className = "";
+    async function enviarMensaje() {
+      const message = document.getElementById('msgInput').value;
+      const statusDiv = document.getElementById('msgStatus');
 
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
+      const res = await fetch('/api/support/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: currentRole, message })
+      });
 
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          msg.textContent = "¡Bienvenido! Redirigiendo...";
-          msg.className = "exito";
-          localStorage.setItem('gusgus_token', data.token);
-          localStorage.setItem('gusgus_user', JSON.stringify(data.user));
-          window.location.href = "/dashboard";
-        } else {
-          msg.textContent = data.error || "Credenciales incorrectas.";
-          msg.className = "error";
-        }
-      } catch (err) {
-        msg.textContent = "Error de conexión con el servidor.";
-        msg.className = "error";
+      const data = await res.json();
+      if (res.ok) {
+        statusDiv.style.color = '#4caf50';
+        statusDiv.innerText = "✓ " + data.message;
+        document.getElementById('msgInput').value = '';
+      } else {
+        statusDiv.style.color = '#f44336';
+        statusDiv.innerText = "❌ " + data.error;
       }
-    };
+    }
+
+    cambiarRol();
+    cargarConfig();
   </script>
 </body>
 </html>
