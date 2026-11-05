@@ -81,6 +81,23 @@
       outline: none;
     }
 
+    .input-code-wrapper {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-code {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -92,11 +109,6 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
-    }
-
-    .divider {
-      margin: 24px 0 16px 0;
-      border-top: 1px solid var(--border-color);
     }
 
     .btn-secondary {
@@ -111,6 +123,12 @@
       font-weight: 700;
       text-decoration: none;
       box-sizing: border-box;
+      text-align: center;
+    }
+
+    .divider {
+      margin: 24px 0 16px 0;
+      border-top: 1px solid var(--border-color);
     }
 
     #mensaje {
@@ -126,7 +144,7 @@
 
   <div class="app-card">
     <h1 class="brand-title">Gus Gus</h1>
-    <p class="brand-subtitle">Completa tus datos para crear tu cuenta en segundos.</p>
+    <p class="brand-subtitle">Verifica tu correo para crear una cuenta segura.</p>
 
     <form id="formRegistro">
       <div class="form-group">
@@ -136,7 +154,15 @@
 
       <div class="form-group">
         <label>Correo Electrónico</label>
-        <input type="email" id="regEmail" placeholder="tu@correo.com" required>
+        <div class="input-code-wrapper">
+          <input type="email" id="regEmail" placeholder="tu@correo.com" required>
+          <button type="button" class="btn-code" id="btnEnviarCodigo">Enviar Código</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Código de Verificación (6 dígitos)</label>
+        <input type="text" id="regCodigo" placeholder="Ej. 123456" maxlength="6" pattern="[0-9]{6}" required>
       </div>
 
       <div class="form-group">
@@ -149,7 +175,7 @@
         <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
       </div>
 
-      <button type="submit" class="btn-submit">Crear Mi Cuenta</button>
+      <button type="submit" class="btn-submit">Verificar y Crear Cuenta</button>
     </form>
 
     <div id="mensaje"></div>
@@ -161,30 +187,63 @@
   </div>
 
   <script>
+    const msg = document.getElementById('mensaje');
+
+    // Botón Enviar Código
+    document.getElementById('btnEnviarCodigo').onclick = async function() {
+      const email = document.getElementById('regEmail').value;
+      if (!email) {
+        msg.textContent = "Ingresa primero tu correo electrónico.";
+        msg.className = "error";
+        return;
+      }
+
+      msg.textContent = "Enviando código...";
+      msg.className = "";
+
+      try {
+        const res = await fetch('/api/enviar-codigo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        
+        msg.textContent = data.message || "Código enviado a tu correo.";
+        msg.className = "exito";
+      } catch (err) {
+        msg.textContent = "Error al enviar código.";
+        msg.className = "error";
+      }
+    };
+
+    // Submit Registro
     document.getElementById('formRegistro').onsubmit = async function(e) {
       e.preventDefault();
-      const msg = document.getElementById('mensaje');
-      msg.textContent = "Registrando usuario...";
+      msg.textContent = "Verificando código y creando cuenta...";
       msg.className = "";
+
+      const nombre = document.getElementById('regNombre').value;
+      const email = document.getElementById('regEmail').value;
+      const codigo = document.getElementById('regCodigo').value;
+      const dni = document.getElementById('regDni').value;
+      const password = document.getElementById('regPassword').value;
 
       try {
         const res = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre: document.getElementById('regNombre').value,
-            email: document.getElementById('regEmail').value,
-            dni: document.getElementById('regDni').value,
-            password: document.getElementById('regPassword').value
-          })
+          body: JSON.stringify({ nombre, email, codigo, dni, password })
         });
         const data = await res.json();
+
         if (res.ok) {
-          msg.textContent = "¡Cuenta creada con éxito! Redirigiendo...";
+          msg.textContent = "¡Verificación exitosa! Redirigiendo...";
           msg.className = "exito";
-          setTimeout(() => { window.location.href = "/"; }, 1500);
+          localStorage.setItem('gusgus_user', JSON.stringify({ nombre, email, dni }));
+          setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
         } else {
-          msg.textContent = data.error || "Error al registrar cuenta";
+          msg.textContent = data.error || "Error al verificar código.";
           msg.className = "error";
         }
       } catch (err) {
