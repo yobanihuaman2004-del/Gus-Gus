@@ -39,11 +39,11 @@ const deals = [
 ];
 
 const auditLogs = [
-  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Inicio de sesión optimizado con DNI y Correo." }
+  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Sistema iniciado correctamente." }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Gus (Creador)", receiver: "user@gusgus.com", text: "¡Hola! Bienvenido a GG. La app está 100% activa.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Gus (Creador)", receiver: "Soporte", text: "¡Hola! Bienvenido a GG. La app está 100% activa.", image: null, type: "text", time: "10:30 AM" }
 ];
 
 const verifyAdmin = (req, res, next) => {
@@ -55,22 +55,20 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-// --- AUTENTICACIÓN Y REGISTRO ---
-
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
-  const cleanDni = (dni || '').trim();
-  const cleanEmail = (email || '').trim().toLowerCase();
-  const cleanPhone = (phone || '').trim();
+  const cleanDni = (dni || '76641433').trim();
+  const cleanEmail = (email || 'yobanihuaman2004@gmail.com').trim().toLowerCase();
+  const cleanPhone = (phone || '900000000').trim();
 
   let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
   if (!user) {
     user = { 
       id: users.length + 1, 
       name: (name || "Usuario").trim(), 
-      dni: cleanDni || "76641433", 
-      email: cleanEmail || "yobanihuaman2004@gmail.com", 
-      phone: cleanPhone || "912345678", 
+      dni: cleanDni, 
+      email: cleanEmail, 
+      phone: cleanPhone, 
       pass: (pass || "123456").trim(), 
       role: "USUARIO_ESTANDAR", 
       verified: true 
@@ -89,15 +87,13 @@ app.post('/api/auth/verify', (req, res) => {
   const cleanEmail = (email || '').trim().toLowerCase();
   const user = users.find(u => u.email === cleanEmail) || users[0];
   user.verified = true;
-  res.json({ message: "¡Cuenta verificada exitosamente!", user });
+  res.json({ message: "¡Cuenta verificada!", user });
 });
 
-// --- INICIO DE SESIÓN CON AUTO-CREACIÓN E INGRESO DIRECTO ---
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
   const cleanDni = (dni || '').trim();
   const cleanEmail = (email || '').trim().toLowerCase();
-  const password = (pass || '').trim();
 
   let user = users.find(u => 
     (cleanDni && u.dni === cleanDni) || 
@@ -107,11 +103,11 @@ app.post('/api/auth/login', (req, res) => {
   if (!user) {
     user = {
       id: users.length + 1,
-      name: cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`,
+      name: cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni || '76641433'}`,
       dni: cleanDni || "76641433",
       email: cleanEmail || "yobanihuaman2004@gmail.com",
       phone: "912345678",
-      pass: password || "123456",
+      pass: pass || "123456",
       role: "USUARIO_ESTANDAR",
       verified: true
     };
@@ -136,7 +132,6 @@ app.get('/api/users/search', (req, res) => {
   res.json({ users: results });
 });
 
-// --- PASARELAS ---
 app.get('/api/payments/methods', (req, res) => res.json(paymentMethods));
 
 app.post('/api/payments/config', verifyAdmin, (req, res) => {
@@ -149,7 +144,6 @@ app.post('/api/payments/config', verifyAdmin, (req, res) => {
   res.json({ message: "Métodos de pago guardados.", paymentMethods });
 });
 
-// --- TRATOS Y CUSTODIA ---
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
@@ -221,7 +215,6 @@ app.post('/api/deals/release', verifyAdmin, (req, res) => {
   res.json({ message: `Fondos del trato ${dealId} liberados con éxito.` });
 });
 
-// --- CHAT ---
 app.get('/api/chat', (req, res) => {
   const { user1 } = req.query;
   const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus") || m.type === "system");
@@ -248,6 +241,9 @@ app.post('/api/chat/send', (req, res) => {
 
 app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
 
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.listen(PORT, () => console.log(`[GG] Servidor listo en puerto ${PORT}`));
+         
