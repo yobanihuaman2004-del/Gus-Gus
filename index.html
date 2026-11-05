@@ -3,130 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Aplicación Principal</title>
+  <title>Gus Gus - Intermediación y Custodia</title>
   <style>
     :root {
-      --bg-dark: #12100e;
-      --panel-bg: #1c1815;
+      --bg-dark: #0f0d0b;
+      --panel-bg: #181411;
+      --panel-border: #8b5a2b;
       --gold: #d4af37;
       --copper: #b87333;
       --bronze: #cd7f32;
-      --text: #e8d8c8;
-      --border: 2px solid var(--copper);
+      --text: #f0e6d2;
+      --text-muted: #a89885;
+      --gold-glow: 0 0 10px rgba(212, 175, 55, 0.3);
     }
+
     body {
       background-color: var(--bg-dark);
       color: var(--text);
       font-family: 'Georgia', serif;
       margin: 0;
-      padding: 20px;
+      padding: 15px;
+      background-image: radial-gradient(#221a14 1px, transparent 0);
+      background-size: 20px 20px;
     }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
     .header {
-      border-bottom: var(--border);
-      padding-bottom: 10px;
+      border: 2px solid var(--bronze);
+      background: linear-gradient(180deg, #241c15 0%, #140f0c 100%);
+      padding: 15px 20px;
       margin-bottom: 20px;
+      border-radius: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: var(--gold-glow);
     }
-    .logo { font-size: 1.8rem; color: var(--gold); font-weight: bold; }
-    .badge { background: var(--copper); color: #000; padding: 6px 12px; border-radius: 4px; font-weight: bold; }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    .logo-title {
+      font-size: 1.8rem;
+      color: var(--gold);
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .badge-role {
+      background: linear-gradient(135deg, var(--bronze), var(--copper));
+      color: #000;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--gold);
+    }
+
     .card {
       background: var(--panel-bg);
-      border: var(--border);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px; right: 3px; bottom: 3px;
+      border: 1px solid rgba(205, 127, 50, 0.15);
+      pointer-events: none;
       border-radius: 6px;
     }
-    h2 { color: var(--bronze); margin-top: 0; }
-    input, textarea {
+
+    h2 {
+      color: var(--gold);
+      margin-top: 0;
+      font-size: 1.3rem;
+      border-bottom: 1px solid var(--bronze);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input, textarea, select {
       width: 100%;
-      max-width: 400px;
       padding: 10px;
-      margin-bottom: 10px;
-      background: #0d0b0a;
+      margin-bottom: 12px;
+      background: #0a0807;
       border: 1px solid var(--bronze);
       color: var(--gold);
+      font-family: monospace;
       font-size: 1rem;
       border-radius: 4px;
       box-sizing: border-box;
     }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: var(--gold-glow);
+    }
+
     button {
-      background: var(--bronze);
+      background: linear-gradient(180deg, var(--bronze) 0%, #8b5a2b 100%);
       color: #000;
-      border: none;
-      padding: 10px 20px;
+      border: 1px solid var(--gold);
+      padding: 10px 18px;
       font-weight: bold;
+      font-family: 'Georgia', serif;
       cursor: pointer;
       border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
     }
-    button:hover { background: var(--gold); }
+
+    button:hover {
+      background: linear-gradient(180deg, var(--gold) 0%, var(--bronze) 100%);
+      box-shadow: var(--gold-glow);
+    }
+
+    .deal-item {
+      background: #0d0b09;
+      border: 1px dashed var(--bronze);
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .status-custodia { background: #8b5a2b; color: #fff; }
+    .status-liberado { background: #2e7d32; color: #fff; }
+
     .hidden { display: none; }
-    ul { list-style: square; padding-left: 20px; }
+    ul { list-style: square; padding-left: 20px; font-family: monospace; font-size: 0.9rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
 
-  <!-- PANTALLA DE AUTENTICACIÓN -->
-  <div id="authSection">
-    <div class="header">
-      <div class="logo">⚙️ Gus Gus - Disney Mouse</div>
-      <div class="badge">SISTEMA INTERMEDIARIO</div>
-    </div>
+  <div class="container">
 
-    <div class="card">
-      <h2 id="authTitle">Iniciar Sesión</h2>
-      <input type="email" id="authEmail" placeholder="Correo electrónico">
-      <input type="password" id="authPass" placeholder="Contraseña">
-      <input type="text" id="authName" class="hidden" placeholder="Nombre completo">
-      <br>
-      <button onclick="ejecutarAuth()" id="authBtn">Ingresar</button>
-      <p>
-        <a href="#" onclick="toggleAuthMode()" id="toggleLink" style="color: var(--gold);">¿No tienes cuenta? Regístrate aquí</a>
-      </p>
-      <p id="authStatus" style="color: red; font-weight: bold;"></p>
-    </div>
-  </div>
+    <!-- SECCIÓN AUTH -->
+    <div id="authSection">
+      <div class="header">
+        <div class="logo-box">
+          <span class="logo-icon">🐭</span>
+          <div class="logo-title">Gus Gus</div>
+        </div>
+        <div class="badge-role">INTERMEDIACIÓN SEGURA</div>
+      </div>
 
-  <!-- APPLICACIÓN PRINCIPAL (POST LOGIN) -->
-  <div id="appSection" class="hidden">
-    <div class="header">
-      <div class="logo">⚙️ Gus Gus</div>
-      <div>
-        <span id="userDisplay" class="badge"></span>
-        <button onclick="logout()" style="margin-left: 10px; padding: 5px 10px;">Cerrar Sesión</button>
+      <div class="card">
+        <h2 id="authTitle">⚙️ Iniciar Sesión</h2>
+        <label>Correo Electrónico:</label>
+        <input type="email" id="authEmail" placeholder="ejemplo@gusgus.com">
+        <label>Contraseña:</label>
+        <input type="password" id="authPass" placeholder="******">
+        <div id="registerFields" class="hidden">
+          <label>Nombre Completo:</label>
+          <input type="text" id="authName" placeholder="Tu Nombre">
+        </div>
+        <button onclick="ejecutarAuth()" id="authBtn">Ingresar</button>
+        <p style="margin-top: 15px;">
+          <a href="#" onclick="toggleAuthMode()" id="toggleLink" style="color: var(--gold);">¿No tienes cuenta? Regístrate aquí</a>
+        </p>
+        <p id="authStatus" style="color: #ff5252; font-weight: bold;"></p>
       </div>
     </div>
 
-    <!-- MÓDULO FINANCIERO -->
-    <div class="card">
-      <h2>Pasarela Financiera - Lemon Cash</h2>
-      <p>CCI Registrado para transacciones e intermediación:</p>
-      <input type="text" id="cciInput" maxlength="21" placeholder="CCI de Lemon Cash">
-      <br>
-      <button id="btnSaveCCI" onclick="guardarCCI()">Guardar CCI (Solo Admin)</button>
-      <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 10px;"></p>
+    <!-- SECCIÓN APP PRINCIPAL -->
+    <div id="appSection" class="hidden">
+      <div class="header">
+        <div class="logo-box">
+          <span class="logo-icon">🐭</span>
+          <div class="logo-title">Gus Gus</div>
+        </div>
+        <div>
+          <span id="userDisplay" class="badge-role"></span>
+          <button onclick="logout()" style="margin-left: 8px; padding: 4px 10px; font-size: 0.8rem;">Salir</button>
+        </div>
+      </div>
+
+      <!-- PASARELA LEMON CASH -->
+      <div class="card">
+        <h2>💳 Pasarela Financiera - Lemon Cash</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">CCI Oficial registrado para recepción y custodia de fondos:</p>
+        <input type="text" id="cciInput" maxlength="21" placeholder="CCI de 21 dígitos">
+        <button id="btnSaveCCI" onclick="guardarCCI()">Guardar CCI (Solo Admin)</button>
+        <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
+      </div>
+
+      <!-- MÓDULO DE INTERMEDIACIÓN -->
+      <div class="card">
+        <h2>⚖️ Sistema de Intermediación (Compras y Ventas)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Crear un nuevo trato de compra/venta asegurado:</p>
+        <label>Correo del Vendedor / Contraparte:</label>
+        <input type="email" id="dealSeller" placeholder="vendedor@ejemplo.com">
+        <label>Monto a Depositar ($):</label>
+        <input type="number" id="dealAmount" placeholder="100.00">
+        <label>Descripción del Producto o Servicio:</label>
+        <input type="text" id="dealDesc" placeholder="Ej. Compra de cuenta o artículo">
+        <button onclick="crearTrato()">Iniciar Trato y Depositar en Custodia</button>
+        <p id="dealStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
+
+        <h3 style="color: var(--bronze); margin-top: 20px;">Tratos Registrados en Custodia:</h3>
+        <div id="dealsList"></div>
+      </div>
+
+      <!-- PANEL MAESTRO DE CONTROL (ADMIN) -->
+      <div id="adminPanel" class="card hidden">
+        <h2>🔍 Custodia y Auditoría (Gus & Nor #2)</h2>
+        <button onclick="cargarAuditoria()">Consultar Logs de Seguridad</button>
+        <ul id="auditList"></ul>
+
+        <h2>📬 Mensajes Directos de Usuarios</h2>
+        <button onclick="cargarMensajes()">Cargar Mensajes</button>
+        <ul id="messageList"></ul>
+      </div>
+
+      <!-- CENTRO DE ATENCIÓN Y MENSAJES -->
+      <div class="card">
+        <h2>💬 Contacto Directo con el Creador</h2>
+        <textarea id="msgText" rows="3" placeholder="Escribe tus dudas o reporte de intermediación..."></textarea>
+        <button onclick="enviarMensaje()">Enviar Mensaje Directo</button>
+        <p id="msgStatus" style="color: var(--gold); margin-top: 8px;"></p>
+      </div>
+
     </div>
 
-    <!-- MÓDULO EXCLUSIVO PARA ADMIN MAESTRO -->
-    <div id="adminPanel" class="card hidden">
-      <h2>Módulo de Auditoría y Custodia (Gus & Nor #2)</h2>
-      <button onclick="cargarAuditoria()">Cargar Logs de Auditoría</button>
-      <ul id="auditList"></ul>
-
-      <h2>Mensajes Recibidos</h2>
-      <button onclick="cargarMensajes()">Ver Mensajes de Usuarios</button>
-      <ul id="messageList"></ul>
-    </div>
-
-    <!-- MÓDULO DE ATENCIÓN Y MENSAJERÍA PARA USUARIOS -->
-    <div class="card">
-      <h2>Centro de Contacto con el Creador</h2>
-      <textarea id="msgText" rows="3" placeholder="Escribe tu mensaje o consulta sobre intermediación..."></textarea>
-      <br>
-      <button onclick="enviarMensaje()">Enviar Mensaje</button>
-      <p id="msgStatus" style="color: var(--gold);"></p>
-    </div>
   </div>
 
   <script>
@@ -135,8 +274,8 @@
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      document.getElementById('authTitle').innerText = isRegisterMode ? "Crear Cuenta" : "Iniciar Sesión";
-      document.getElementById('authName').classList.toggle('hidden', !isRegisterMode);
+      document.getElementById('authTitle').innerText = isRegisterMode ? "⚙️ Crear Cuenta" : "⚙️ Iniciar Sesión";
+      document.getElementById('registerFields').classList.toggle('hidden', !isRegisterMode);
       document.getElementById('authBtn').innerText = isRegisterMode ? "Registrarme" : "Ingresar";
       document.getElementById('toggleLink').innerText = isRegisterMode ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate aquí";
     }
@@ -159,7 +298,7 @@
 
       if (res.ok) {
         if (isRegisterMode) {
-          alert("Registro exitoso. Ahora inicia sesión.");
+          alert("Cuenta creada con éxito. Inicia sesión.");
           toggleAuthMode();
         } else {
           currentUser = data.user;
@@ -173,13 +312,14 @@
     function iniciarApp() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appSection').classList.remove('hidden');
-      document.getElementById('userDisplay').innerText = `${currentUser.name} (${currentUser.role})`;
+      document.getElementById('userDisplay').innerText = `${currentUser.name}`;
 
       const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
       document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
       document.getElementById('btnSaveCCI').disabled = !isAdmin;
 
       cargarConfig();
+      cargarTratos();
     }
 
     function logout() {
@@ -206,6 +346,78 @@
       });
       const data = await res.json();
       document.getElementById('cciStatus').innerText = res.ok ? "✓ " + data.message : "❌ " + data.error;
+    }
+
+    async function cargarTratos() {
+      const res = await fetch('/api/deals');
+      const data = await res.json();
+      const list = document.getElementById('dealsList');
+      list.innerHTML = "";
+
+      if (data.deals && data.deals.length > 0) {
+        data.deals.forEach(d => {
+          const div = document.createElement('div');
+          div.className = "deal-item";
+          const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
+
+          let actionBtn = '';
+          if (isAdmin && d.status === 'EN_CUSTODIA') {
+            actionBtn = `<button onclick="liberarTrato('${d.id}')" style="padding: 4px 8px; font-size: 0.75rem;">Liberar Fondos</button>`;
+          }
+
+          div.innerHTML = `
+            <div>
+              <strong>[${d.id}] ${d.description}</strong><br>
+              <small style="color: var(--text-muted);">Comprador: ${d.buyer} | Vendedor: ${d.seller} | Monto: $${d.amount}</small>
+            </div>
+            <div>
+              <span class="status-badge ${d.status === 'EN_CUSTODIA' ? 'status-custodia' : 'status-liberado'}">${d.status}</span>
+              ${actionBtn}
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } else {
+        list.innerHTML = "<p style='color: var(--text-muted);'>No hay tratos registrados aún.</p>";
+      }
+    }
+
+    async function crearTrato() {
+      const seller = document.getElementById('dealSeller').value;
+      const amount = document.getElementById('dealAmount').value;
+      const description = document.getElementById('dealDesc').value;
+
+      const res = await fetch('/api/deals/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seller, amount, description, buyer: currentUser.email })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('dealStatus').innerText = "✓ " + data.message;
+        document.getElementById('dealSeller').value = "";
+        document.getElementById('dealAmount').value = "";
+        document.getElementById('dealDesc').value = "";
+        cargarTratos();
+      } else {
+        document.getElementById('dealStatus').innerText = "❌ " + data.error;
+      }
+    }
+
+    async function liberarTrato(dealId) {
+      const res = await fetch('/api/deals/release', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-role': currentUser.role
+        },
+        body: JSON.stringify({ dealId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        cargarTratos();
+      }
     }
 
     async function cargarAuditoria() {
@@ -245,7 +457,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado al Creador.";
+        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado correctamente.";
         document.getElementById('msgText').value = "";
       }
     }
