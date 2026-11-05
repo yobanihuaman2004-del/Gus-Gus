@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GG - Plataforma de Intermediación</title>
   <style>
     :root {
@@ -13,14 +13,11 @@
       --white: #ffffff;
       --off-white: #f8f1f2;
       --white-muted: #e0cfd2;
-      --border-white: 1px solid rgba(255, 255, 255, 0.25);
+      --border-white: 1px solid rgba(255, 255, 255, 0.3);
       --border-white-strong: 2px solid #ffffff;
     }
 
-    * {
-      box-sizing: border-box;
-      touch-action: manipulation;
-    }
+    * { box-sizing: border-box; }
 
     body {
       background-color: var(--wine-dark);
@@ -28,74 +25,72 @@
       font-family: system-ui, -apple-system, Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
     }
 
     .app-container {
-      max-width: 480px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 520px;
       background-color: var(--wine-main);
       min-height: 100vh;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.95);
       position: relative;
-      padding-bottom: 70px;
+      padding-bottom: 50px;
       border-left: var(--border-white);
       border-right: var(--border-white);
     }
 
     .gg-header {
       background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine-main) 100%);
-      padding: 22px 18px 15px 18px;
+      padding: 24px 20px 18px 20px;
       border-bottom: var(--border-white-strong);
     }
 
     .logo-badge-gg {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-weight: 900;
       color: var(--white);
-      letter-spacing: 2px;
-      border: 2px solid var(--white);
-      padding: 2px 14px;
-      border-radius: 8px;
+      letter-spacing: 3px;
+      border: 3px solid var(--white);
+      padding: 4px 18px;
+      border-radius: 10px;
       display: inline-block;
       background: var(--wine-dark);
     }
 
-    .search-box {
-      background: rgba(255, 255, 255, 0.12);
+    .card-section {
+      background: var(--wine-card);
       border: var(--border-white);
-      border-radius: 25px;
-      padding: 8px 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 15px;
+      border-radius: 14px;
+      margin: 20px 16px;
+      padding: 22px;
     }
 
-    .search-box input {
-      background: transparent;
-      border: none;
-      color: var(--white);
-      font-size: 0.95rem;
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--white-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    input, select {
       width: 100%;
+      padding: 13px;
+      background: var(--wine-dark);
+      border: var(--border-white);
+      border-radius: 8px;
+      color: var(--white);
+      margin-bottom: 14px;
+      font-size: 1rem;
       outline: none;
     }
 
-    .balance-card {
-      background: var(--wine-card);
-      border: var(--border-white);
-      border-radius: 16px;
-      margin: 18px 15px;
-      padding: 20px;
-      text-align: center;
-      position: relative;
-    }
-
-    .balance-amount {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--white);
-      margin: 10px 0;
+    input:focus {
+      border-color: var(--white);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
 
     .btn-gg {
@@ -105,33 +100,29 @@
       padding: 14px 20px;
       border-radius: 25px;
       font-weight: bold;
-      font-size: 0.95rem;
+      font-size: 1rem;
       cursor: pointer;
       width: 100%;
-      margin: 8px 0;
+      margin: 10px 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: block;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 10;
-      user-select: none;
     }
 
     .btn-gg:active {
       background: var(--off-white);
-      transform: scale(0.98);
+      transform: scale(0.99);
     }
 
     .btn-outline-white {
       background: transparent;
       color: var(--white);
-      border: 1px solid var(--white);
+      border: 1.5px solid var(--white);
     }
 
     .btn-action-small {
-      padding: 8px 14px;
-      font-size: 0.78rem;
+      padding: 8px 12px;
+      font-size: 0.8rem;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
@@ -139,33 +130,20 @@
       margin-top: 6px;
     }
 
-    input, select {
-      width: 100%;
-      padding: 12px;
-      background: var(--wine-dark);
-      border: var(--border-white);
-      border-radius: 8px;
-      color: var(--white);
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      outline: none;
-      font-size: 1rem;
-    }
-
-    .card-section {
+    .balance-card {
       background: var(--wine-card);
       border: var(--border-white);
-      border-radius: 12px;
-      margin: 15px;
-      padding: 18px;
+      border-radius: 16px;
+      margin: 20px 16px;
+      padding: 22px;
+      text-align: center;
     }
 
-    h3 {
-      margin-top: 0;
+    .balance-amount {
+      font-size: 2.6rem;
+      font-weight: 800;
       color: var(--white);
-      font-size: 1.1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding-bottom: 8px;
+      margin: 10px 0;
     }
 
     .chat-box {
@@ -192,86 +170,97 @@
     .msg-received { background: rgba(255, 255, 255, 0.12); color: var(--white); align-self: flex-start; }
     .msg-system { background: #fff; color: var(--wine-dark); align-self: center; font-weight: bold; border-radius: 8px; text-align: center; }
 
-    .chat-img-preview {
-      max-width: 100%;
-      border-radius: 8px;
-      margin-top: 6px;
-      border: 1px solid var(--white);
-    }
-
+    .chat-img-preview { max-width: 100%; border-radius: 8px; margin-top: 6px; border: 1px solid var(--white); }
     .hidden { display: none !important; }
     .search-results { background: var(--wine-dark); border: var(--border-white); border-radius: 8px; margin-top: 5px; max-height: 120px; overflow-y: auto; }
-    .search-item { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem; }
-    .link-btn { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.85rem; padding: 5px; display: inline-block; }
+    .search-item { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.9rem; }
+    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div class="app-container">
 
-    <!-- AUTENTICACIÓN -->
-    <div id="authSection" class="card-section" style="margin-top: 35px; border: var(--border-white-strong);">
+    <!-- AUTENTICACIÓN DIRECTA -->
+    <div id="authSection" class="card-section" style="margin-top: 30px; border: var(--border-white-strong);">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge-gg">GG</div>
-        <p style="color: var(--white-muted); font-size: 0.85rem; margin-top: 10px; font-weight: bold;">SISTEMA DE CUSTODIA & MENSAJERÍA</p>
+        <p style="color: var(--white-muted); font-size: 0.9rem; margin-top: 10px; font-weight: bold; letter-spacing: 1px;">SISTEMA DE INTERMEDIACIÓN & CUSTODIA</p>
       </div>
 
-      <!-- VISTA BIENVENIDA -->
-      <div id="viewWelcome">
-        <button type="button" id="btnGoLogin" class="btn-gg">Ingresar a mi Cuenta</button>
-        <button type="button" id="btnGoRegister" class="btn-gg btn-outline-white">Crear Cuenta Nueva</button>
+      <!-- FORMULARIO DE INICIO DE SESIÓN DIRECTO -->
+      <div id="viewLogin">
+        <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Iniciar Sesión</h3>
+        <label>DNI, Gmail o Teléfono:</label>
+        <input type="text" id="loginInput" placeholder="Ej. 12345678 o correo@gmail.com" value="admin@gusgus.com">
+        
+        <label>Contraseña:</label>
+        <input type="password" id="loginPass" placeholder="******" value="admin123">
+        
+        <button type="button" class="btn-gg" onclick="ejecutarLogin()">INGRESAR A LA APP</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+          <span class="link-toggle" onclick="toggleAuthView('register')">¿No tienes cuenta? Regístrate aquí</span>
+        </div>
       </div>
 
-      <!-- INICIAR SESIÓN -->
-      <div id="viewLogin" class="hidden">
-        <h3>Iniciar Sesión</h3>
-        <input type="text" id="loginInput" placeholder="Correo o Número Celular" value="admin@gusgus.com">
-        <input type="password" id="loginPass" placeholder="Contraseña" value="admin123">
-        <button type="button" id="btnDoLogin" class="btn-gg">Entrar a la App</button>
-        <p style="text-align: center; margin-top: 12px;"><span id="linkBack1" class="link-btn">← Volver al Menú</span></p>
-      </div>
-
-      <!-- CREAR CUENTA -->
+      <!-- FORMULARIO DE REGISTRO DIRECTO -->
       <div id="viewRegister" class="hidden">
-        <h3>Crear Cuenta Nueva</h3>
-        <input type="text" id="regName" placeholder="Nombre Completo">
-        <input type="text" id="regPhone" placeholder="Número Celular">
-        <input type="email" id="regEmail" placeholder="Correo Electrónico">
-        <input type="password" id="regPass" placeholder="Contraseña">
-        <button type="button" id="btnDoRegister" class="btn-gg">Registrarme</button>
-        <p style="text-align: center; margin-top: 12px;"><span id="linkBack2" class="link-btn">← Volver al Menú</span></p>
+        <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Crear Cuenta Nueva</h3>
+        
+        <label>Número de DNI:</label>
+        <input type="text" id="regDni" placeholder="Ej. 73456789" maxlength="8">
+
+        <label>Nombre Completo / Usuario:</label>
+        <input type="text" id="regName" placeholder="Tu Nombre y Apellido">
+
+        <label>Correo Electrónico (Gmail):</label>
+        <input type="email" id="regEmail" placeholder="usuario@gmail.com">
+
+        <label>Teléfono Celular:</label>
+        <input type="text" id="regPhone" placeholder="Ej. 912345678">
+
+        <label>Contraseña:</label>
+        <input type="password" id="regPass" placeholder="Crea tu contraseña">
+
+        <button type="button" class="btn-gg" onclick="ejecutarRegistro()">REGISTRAR MI CUENTA</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+          <span class="link-toggle" onclick="toggleAuthView('login')">¿Ya tienes cuenta? Inicia sesión</span>
+        </div>
       </div>
 
-      <!-- VERIFICACIÓN -->
+      <!-- VERIFICACIÓN DE CÓDIGO -->
       <div id="viewVerify" class="hidden">
-        <h3>Verificación de Código</h3>
-        <input type="text" id="verifyCode" placeholder="Código de 6 dígitos">
-        <p id="demoCodeNotice" style="color: var(--white); font-size: 0.8rem; font-weight: bold; text-align: center;"></p>
-        <button type="button" id="btnDoVerify" class="btn-gg">Confirmar e Ingresar</button>
+        <h3 style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-top:0;">Verificar Código</h3>
+        <p style="font-size: 0.85rem; color: var(--white-muted);">Ingresa el código de 6 dígitos generado:</p>
+        <input type="text" id="verifyCode" placeholder="Código (Ej: 123456)" maxlength="6">
+        <p id="demoCodeNotice" style="color: var(--white); font-size: 0.85rem; font-weight: bold; text-align: center;"></p>
+        <button type="button" class="btn-gg" onclick="confirmarVerificacion()">CONFIRMAR E INGRESAR</button>
       </div>
 
-      <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
+      <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL INTERIOR -->
+    <!-- APP INTERIOR PRINCIPAL -->
     <div id="appSection" class="hidden">
       
       <div class="gg-header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div class="logo-badge-gg" style="font-size: 1.4rem; padding: 2px 10px;">GG</div>
+          <div class="logo-badge-gg" style="font-size: 1.5rem; padding: 2px 10px;">GG</div>
           <span id="userDisplay" style="font-size: 0.8rem; border: var(--border-white); padding: 4px 10px; border-radius: 15px; background: rgba(0,0,0,0.3);"></span>
-          <button type="button" id="btnLogout" style="background: none; border: 1px solid var(--white); color: #fff; border-radius: 12px; padding: 5px 10px; cursor: pointer; font-size: 0.75rem;">Salir</button>
+          <button type="button" onclick="logout()" style="background: none; border: 1px solid var(--white); color: #fff; border-radius: 12px; padding: 5px 12px; cursor: pointer; font-size: 0.8rem;">Salir</button>
         </div>
 
-        <div class="search-box">
+        <div class="search-box" style="background: rgba(255, 255, 255, 0.12); border: var(--border-white); border-radius: 25px; padding: 8px 15px; display: flex; align-items: center; gap: 10px; margin-top: 15px;">
           <span>🔍</span>
-          <input type="text" id="searchInput" onkeyup="buscarUsuario()" placeholder="Buscar usuario por celular o nombre...">
+          <input type="text" id="searchInput" onkeyup="buscarUsuario()" placeholder="Buscar por DNI, celular o nombre..." style="background: transparent; border: none; color: #fff; margin-bottom: 0;">
         </div>
         <div id="searchResults" class="search-results hidden"></div>
       </div>
 
       <div class="balance-card">
-        <span style="color: var(--white-muted); font-size: 0.8rem;">FONDOS EN CUSTODIA (GUS & NOR #2)</span>
+        <span style="color: var(--white-muted); font-size: 0.85rem;">FONDOS EN CUSTODIA (GUS & NOR #2)</span>
         <div class="balance-amount">S/ 0.00</div>
         <div style="display: flex; gap: 10px; margin-top: 12px;">
           <button type="button" class="btn-gg" onclick="scrollToSection('tratoSection')">Crear Trato</button>
@@ -287,13 +276,13 @@
           <option value="PLIN">Plin</option>
           <option value="LEMON_CASH">Lemon Cash (CCI)</option>
         </select>
-        <input type="text" id="dealSeller" placeholder="Número celular o correo del vendedor">
+        <input type="text" id="dealSeller" placeholder="DNI, Celular o Correo del vendedor">
         <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)">
-        <input type="text" id="dealDesc" placeholder="Descripción de la compra">
+        <input type="text" id="dealDesc" placeholder="Descripción del producto o servicio">
         <button type="button" class="btn-gg" onclick="crearTrato()">Pagar y Custodiar Fondos</button>
         <p id="dealStatus" style="color: var(--white); font-size: 0.85rem; margin-top: 8px; font-weight: bold;"></p>
 
-        <h4 style="color: var(--white); margin-top: 18px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;">Mis Tratos y Estado de Envíos:</h4>
+        <h4 style="color: var(--white); margin-top: 18px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;">Mis Tratos y Envíos:</h4>
         <div id="dealsList"></div>
       </div>
 
@@ -341,32 +330,15 @@
     let tempEmail = "";
     let selectedImageBase64 = null;
 
-    function bindClick(id, fn) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('click', fn);
-        el.addEventListener('touchstart', function(e) {
-          e.preventDefault();
-          fn(e);
-        }, { passive: false });
-      }
-    }
-
-    function mostrarAuthForm(vista) {
-      document.getElementById('viewWelcome').classList.add('hidden');
-      document.getElementById('viewLogin').classList.add('hidden');
-      document.getElementById('viewRegister').classList.add('hidden');
-      document.getElementById('viewVerify').classList.add('hidden');
+    function toggleAuthView(view) {
+      document.getElementById('viewLogin').classList.toggle('hidden', view !== 'login');
+      document.getElementById('viewRegister').classList.toggle('hidden', view !== 'register');
+      document.getElementById('viewVerify').classList.toggle('hidden', view !== 'verify');
       document.getElementById('authStatus').innerText = "";
-
-      if (vista === 'welcome') document.getElementById('viewWelcome').classList.remove('hidden');
-      if (vista === 'login') document.getElementById('viewLogin').classList.remove('hidden');
-      if (vista === 'register') document.getElementById('viewRegister').classList.remove('hidden');
-      if (vista === 'verify') document.getElementById('viewVerify').classList.remove('hidden');
     }
 
     async function ejecutarLogin() {
-      const emailOrPhone = document.getElementById('loginInput').value;
+      const inputVal = document.getElementById('loginInput').value;
       const pass = document.getElementById('loginPass').value;
       const status = document.getElementById('authStatus');
 
@@ -374,7 +346,7 @@
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ emailOrPhone, pass })
+          body: JSON.stringify({ inputVal, pass })
         });
         const data = await res.json();
 
@@ -382,7 +354,7 @@
           currentUser = data.user;
           iniciarApp();
         } else {
-          status.innerText = data.error || "Error al iniciar sesión.";
+          status.innerText = data.error || "Credenciales incorrectas.";
         }
       } catch (err) {
         status.innerText = "Error de conexión con el servidor.";
@@ -390,9 +362,10 @@
     }
 
     async function ejecutarRegistro() {
+      const dni = document.getElementById('regDni').value;
       const name = document.getElementById('regName').value;
-      const phone = document.getElementById('regPhone').value;
       const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
       const pass = document.getElementById('regPass').value;
       const status = document.getElementById('authStatus');
 
@@ -400,19 +373,19 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, phone, email, pass })
+          body: JSON.stringify({ dni, name, email, phone, pass })
         });
         const data = await res.json();
 
         if (res.ok) {
           tempEmail = data.email;
-          document.getElementById('demoCodeNotice').innerText = `Código enviado: ${data.demoCode}`;
-          mostrarAuthForm('verify');
+          document.getElementById('demoCodeNotice').innerText = `Código generado: ${data.demoCode}`;
+          toggleAuthView('verify');
         } else {
-          status.innerText = data.error || "No se pudo registrar la cuenta.";
+          status.innerText = data.error || "Error al registrar cuenta.";
         }
       } catch (err) {
-        status.innerText = "Error de conexión.";
+        status.innerText = "Error de red al conectar.";
       }
     }
 
@@ -432,7 +405,7 @@
           currentUser = data.user;
           iniciarApp();
         } else {
-          status.innerText = data.error || "Código erróneo.";
+          status.innerText = data.error || "Código incorrecto.";
         }
       } catch (err) {
         status.innerText = "Error procesando verificación.";
@@ -442,7 +415,7 @@
     function iniciarApp() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appSection').classList.remove('hidden');
-      document.getElementById('userDisplay').innerText = currentUser.name || "Usuario";
+      document.getElementById('userDisplay').innerText = `${currentUser.name} (DNI: ${currentUser.dni || 'S/D'})`;
 
       if (currentUser.role === 'ADMIN_MAESTRO') {
         document.getElementById('adminPanel').classList.remove('hidden');
@@ -459,7 +432,7 @@
       currentUser = null;
       document.getElementById('appSection').classList.add('hidden');
       document.getElementById('authSection').classList.remove('hidden');
-      mostrarAuthForm('welcome');
+      toggleAuthView('login');
     }
 
     function scrollToSection(id) {
@@ -480,9 +453,9 @@
         data.users.forEach(u => {
           const div = document.createElement('div');
           div.className = "search-item";
-          div.innerText = `👤 ${u.name} - 📞 ${u.phone}`;
+          div.innerText = `👤 ${u.name} - DNI: ${u.dni} - 📞 ${u.phone}`;
           div.onclick = () => {
-            document.getElementById('dealSeller').value = u.phone;
+            document.getElementById('dealSeller').value = u.dni || u.phone;
             resultsDiv.classList.add('hidden');
           };
           resultsDiv.appendChild(div);
@@ -527,11 +500,12 @@
           const div = document.createElement('div');
           div.style.background = "var(--wine-dark)";
           div.style.border = "var(--border-white)";
-          div.style.padding = "10px";
+          div.style.padding = "12px";
           div.style.borderRadius = "8px";
           div.style.marginTop = "8px";
           div.style.fontSize = "0.85rem";
 
           const isAdmin = currentUser && currentUser.role === 'ADMIN_MAESTRO';
 
-          let btnShip = `<button onclick="notificarEnvio('${d.id}')" class="btn-action-small" style="backgr
+          let btnShip = `<button onclick="notificarEnvio('${d.id}')" class="btn-action-small" style="background:#00b0ff; color:#000;">📦 Confirmar Envío Realizado</button>`;
+          let btnConfirmReceipt = `<button onc
