@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gus Gus - Acceso</title>
   <style>
     :root {
       --bg-color: #F4EFEA;
       --card-bg: #FFFFFF;
       --primary-color: #3A272D;
-      --primary-hover: #2B1C21;
       --accent-color: #8C6551;
       --text-main: #231B1E;
       --text-muted: #6E6366;
@@ -31,23 +30,25 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 24px 16px;
+      width: 100%;
+      padding: 20px 16px;
     }
 
     .app-card {
       background: var(--card-bg);
-      padding: 36px 24px;
+      padding: 32px 20px;
       border-radius: 24px;
       box-shadow: 0 10px 30px rgba(58, 39, 45, 0.05);
-      max-width: 420px;
       width: 100%;
+      max-width: 400px;
       text-align: center;
       border: 1px solid rgba(226, 218, 213, 0.6);
+      margin: 0 auto;
     }
 
     .brand-title {
       color: var(--primary-color);
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 700;
       margin-bottom: 8px;
     }
@@ -55,7 +56,7 @@
     .brand-subtitle {
       color: var(--text-muted);
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.4;
       margin-bottom: 24px;
     }
 
@@ -87,7 +88,6 @@
       gap: 8px;
     }
 
-    /* ESTILOS DE BOTONES MÓVILES REALES */
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -125,7 +125,7 @@
       font-weight: 700;
       cursor: pointer;
       padding: 8px 0;
-      display: inline-block;
+      display: block;
       width: 100%;
       text-align: right;
     }
@@ -231,7 +231,6 @@
     const subtituloCard = document.getElementById('subtituloCard');
     const msg = document.getElementById('mensaje');
 
-    // Botón Cambiar a Recuperar
     document.getElementById('btnAbrirRecuperar').onclick = function() {
       vistaLogin.classList.add('oculto');
       vistaRecuperar.classList.remove('oculto');
@@ -239,7 +238,6 @@
       msg.textContent = "";
     };
 
-    // Botón Volver a Login
     document.getElementById('btnVolverLogin').onclick = function() {
       vistaRecuperar.classList.add('oculto');
       vistaLogin.classList.remove('oculto');
@@ -247,7 +245,6 @@
       msg.textContent = "";
     };
 
-    // Botón Enviar Código Recuperación
     document.getElementById('btnEnviarCodigoRec').onclick = async function() {
       const contacto = document.getElementById('recContacto').value;
       if (!contacto) {
@@ -274,7 +271,6 @@
       }
     };
 
-    // Formulario Restablecer Contraseña
     document.getElementById('formRecuperar').onsubmit = async function(e) {
       e.preventDefault();
       msg.textContent = "Actualizando contraseña...";
@@ -306,7 +302,6 @@
       }
     };
 
-    // Formulario Login
     document.getElementById('formLogin').onsubmit = async function(e) {
       e.preventDefault();
       msg.textContent = "Verificando...";
@@ -336,14 +331,6 @@
         }
       } catch (err) {
         msg.textContent = "Error de conexión con el servidor.";
-        msg.className = "error";
-      }
-    };
-  </script>
-
-</body>
-</html>
-msg.textContent = "Error de conexión con el servidor.";
         msg.className = "error";
       }
     };
