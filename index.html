@@ -3,221 +3,317 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Plataforma de Intermediación</title>
+  <title>GG - Plataforma de Intermediación</title>
   <style>
     :root {
-      --bg-dark: #0f0d0b;
-      --panel-bg: #181411;
-      --panel-border: #8b5a2b;
-      --gold: #d4af37;
-      --copper: #b87333;
-      --bronze: #cd7f32;
-      --text: #f0e6d2;
-      --text-muted: #a89885;
-      --gold-glow: 0 0 10px rgba(212, 175, 55, 0.3);
+      --wine-main: #58111a;
+      --wine-dark: #3b0910;
+      --wine-card: #450c14;
+      --wine-light: #721925;
+      --white: #ffffff;
+      --off-white: #f8f1f2;
+      --white-muted: #e0cfd2;
+      --border-white: 1px solid rgba(255, 255, 255, 0.25);
+      --border-white-strong: 2px solid #ffffff;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text);
-      font-family: 'Georgia', serif;
+      background-color: var(--wine-dark);
+      color: var(--white);
+      font-family: system-ui, -apple-system, Roboto, sans-serif;
       margin: 0;
-      padding: 15px;
-      background-image: radial-gradient(#221a14 1px, transparent 0);
-      background-size: 20px 20px;
+      padding: 0;
     }
 
-    .container { max-width: 800px; margin: 0 auto; }
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--wine-main);
+      min-height: 100vh;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+      position: relative;
+      padding-bottom: 70px;
+      border-left: var(--border-white);
+      border-right: var(--border-white);
+    }
 
-    .header {
-      border: 2px solid var(--bronze);
-      background: linear-gradient(180deg, #241c15 0%, #140f0c 100%);
-      padding: 15px 20px;
-      margin-bottom: 20px;
+    .gg-header {
+      background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine-main) 100%);
+      padding: 22px 18px 15px 18px;
+      border-bottom: var(--border-white-strong);
+    }
+
+    .logo-badge-gg {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 2px;
+      border: 2px solid var(--white);
+      padding: 2px 14px;
       border-radius: 8px;
+      display: inline-block;
+      background: var(--wine-dark);
+    }
+
+    .search-box {
+      background: rgba(255, 255, 255, 0.12);
+      border: var(--border-white);
+      border-radius: 25px;
+      padding: 8px 15px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: var(--gold-glow);
+      gap: 10px;
+      margin-top: 15px;
     }
 
-    .logo-box { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { font-size: 2.2rem; filter: drop-shadow(0 0 5px var(--gold)); }
-    .logo-title {
-      font-size: 1.8rem;
-      color: var(--gold);
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: var(--white);
+      font-size: 0.95rem;
+      width: 100%;
+      outline: none;
     }
 
-    .badge-role {
-      background: linear-gradient(135deg, var(--bronze), var(--copper));
-      color: #000;
-      padding: 6px 14px;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      border: 1px solid var(--gold);
-    }
-
-    .card {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
+    .balance-card {
+      background: var(--wine-card);
+      border: var(--border-white);
+      border-radius: 16px;
+      margin: 18px 15px;
       padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      text-align: center;
       position: relative;
     }
 
-    h2 {
-      color: var(--gold);
+    .balance-amount {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--white);
+      margin: 10px 0;
+    }
+
+    .btn-gg {
+      background: var(--white);
+      color: var(--wine-dark);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+      width: 100%;
+      margin: 4px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--white);
+    }
+
+    .btn-action-small {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid var(--white);
+      margin-top: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px;
+      background: var(--wine-dark);
+      border: var(--border-white);
+      border-radius: 8px;
+      color: var(--white);
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    .card-section {
+      background: var(--wine-card);
+      border: var(--border-white);
+      border-radius: 12px;
+      margin: 15px;
+      padding: 18px;
+    }
+
+    h3 {
       margin-top: 0;
-      font-size: 1.3rem;
-      border-bottom: 1px solid var(--bronze);
+      color: var(--white);
+      font-size: 1.1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       padding-bottom: 8px;
     }
 
-    label { color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 4px; }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      background: #0a0807;
-      border: 1px solid var(--bronze);
-      color: var(--gold);
-      font-family: monospace;
-      font-size: 1rem;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    button {
-      background: linear-gradient(180deg, var(--bronze) 0%, #8b5a2b 100%);
-      color: #000;
-      border: 1px solid var(--gold);
-      padding: 10px 18px;
-      font-weight: bold;
-      font-family: 'Georgia', serif;
-      cursor: pointer;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-
-    button:hover {
-      background: linear-gradient(180deg, var(--gold) 0%, var(--bronze) 100%);
-      box-shadow: var(--gold-glow);
-    }
-
-    .deal-item {
-      background: #0d0b09;
-      border: 1px dashed var(--bronze);
+    /* CHAT MULTIMEDIA */
+    .chat-box {
+      background: var(--wine-dark);
+      border: var(--border-white);
+      border-radius: 12px;
+      height: 280px;
+      overflow-y: auto;
       padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 4px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .status-badge { padding: 4px 8px; border-radius: 3px; font-size: 0.8rem; font-weight: bold; }
-    .status-custodia { background: #8b5a2b; color: #fff; }
-    .status-liberado { background: #2e7d32; color: #fff; }
+    .msg-bubble {
+      max-width: 82%;
+      padding: 9px 14px;
+      border-radius: 15px;
+      font-size: 0.88rem;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .msg-sent { background: var(--wine-light); color: var(--white); align-self: flex-end; }
+    .msg-received { background: rgba(255, 255, 255, 0.12); color: var(--white); align-self: flex-start; }
+    .msg-system { background: #fff; color: var(--wine-dark); align-self: center; font-weight: bold; border-radius: 8px; text-align: center; }
+
+    .chat-img-preview {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 6px;
+      border: 1px solid var(--white);
+    }
 
     .hidden { display: none; }
-    ul { list-style: square; padding-left: 20px; font-family: monospace; font-size: 0.9rem; color: var(--text-muted); }
+    .search-results { background: var(--wine-dark); border: var(--border-white); border-radius: 8px; margin-top: 5px; max-height: 120px; overflow-y: auto; }
+    .search-item { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem; }
+    .link-btn { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.85rem; }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="app-container">
 
-    <!-- AUTENTICACIÓN -->
-    <div id="authSection">
-      <div class="header">
-        <div class="logo-box">
-          <span class="logo-icon">🐭</span>
-          <div class="logo-title">Gus Gus</div>
-        </div>
-        <div class="badge-role">SISTEMA DE INTERMEDIACIÓN</div>
+    <!-- AUTHENTICATION -->
+    <div id="authSection" class="card-section" style="margin-top: 35px; border: var(--border-white-strong);">
+      <div style="text-align: center; margin-bottom: 25px;">
+        <div class="logo-badge-gg">GG</div>
+        <p style="color: var(--white-muted); font-size: 0.85rem; margin-top: 10px; font-weight: bold;">SISTEMA DE CUSTODIA & MENSAJERÍA</p>
       </div>
 
-      <div class="card">
-        <h2 id="authTitle">⚙️ Iniciar Sesión</h2>
-        <label>Correo Electrónico:</label>
-        <input type="email" id="authEmail" placeholder="correo@ejemplo.com">
-        <label>Contraseña:</label>
-        <input type="password" id="authPass" placeholder="******">
-        <div id="registerFields" class="hidden">
-          <label>Nombre Completo:</label>
-          <input type="text" id="authName" placeholder="Tu Nombre">
-        </div>
-        <button onclick="ejecutarAuth()" id="authBtn">Ingresar</button>
-        <p style="margin-top: 15px;">
-          <a href="#" onclick="toggleAuthMode()" id="toggleLink" style="color: var(--gold);">¿No tienes cuenta? Regístrate aquí</a>
-        </p>
-        <p id="authStatus" style="color: #ff5252; font-weight: bold;"></p>
+      <div id="viewWelcome">
+        <button class="btn-gg" onclick="mostrarAuthForm('login')">Ingresar a mi Cuenta</button>
+        <button class="btn-gg btn-outline-white" style="margin-top: 10px;" onclick="mostrarAuthForm('register')">Crear Cuenta Nueva</button>
       </div>
+
+      <div id="viewLogin" class="hidden">
+        <h3>Iniciar Sesión</h3>
+        <input type="text" id="loginInput" placeholder="Correo o Número Celular">
+        <input type="password" id="loginPass" placeholder="Contraseña">
+        <button class="btn-gg" onclick="ejecutarLogin()">Entrar</button>
+        <p style="text-align: center; margin-top: 12px;"><span class="link-btn" onclick="mostrarAuthForm('welcome')">← Volver</span></p>
+      </div>
+
+      <div id="viewRegister" class="hidden">
+        <h3>Crear Cuenta Nueva</h3>
+        <input type="text" id="regName" placeholder="Nombre Completo">
+        <input type="text" id="regPhone" placeholder="Número Celular">
+        <input type="email" id="regEmail" placeholder="Correo Electrónico">
+        <input type="password" id="regPass" placeholder="Contraseña">
+        <button class="btn-gg" onclick="ejecutarRegistro()">Registrarme</button>
+        <p style="text-align: center; margin-top: 12px;"><span class="link-btn" onclick="mostrarAuthForm('welcome')">← Volver</span></p>
+      </div>
+
+      <div id="viewVerify" class="hidden">
+        <h3>Verificación de Código</h3>
+        <input type="text" id="verifyCode" placeholder="Código de 6 dígitos">
+        <p id="demoCodeNotice" style="color: var(--white); font-size: 0.8rem; font-weight: bold; text-align: center;"></p>
+        <button class="btn-gg" onclick="confirmarVerificacion()">Confirmar Código</button>
+      </div>
+
+      <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANEL PRINCIPAL -->
+    <!-- MAIN APP -->
     <div id="appSection" class="hidden">
-      <div class="header">
-        <div class="logo-box">
-          <span class="logo-icon">🐭</span>
-          <div class="logo-title">Gus Gus</div>
+      
+      <div class="gg-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="logo-badge-gg" style="font-size: 1.4rem; padding: 2px 10px;">GG</div>
+          <span id="userDisplay" style="font-size: 0.8rem; border: var(--border-white); padding: 4px 10px; border-radius: 15px; background: rgba(0,0,0,0.3);"></span>
+          <button onclick="logout()" style="background: none; border: 1px solid var(--white); color: #fff; border-radius: 12px; padding: 3px 8px; cursor: pointer; font-size: 0.75rem;">Salir</button>
         </div>
-        <div>
-          <span id="userDisplay" class="badge-role"></span>
-          <button onclick="logout()" style="margin-left: 8px; padding: 4px 10px; font-size: 0.8rem;">Salir</button>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="searchInput" onkeyup="buscarUsuario()" placeholder="Buscar usuario por celular o nombre...">
+        </div>
+        <div id="searchResults" class="search-results hidden"></div>
+      </div>
+
+      <div class="balance-card">
+        <span style="color: var(--white-muted); font-size: 0.8rem;">FONDOS EN CUSTODIA (GUS & NOR #2)</span>
+        <div class="balance-amount">S/ 0.00</div>
+        <div style="display: flex; gap: 10px; margin-top: 12px;">
+          <button class="btn-gg" onclick="scrollToSection('tratoSection')">Crear Trato</button>
+          <button class="btn-gg btn-outline-white" onclick="scrollToSection('chatSection')">Chat Directo</button>
         </div>
       </div>
 
-      <!-- LEMON CASH -->
-      <div class="card">
-        <h2>💳 Pasarela Financiera - Lemon Cash</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">CCI Oficial para custodia de fondos:</p>
-        <input type="text" id="cciInput" maxlength="21" placeholder="CCI de 21 dígitos">
-        <button id="btnSaveCCI" onclick="guardarCCI()">Guardar CCI (Solo Admin)</button>
-        <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
-      </div>
+      <!-- TRATOS Y GESTIÓN DE ENVÍOS -->
+      <div class="card-section" id="tratoSection">
+        <h3>🛡️ Registrar Trato en Custodia</h3>
+        <select id="dealPaymentMethod">
+          <option value="YAPE">Yape</option>
+          <option value="CULQI">Culqi (Tarjetas)</option>
+          <option value="PLIN">Plin</option>
+          <option value="LEMON_CASH">Lemon Cash (CCI)</option>
+        </select>
+        <input type="text" id="dealSeller" placeholder="Número celular o correo del vendedor">
+        <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)">
+        <input type="text" id="dealDesc" placeholder="Descripción de la compra">
+        <button class="btn-gg" onclick="crearTrato()">Pagar y Custodiar Fondos</button>
+        <p id="dealStatus" style="color: var(--white); font-size: 0.85rem; margin-top: 8px; font-weight: bold;"></p>
 
-      <!-- INTERMEDIACIÓN -->
-      <div class="card">
-        <h2>⚖️ Intermediación Segura de Compras y Ventas</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Registrar nuevo trato en custodia:</p>
-        <label>Correo del Vendedor / Contraparte:</label>
-        <input type="email" id="dealSeller" placeholder="vendedor@ejemplo.com">
-        <label>Monto ($):</label>
-        <input type="number" id="dealAmount" placeholder="100.00">
-        <label>Descripción del Producto/Servicio:</label>
-        <input type="text" id="dealDesc" placeholder="Ej. Cuenta de juego o producto digital">
-        <button onclick="crearTrato()">Registrar Trato en Custodia</button>
-        <p id="dealStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
-
-        <h3 style="color: var(--bronze); margin-top: 20px;">Tratos Registrados:</h3>
+        <h4 style="color: var(--white); margin-top: 18px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;">Mis Tratos y Estado de Envíos:</h4>
         <div id="dealsList"></div>
       </div>
 
-      <!-- PANEL ADMIN MAESTRO -->
-      <div id="adminPanel" class="card hidden">
-        <h2>🔍 Módulo de Custodia y Auditoría (Gus & Nor #2)</h2>
-        <button onclick="cargarAuditoria()">Consultar Logs de Seguridad</button>
-        <ul id="auditList"></ul>
+      <!-- CHAT CON ADJUNCIÓN DE FOTOS Y CONFIRMACIONES -->
+      <div class="card-section" id="chatSection">
+        <h3>💬 Mensajería Directa & Comprobantes</h3>
+        <div id="chatBox" class="chat-box"></div>
+        
+        <!-- PREVISUALIZACIÓN DE FOTO A ADJUNTAR -->
+        <div id="imgPreviewBox" class="hidden" style="margin-top: 8px; text-align: center;">
+          <img id="imgPreview" style="max-height: 80px; border-radius: 6px; border: 1px solid var(--white);">
+          <button onclick="cancelarImagen()" style="background: none; border: none; color: #ff8a80; cursor: pointer; font-size: 0.75rem;">✕ Quitar foto</button>
+        </div>
 
-        <h2>📬 Mensajes Recibidos de Usuarios</h2>
-        <button onclick="cargarMensajes()">Ver Mensajes</button>
-        <ul id="messageList"></ul>
+        <div style="display: flex; gap: 6px; margin-top: 10px; align-items: center;">
+          <label for="chatFileInput" style="background: rgba(255,255,255,0.2); border: 1px solid var(--white); padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;">📷</label>
+          <input type="file" id="chatFileInput" accept="image/*" onchange="seleccionarImagen(event)" class="hidden">
+          
+          <input type="text" id="chatInput" placeholder="Escribe un mensaje..." style="margin-bottom: 0;">
+          <button class="btn-gg" style="width: auto; padding: 10px 16px;" onclick="enviarChat()">Enviar</button>
+        </div>
       </div>
 
-      <!-- SOPORTE -->
-      <div class="card">
-        <h2>💬 Contacto Directo con el Creador</h2>
-        <textarea id="msgText" rows="3" placeholder="Envía tus dudas o solicitudes de soporte..."></textarea>
-        <button onclick="enviarMensaje()">Enviar Mensaje</button>
-        <p id="msgStatus" style="color: var(--gold); margin-top: 8px;"></p>
+      <!-- PANEL ADMIN MAESTRO -->
+      <div id="adminPanel" class="card-section hidden" style="border: var(--border-white-strong);">
+        <h3>👑 Panel de Control Creador (Gus)</h3>
+        <label style="font-size: 0.8rem;">Número Yape:</label>
+        <input type="text" id="cfgYape">
+        <label style="font-size: 0.8rem;">Número Plin:</label>
+        <input type="text" id="cfgPlin">
+        <label style="font-size: 0.8rem;">CCI Lemon Cash:</label>
+        <input type="text" id="cfgLemon">
+        <label style="font-size: 0.8rem;">Llave Pública Culqi:</label>
+        <input type="text" id="cfgCulqi">
+        <button class="btn-gg" onclick="guardarPagos()">Guardar Configuración</button>
+
+        <h4 style="color: var(--white); margin-top: 15px;">Logs de Auditoría (Nor #2):</h4>
+        <button class="btn-gg btn-outline-white" onclick="cargarAuditoria()">Consultar Historial</button>
+        <ul id="auditList" style="font-size: 0.75rem; color: var(--white-muted); padding-left: 15px; margin-top: 10px;"></ul>
       </div>
 
     </div>
@@ -226,83 +322,74 @@
 
   <script>
     let currentUser = null;
-    let isRegisterMode = false;
+    let tempEmail = "";
+    let selectedImageBase64 = null;
 
-    function toggleAuthMode() {
-      isRegisterMode = !isRegisterMode;
-      document.getElementById('authTitle').innerText = isRegisterMode ? "⚙️ Crear Cuenta" : "⚙️ Iniciar Sesión";
-      document.getElementById('registerFields').classList.toggle('hidden', !isRegisterMode);
-      document.getElementById('authBtn').innerText = isRegisterMode ? "Registrarme" : "Ingresar";
-      document.getElementById('toggleLink').innerText = isRegisterMode ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate aquí";
+    function mostrarAuthForm(vista) {
+      document.getElementById('viewWelcome').classList.add('hidden');
+      document.getElementById('viewLogin').classList.add('hidden');
+      document.getElementById('viewRegister').classList.add('hidden');
+      document.getElementById('viewVerify').classList.add('hidden');
+      if (vista === 'welcome') document.getElementById('viewWelcome').classList.remove('hidden');
+      if (vista === 'login') document.getElementById('viewLogin').classList.remove('hidden');
+      if (vista === 'register') document.getElementById('viewRegister').classList.remove('hidden');
+      if (vista === 'verify') document.getElementById('viewVerify').classList.remove('hidden');
     }
 
-    async function ejecutarAuth() {
-      const email = document.getElementById('authEmail').value;
-      const pass = document.getElementById('authPass').value;
-      const name = document.getElementById('authName').value;
-      const status = document.getElementById('authStatus');
-
-      const url = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
-      const body = isRegisterMode ? { email, pass, name } : { email, pass };
-
-      const res = await fetch(url, {
+    async function ejecutarLogin() {
+      const emailOrPhone = document.getElementById('loginInput').value;
+      const pass = document.getElementById('loginPass').value;
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ emailOrPhone, pass })
       });
       const data = await res.json();
+      if (res.ok) { currentUser = data.user; iniciarApp(); } 
+      else { document.getElementById('authStatus').innerText = data.error; }
+    }
 
+    async function ejecutarRegistro() {
+      const name = document.getElementById('regName').value;
+      const phone = document.getElementById('regPhone').value;
+      const email = document.getElementById('regEmail').value;
+      const pass = document.getElementById('regPass').value;
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email, pass })
+      });
+      const data = await res.json();
       if (res.ok) {
-        if (isRegisterMode) {
-          alert("Registro exitoso. Inicia sesión.");
-          toggleAuthMode();
-        } else {
-          currentUser = data.user;
-          iniciarApp();
-        }
-      } else {
-        status.innerText = data.error;
-      }
+        tempEmail = data.email;
+        document.getElementById('demoCodeNotice').innerText = `Código: ${data.demoCode}`;
+        mostrarAuthForm('verify');
+      } else { document.getElementById('authStatus').innerText = data.error; }
+    }
+
+    async function confirmarVerificacion() {
+      const code = document.getElementById('verifyCode').value;
+      const res = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: tempEmail, code })
+      });
+      const data = await res.json();
+      if (res.ok) { alert(data.message); mostrarAuthForm('login'); } 
+      else { document.getElementById('authStatus').innerText = data.error; }
     }
 
     function iniciarApp() {
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appSection').classList.remove('hidden');
-      document.getElementById('userDisplay').innerText = `${currentUser.name}`;
-
-      const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
-      document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
-      document.getElementById('btnSaveCCI').disabled = !isAdmin;
-
-      cargarConfig();
+      document.getElementById('userDisplay').innerText = currentUser.name;
+      if (currentUser.role === 'ADMIN_MAESTRO') document.getElementById('adminPanel').classList.remove('hidden');
       cargarTratos();
+      cargarChat();
     }
 
-    function logout() {
-      currentUser = null;
-      document.getElementById('appSection').classList.add('hidden');
-      document.getElementById('authSection').classList.remove('hidden');
-    }
-
-    async function cargarConfig() {
-      const res = await fetch('/api/config');
-      const data = await res.json();
-      document.getElementById('cciInput').value = data.lemonCashCCI || '';
-    }
-
-    async function guardarCCI() {
-      const cci = document.getElementById('cciInput').value;
-      const res = await fetch('/api/config/cci', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': currentUser.role
-        },
-        body: JSON.stringify({ cci })
-      });
-      const data = await res.json();
-      document.getElementById('cciStatus').innerText = res.ok ? "✓ " + data.message : "❌ " + data.error;
-    }
+    function logout() { location.reload(); }
+    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
     async function cargarTratos() {
       const res = await fetch('/api/deals');
@@ -310,265 +397,117 @@
       const list = document.getElementById('dealsList');
       list.innerHTML = "";
 
-      if (data.deals && data.deals.length > 0) {
+      if (data.deals) {
         data.deals.forEach(d => {
           const div = document.createElement('div');
-          div.className = "deal-item";
+          div.style.background = "var(--wine-dark)";
+          div.style.border = "var(--border-white)";
+          div.style.padding = "10px";
+          div.style.borderRadius = "8px";
+          div.style.marginTop = "8px";
+          div.style.fontSize = "0.85rem";
+
           const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
 
-          let actionBtn = '';
-          if (isAdmin && d.status === 'EN_CUSTODIA') {
-            actionBtn = `<button onclick="liberarTrato('${d.id}')" style="padding: 4px 8px; font-size: 0.75rem;">Liberar Fondos</button>`;
-          }
+          // Botones dinámicos de confirmación de envío y recepción
+          let btnShip = `<button onclick="notificarEnvio('${d.id}')" class="btn-action-small" style="background:#00b0ff; color:#000;">📦 Confirmar Envío Realizado</button>`;
+          let btnConfirmReceipt = `<button onclick="confirmarRecepcion('${d.id}')" class="btn-action-small" style="background:#00e676; color:#000;">✅ Confirmar Pedido Recibido</button>`;
+          let btnRelease = (isAdmin && d.status === 'RECIBIDO_CONFIRMADO') ? 
+            `<button onclick="liberarTrato('${d.id}')" class="btn-action-small" style="background:var(--white); color:#000;">Liberar Fondos (Gus)</button>` : '';
 
           div.innerHTML = `
-            <div>
-              <strong>[${d.id}] ${d.description}</strong><br>
-              <small style="color: var(--text-muted);">Comprador: ${d.buyer} | Vendedor: ${d.seller} | Monto: $${d.amount}</small>
-            </div>
-            <div>
-              <span class="status-badge ${d.status === 'EN_CUSTODIA' ? 'status-custodia' : 'status-liberado'}">${d.status}</span>
-              ${actionBtn}
+            <strong>[${d.id}] ${d.description}</strong> - S/ ${d.amount}<br>
+            <span style="color:var(--white-muted);">Pago: ${d.paymentMethod} | Estado: <strong>${d.status}</strong></span><br>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+              ${d.status === 'EN_CUSTODIA' ? btnShip : ''}
+              ${d.status === 'ENVIADO' ? btnConfirmReceipt : ''}
+              ${btnRelease}
             </div>
           `;
           list.appendChild(div);
         });
-      } else {
-        list.innerHTML = "<p style='color: var(--text-muted);'>No hay tratos registrados aún.</p>";
       }
     }
 
     async function crearTrato() {
-      const seller = document.getElementById('dealSeller').value;
+      const paymentMethod = document.getElementById('dealPaymentMethod').value;
+      const sellerPhoneOrEmail = document.getElementById('dealSeller').value;
       const amount = document.getElementById('dealAmount').value;
       const description = document.getElementById('dealDesc').value;
 
       const res = await fetch('/api/deals/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ seller, amount, description, buyer: currentUser.email })
+        body: JSON.stringify({ sellerPhoneOrEmail, amount, description, paymentMethod, buyer: currentUser.email })
       });
       const data = await res.json();
       if (res.ok) {
         document.getElementById('dealStatus').innerText = "✓ " + data.message;
-        document.getElementById('dealSeller').value = "";
-        document.getElementById('dealAmount').value = "";
-        document.getElementById('dealDesc').value = "";
         cargarTratos();
       } else {
         document.getElementById('dealStatus').innerText = "❌ " + data.error;
       }
     }
 
-    async function liberarTrato(dealId) {
-      const res = await fetch('/api/deals/release', {
+    async function notificarEnvio(dealId) {
+      const res = await fetch('/api/deals/ship', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': currentUser.role
-        },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dealId, trackingPhoto: selectedImageBase64 })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        cancelarImagen();
+        cargarTratos();
+        cargarChat();
+      }
+    }
+
+    async function confirmarRecepcion(dealId) {
+      const res = await fetch('/api/deals/confirm-receipt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dealId })
       });
       const data = await res.json();
       if (res.ok) {
         alert(data.message);
         cargarTratos();
+        cargarChat();
       }
     }
 
-    async function cargarAuditoria() {
-      const res = await fetch('/api/audit', { headers: { 'x-user-role': currentUser.role } });
-      const data = await res.json();
-      const list = document.getElementById('auditList');
-      list.innerHTML = "";
-      if (data.logs) {
-        data.logs.forEach(log => {
-          const li = document.createElement('li');
-          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
-          list.appendChild(li);
-        });
-      }
-    }
-
-    async function cargarMensajes() {
-      const res = await fetch('/api/messages', { headers: { 'x-user-role': currentUser.role } });
-      const data = await res.json();
-      const list = document.getElementById('messageList');
-      list.innerHTML = "";
-      if (data.messages) {
-        data.messages.forEach(m => {
-          const li = document.createElement('li');
-          li.innerText = `[${m.timestamp}] ${m.sender}: ${m.text}`;
-          list.appendChild(li);
-        });
-      }
-    }
-
-    async function enviarMensaje() {
-      const text = document.getElementById('msgText').value;
-      const res = await fetch('/api/messages', {
+    async function liberarTrato(dealId) {
+      const res = await fetch('/api/deals/release', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sender: currentUser.email, text })
+        headers: { 'Content-Type': 'application/json', 'x-user-role': currentUser.role },
+        body: JSON.stringify({ dealId })
       });
       const data = await res.json();
-      if (res.ok) {
-        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado correctamente.";
-        document.getElementById('msgText').value = "";
-      }
-    }
-  </script>
-</body>
-</html>
-urrentUser.name}`;
-
-      const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
-      document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
-      document.getElementById('btnSaveCCI').disabled = !isAdmin;
-
-      cargarConfig();
+      alert(data.message);
       cargarTratos();
     }
 
-    function logout() {
-      currentUser = null;
-      document.getElementById('appSection').classList.add('hidden');
-      document.getElementById('authSection').classList.remove('hidden');
+    // MANEJO DE FOTOS EN CHAT
+    function seleccionarImagen(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        selectedImageBase64 = evt.target.result;
+        document.getElementById('imgPreview').src = selectedImageBase64;
+        document.getElementById('imgPreviewBox').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
     }
 
-    async function cargarConfig() {
-      const res = await fetch('/api/config');
-      const data = await res.json();
-      document.getElementById('cciInput').value = data.lemonCashCCI || '';
+    function cancelarImagen() {
+      selectedImageBase64 = null;
+      document.getElementById('chatFileInput').value = "";
+      document.getElementById('imgPreviewBox').classList.add('hidden');
     }
 
-    async function guardarCCI() {
-      const cci = document.getElementById('cciInput').value;
-      const res = await fetch('/api/config/cci', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': currentUser.role
-        },
-        body: JSON.stringify({ cci })
-      });
-      const data = await res.json();
-      document.getElementById('cciStatus').innerText = res.ok ? "✓ " + data.message : "❌ " + data.error;
-    }
-
-    async function cargarTratos() {
-      const res = await fetch('/api/deals');
-      const data = await res.json();
-      const list = document.getElementById('dealsList');
-      list.innerHTML = "";
-
-      if (data.deals && data.deals.length > 0) {
-        data.deals.forEach(d => {
-          const div = document.createElement('div');
-          div.className = "deal-item";
-          const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
-
-          let actionBtn = '';
-          if (isAdmin && d.status === 'EN_CUSTODIA') {
-            actionBtn = `<button onclick="liberarTrato('${d.id}')" style="padding: 4px 8px; font-size: 0.75rem;">Liberar Fondos</button>`;
-          }
-
-          div.innerHTML = `
-            <div>
-              <strong>[${d.id}] ${d.description}</strong><br>
-              <small style="color: var(--text-muted);">Comprador: ${d.buyer} | Vendedor: ${d.seller} | Monto: $${d.amount}</small>
-            </div>
-            <div>
-              <span class="status-badge ${d.status === 'EN_CUSTODIA' ? 'status-custodia' : 'status-liberado'}">${d.status}</span>
-              ${actionBtn}
-            </div>
-          `;
-          list.appendChild(div);
-        });
-      } else {
-        list.innerHTML = "<p style='color: var(--text-muted);'>No hay tratos registrados aún.</p>";
-      }
-    }
-
-    async function crearTrato() {
-      const seller = document.getElementById('dealSeller').value;
-      const amount = document.getElementById('dealAmount').value;
-      const description = document.getElementById('dealDesc').value;
-
-      const res = await fetch('/api/deals/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ seller, amount, description, buyer: currentUser.email })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('dealStatus').innerText = "✓ " + data.message;
-        document.getElementById('dealSeller').value = "";
-        document.getElementById('dealAmount').value = "";
-        document.getElementById('dealDesc').value = "";
-        cargarTratos();
-      } else {
-        document.getElementById('dealStatus').innerText = "❌ " + data.error;
-      }
-    }
-
-    async function liberarTrato(dealId) {
-      const res = await fetch('/api/deals/release', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': currentUser.role
-        },
-        body: JSON.stringify({ dealId })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert(data.message);
-        cargarTratos();
-      }
-    }
-
-    async function cargarAuditoria() {
-      const res = await fetch('/api/audit', { headers: { 'x-user-role': currentUser.role } });
-      const data = await res.json();
-      const list = document.getElementById('auditList');
-      list.innerHTML = "";
-      if (data.logs) {
-        data.logs.forEach(log => {
-          const li = document.createElement('li');
-          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
-          list.appendChild(li);
-        });
-      }
-    }
-
-    async function cargarMensajes() {
-      const res = await fetch('/api/messages', { headers: { 'x-user-role': currentUser.role } });
-      const data = await res.json();
-      const list = document.getElementById('messageList');
-      list.innerHTML = "";
-      if (data.messages) {
-        data.messages.forEach(m => {
-          const li = document.createElement('li');
-          li.innerText = `[${m.timestamp}] ${m.sender}: ${m.text}`;
-          list.appendChild(li);
-        });
-      }
-    }
-
-    async function enviarMensaje() {
-      const text = document.getElementById('msgText').value;
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sender: currentUser.email, text })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado correctamente.";
-        document.getElementById('msgText').value = "";
-      }
-    }
-  </script>
-</body>
-</html>
+    async function cargarChat() {
+      const res = await fetch(`/api/c
