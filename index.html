@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Intermediación y Custodia</title>
+  <title>Gus Gus - Plataforma de Intermediación</title>
   <style>
     :root {
       --bg-dark: #0f0d0b;
@@ -27,10 +27,7 @@
       background-size: 20px 20px;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .container { max-width: 800px; margin: 0 auto; }
 
     .header {
       border: 2px solid var(--bronze);
@@ -44,24 +41,14 @@
       box-shadow: var(--gold-glow);
     }
 
-    .logo-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      font-size: 2.2rem;
-      filter: drop-shadow(0 0 5px var(--gold));
-    }
-
+    .logo-box { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 2.2rem; filter: drop-shadow(0 0 5px var(--gold)); }
     .logo-title {
       font-size: 1.8rem;
       color: var(--gold);
       font-weight: bold;
       letter-spacing: 1px;
       text-transform: uppercase;
-      text-shadow: 1px 1px 2px #000;
     }
 
     .badge-role {
@@ -71,7 +58,6 @@
       border-radius: 4px;
       font-weight: bold;
       font-size: 0.85rem;
-      letter-spacing: 0.5px;
       border: 1px solid var(--gold);
     }
 
@@ -85,34 +71,17 @@
       position: relative;
     }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 3px; left: 3px; right: 3px; bottom: 3px;
-      border: 1px solid rgba(205, 127, 50, 0.15);
-      pointer-events: none;
-      border-radius: 6px;
-    }
-
     h2 {
       color: var(--gold);
       margin-top: 0;
       font-size: 1.3rem;
       border-bottom: 1px solid var(--bronze);
       padding-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    label {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 4px;
-    }
+    label { color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 4px; }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 10px;
       margin-bottom: 12px;
@@ -125,12 +94,6 @@
       box-sizing: border-box;
     }
 
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: var(--gold-glow);
-    }
-
     button {
       background: linear-gradient(180deg, var(--bronze) 0%, #8b5a2b 100%);
       color: #000;
@@ -141,8 +104,6 @@
       cursor: pointer;
       border-radius: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.2s ease;
     }
 
     button:hover {
@@ -161,12 +122,7 @@
       align-items: center;
     }
 
-    .status-badge {
-      padding: 4px 8px;
-      border-radius: 3px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+    .status-badge { padding: 4px 8px; border-radius: 3px; font-size: 0.8rem; font-weight: bold; }
     .status-custodia { background: #8b5a2b; color: #fff; }
     .status-liberado { background: #2e7d32; color: #fff; }
 
@@ -178,20 +134,20 @@
 
   <div class="container">
 
-    <!-- SECCIÓN AUTH -->
+    <!-- AUTENTICACIÓN -->
     <div id="authSection">
       <div class="header">
         <div class="logo-box">
           <span class="logo-icon">🐭</span>
           <div class="logo-title">Gus Gus</div>
         </div>
-        <div class="badge-role">INTERMEDIACIÓN SEGURA</div>
+        <div class="badge-role">SISTEMA DE INTERMEDIACIÓN</div>
       </div>
 
       <div class="card">
         <h2 id="authTitle">⚙️ Iniciar Sesión</h2>
         <label>Correo Electrónico:</label>
-        <input type="email" id="authEmail" placeholder="ejemplo@gusgus.com">
+        <input type="email" id="authEmail" placeholder="correo@ejemplo.com">
         <label>Contraseña:</label>
         <input type="password" id="authPass" placeholder="******">
         <div id="registerFields" class="hidden">
@@ -206,7 +162,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN APP PRINCIPAL -->
+    <!-- PANEL PRINCIPAL -->
     <div id="appSection" class="hidden">
       <div class="header">
         <div class="logo-box">
@@ -219,48 +175,48 @@
         </div>
       </div>
 
-      <!-- PASARELA LEMON CASH -->
+      <!-- LEMON CASH -->
       <div class="card">
         <h2>💳 Pasarela Financiera - Lemon Cash</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">CCI Oficial registrado para recepción y custodia de fondos:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">CCI Oficial para custodia de fondos:</p>
         <input type="text" id="cciInput" maxlength="21" placeholder="CCI de 21 dígitos">
         <button id="btnSaveCCI" onclick="guardarCCI()">Guardar CCI (Solo Admin)</button>
         <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
       </div>
 
-      <!-- MÓDULO DE INTERMEDIACIÓN -->
+      <!-- INTERMEDIACIÓN -->
       <div class="card">
-        <h2>⚖️ Sistema de Intermediación (Compras y Ventas)</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Crear un nuevo trato de compra/venta asegurado:</p>
+        <h2>⚖️ Intermediación Segura de Compras y Ventas</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Registrar nuevo trato en custodia:</p>
         <label>Correo del Vendedor / Contraparte:</label>
         <input type="email" id="dealSeller" placeholder="vendedor@ejemplo.com">
-        <label>Monto a Depositar ($):</label>
+        <label>Monto ($):</label>
         <input type="number" id="dealAmount" placeholder="100.00">
-        <label>Descripción del Producto o Servicio:</label>
-        <input type="text" id="dealDesc" placeholder="Ej. Compra de cuenta o artículo">
-        <button onclick="crearTrato()">Iniciar Trato y Depositar en Custodia</button>
+        <label>Descripción del Producto/Servicio:</label>
+        <input type="text" id="dealDesc" placeholder="Ej. Cuenta de juego o producto digital">
+        <button onclick="crearTrato()">Registrar Trato en Custodia</button>
         <p id="dealStatus" style="color: var(--gold); font-weight: bold; margin-top: 8px;"></p>
 
-        <h3 style="color: var(--bronze); margin-top: 20px;">Tratos Registrados en Custodia:</h3>
+        <h3 style="color: var(--bronze); margin-top: 20px;">Tratos Registrados:</h3>
         <div id="dealsList"></div>
       </div>
 
-      <!-- PANEL MAESTRO DE CONTROL (ADMIN) -->
+      <!-- PANEL ADMIN MAESTRO -->
       <div id="adminPanel" class="card hidden">
-        <h2>🔍 Custodia y Auditoría (Gus & Nor #2)</h2>
+        <h2>🔍 Módulo de Custodia y Auditoría (Gus & Nor #2)</h2>
         <button onclick="cargarAuditoria()">Consultar Logs de Seguridad</button>
         <ul id="auditList"></ul>
 
-        <h2>📬 Mensajes Directos de Usuarios</h2>
-        <button onclick="cargarMensajes()">Cargar Mensajes</button>
+        <h2>📬 Mensajes Recibidos de Usuarios</h2>
+        <button onclick="cargarMensajes()">Ver Mensajes</button>
         <ul id="messageList"></ul>
       </div>
 
-      <!-- CENTRO DE ATENCIÓN Y MENSAJES -->
+      <!-- SOPORTE -->
       <div class="card">
         <h2>💬 Contacto Directo con el Creador</h2>
-        <textarea id="msgText" rows="3" placeholder="Escribe tus dudas o reporte de intermediación..."></textarea>
-        <button onclick="enviarMensaje()">Enviar Mensaje Directo</button>
+        <textarea id="msgText" rows="3" placeholder="Envía tus dudas o solicitudes de soporte..."></textarea>
+        <button onclick="enviarMensaje()">Enviar Mensaje</button>
         <p id="msgStatus" style="color: var(--gold); margin-top: 8px;"></p>
       </div>
 
@@ -298,7 +254,7 @@
 
       if (res.ok) {
         if (isRegisterMode) {
-          alert("Cuenta creada con éxito. Inicia sesión.");
+          alert("Registro exitoso. Inicia sesión.");
           toggleAuthMode();
         } else {
           currentUser = data.user;
@@ -313,6 +269,158 @@
       document.getElementById('authSection').classList.add('hidden');
       document.getElementById('appSection').classList.remove('hidden');
       document.getElementById('userDisplay').innerText = `${currentUser.name}`;
+
+      const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
+      document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
+      document.getElementById('btnSaveCCI').disabled = !isAdmin;
+
+      cargarConfig();
+      cargarTratos();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+    }
+
+    async function cargarConfig() {
+      const res = await fetch('/api/config');
+      const data = await res.json();
+      document.getElementById('cciInput').value = data.lemonCashCCI || '';
+    }
+
+    async function guardarCCI() {
+      const cci = document.getElementById('cciInput').value;
+      const res = await fetch('/api/config/cci', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-role': currentUser.role
+        },
+        body: JSON.stringify({ cci })
+      });
+      const data = await res.json();
+      document.getElementById('cciStatus').innerText = res.ok ? "✓ " + data.message : "❌ " + data.error;
+    }
+
+    async function cargarTratos() {
+      const res = await fetch('/api/deals');
+      const data = await res.json();
+      const list = document.getElementById('dealsList');
+      list.innerHTML = "";
+
+      if (data.deals && data.deals.length > 0) {
+        data.deals.forEach(d => {
+          const div = document.createElement('div');
+          div.className = "deal-item";
+          const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
+
+          let actionBtn = '';
+          if (isAdmin && d.status === 'EN_CUSTODIA') {
+            actionBtn = `<button onclick="liberarTrato('${d.id}')" style="padding: 4px 8px; font-size: 0.75rem;">Liberar Fondos</button>`;
+          }
+
+          div.innerHTML = `
+            <div>
+              <strong>[${d.id}] ${d.description}</strong><br>
+              <small style="color: var(--text-muted);">Comprador: ${d.buyer} | Vendedor: ${d.seller} | Monto: $${d.amount}</small>
+            </div>
+            <div>
+              <span class="status-badge ${d.status === 'EN_CUSTODIA' ? 'status-custodia' : 'status-liberado'}">${d.status}</span>
+              ${actionBtn}
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } else {
+        list.innerHTML = "<p style='color: var(--text-muted);'>No hay tratos registrados aún.</p>";
+      }
+    }
+
+    async function crearTrato() {
+      const seller = document.getElementById('dealSeller').value;
+      const amount = document.getElementById('dealAmount').value;
+      const description = document.getElementById('dealDesc').value;
+
+      const res = await fetch('/api/deals/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seller, amount, description, buyer: currentUser.email })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('dealStatus').innerText = "✓ " + data.message;
+        document.getElementById('dealSeller').value = "";
+        document.getElementById('dealAmount').value = "";
+        document.getElementById('dealDesc').value = "";
+        cargarTratos();
+      } else {
+        document.getElementById('dealStatus').innerText = "❌ " + data.error;
+      }
+    }
+
+    async function liberarTrato(dealId) {
+      const res = await fetch('/api/deals/release', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-role': currentUser.role
+        },
+        body: JSON.stringify({ dealId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        cargarTratos();
+      }
+    }
+
+    async function cargarAuditoria() {
+      const res = await fetch('/api/audit', { headers: { 'x-user-role': currentUser.role } });
+      const data = await res.json();
+      const list = document.getElementById('auditList');
+      list.innerHTML = "";
+      if (data.logs) {
+        data.logs.forEach(log => {
+          const li = document.createElement('li');
+          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
+          list.appendChild(li);
+        });
+      }
+    }
+
+    async function cargarMensajes() {
+      const res = await fetch('/api/messages', { headers: { 'x-user-role': currentUser.role } });
+      const data = await res.json();
+      const list = document.getElementById('messageList');
+      list.innerHTML = "";
+      if (data.messages) {
+        data.messages.forEach(m => {
+          const li = document.createElement('li');
+          li.innerText = `[${m.timestamp}] ${m.sender}: ${m.text}`;
+          list.appendChild(li);
+        });
+      }
+    }
+
+    async function enviarMensaje() {
+      const text = document.getElementById('msgText').value;
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: currentUser.email, text })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado correctamente.";
+        document.getElementById('msgText').value = "";
+      }
+    }
+  </script>
+</body>
+</html>
+urrentUser.name}`;
 
       const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
       document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
