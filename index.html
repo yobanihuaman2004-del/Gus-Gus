@@ -29,18 +29,8 @@
       justify-content: space-between;
       align-items: center;
     }
-    .logo {
-      font-size: 1.8rem;
-      color: var(--gold);
-      font-weight: bold;
-    }
-    .badge {
-      background: var(--copper);
-      color: #000;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-weight: bold;
-    }
+    .logo { font-size: 1.8rem; color: var(--gold); font-weight: bold; }
+    .badge { background: var(--copper); color: #000; padding: 6px 12px; border-radius: 4px; font-weight: bold; }
     .card {
       background: var(--panel-bg);
       border: var(--border);
@@ -49,15 +39,17 @@
       border-radius: 6px;
     }
     h2 { color: var(--bronze); margin-top: 0; }
-    input[type="text"] {
+    input, textarea {
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       padding: 10px;
+      margin-bottom: 10px;
       background: #0d0b0a;
       border: 1px solid var(--bronze);
       color: var(--gold);
-      font-family: monospace;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
     button {
       background: var(--bronze);
@@ -66,46 +58,140 @@
       padding: 10px 20px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 10px;
       border-radius: 4px;
     }
     button:hover { background: var(--gold); }
+    .hidden { display: none; }
     ul { list-style: square; padding-left: 20px; }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="logo">⚙️ Gus Gus - GG Disney</div>
-    <div class="badge">PANEL: ADMIN MAESTRO (CREADOR)</div>
+  <!-- PANTALLA DE AUTENTICACIÓN -->
+  <div id="authSection">
+    <div class="header">
+      <div class="logo">⚙️ Gus Gus - Disney Mouse</div>
+      <div class="badge">SISTEMA INTERMEDIARIO</div>
+    </div>
+
+    <div class="card">
+      <h2 id="authTitle">Iniciar Sesión</h2>
+      <input type="email" id="authEmail" placeholder="Correo electrónico">
+      <input type="password" id="authPass" placeholder="Contraseña">
+      <input type="text" id="authName" class="hidden" placeholder="Nombre completo">
+      <br>
+      <button onclick="ejecutarAuth()" id="authBtn">Ingresar</button>
+      <p>
+        <a href="#" onclick="toggleAuthMode()" id="toggleLink" style="color: var(--gold);">¿No tienes cuenta? Regístrate aquí</a>
+      </p>
+      <p id="authStatus" style="color: red; font-weight: bold;"></p>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Pasarela Financiera - Lemon Cash</h2>
-    <p>CCI registrado para recepción de fondos:</p>
-    <input type="text" id="cciInput" maxlength="21" placeholder="CCI de 21 dígitos">
-    <br>
-    <button onclick="guardarCCI()">Guardar CCI</button>
-    <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 10px;"></p>
-  </div>
+  <!-- APPLICACIÓN PRINCIPAL (POST LOGIN) -->
+  <div id="appSection" class="hidden">
+    <div class="header">
+      <div class="logo">⚙️ Gus Gus</div>
+      <div>
+        <span id="userDisplay" class="badge"></span>
+        <button onclick="logout()" style="margin-left: 10px; padding: 5px 10px;">Cerrar Sesión</button>
+      </div>
+    </div>
 
-  <div class="card">
-    <h2>Módulo de Custodia y Auditoría (Gus & Nor #2)</h2>
-    <button onclick="cargarAuditoria()">Consultar Registros de Supervisión</button>
-    <ul id="auditList"></ul>
+    <!-- MÓDULO FINANCIERO -->
+    <div class="card">
+      <h2>Pasarela Financiera - Lemon Cash</h2>
+      <p>CCI Registrado para transacciones e intermediación:</p>
+      <input type="text" id="cciInput" maxlength="21" placeholder="CCI de Lemon Cash">
+      <br>
+      <button id="btnSaveCCI" onclick="guardarCCI()">Guardar CCI (Solo Admin)</button>
+      <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 10px;"></p>
+    </div>
+
+    <!-- MÓDULO EXCLUSIVO PARA ADMIN MAESTRO -->
+    <div id="adminPanel" class="card hidden">
+      <h2>Módulo de Auditoría y Custodia (Gus & Nor #2)</h2>
+      <button onclick="cargarAuditoria()">Cargar Logs de Auditoría</button>
+      <ul id="auditList"></ul>
+
+      <h2>Mensajes Recibidos</h2>
+      <button onclick="cargarMensajes()">Ver Mensajes de Usuarios</button>
+      <ul id="messageList"></ul>
+    </div>
+
+    <!-- MÓDULO DE ATENCIÓN Y MENSAJERÍA PARA USUARIOS -->
+    <div class="card">
+      <h2>Centro de Contacto con el Creador</h2>
+      <textarea id="msgText" rows="3" placeholder="Escribe tu mensaje o consulta sobre intermediación..."></textarea>
+      <br>
+      <button onclick="enviarMensaje()">Enviar Mensaje</button>
+      <p id="msgStatus" style="color: var(--gold);"></p>
+    </div>
   </div>
 
   <script>
-    const USER_ROLE = "ADMIN_MAESTRO";
+    let currentUser = null;
+    let isRegisterMode = false;
+
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById('authTitle').innerText = isRegisterMode ? "Crear Cuenta" : "Iniciar Sesión";
+      document.getElementById('authName').classList.toggle('hidden', !isRegisterMode);
+      document.getElementById('authBtn').innerText = isRegisterMode ? "Registrarme" : "Ingresar";
+      document.getElementById('toggleLink').innerText = isRegisterMode ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate aquí";
+    }
+
+    async function ejecutarAuth() {
+      const email = document.getElementById('authEmail').value;
+      const pass = document.getElementById('authPass').value;
+      const name = document.getElementById('authName').value;
+      const status = document.getElementById('authStatus');
+
+      const url = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
+      const body = isRegisterMode ? { email, pass, name } : { email, pass };
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        if (isRegisterMode) {
+          alert("Registro exitoso. Ahora inicia sesión.");
+          toggleAuthMode();
+        } else {
+          currentUser = data.user;
+          iniciarApp();
+        }
+      } else {
+        status.innerText = data.error;
+      }
+    }
+
+    function iniciarApp() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+      document.getElementById('userDisplay').innerText = `${currentUser.name} (${currentUser.role})`;
+
+      const isAdmin = currentUser.role === 'ADMIN_MAESTRO';
+      document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
+      document.getElementById('btnSaveCCI').disabled = !isAdmin;
+
+      cargarConfig();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+    }
 
     async function cargarConfig() {
-      try {
-        const res = await fetch('/api/config');
-        const data = await res.json();
-        document.getElementById('cciInput').value = data.lemonCashCCI || '';
-      } catch (err) {
-        console.error("Error al obtener la configuración", err);
-      }
+      const res = await fetch('/api/config');
+      const data = await res.json();
+      document.getElementById('cciInput').value = data.lemonCashCCI || '';
     }
 
     async function guardarCCI() {
@@ -114,36 +200,55 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-role': USER_ROLE
+          'x-user-role': currentUser.role
         },
         body: JSON.stringify({ cci })
       });
       const data = await res.json();
-      const statusElement = document.getElementById('cciStatus');
-      if (res.ok) {
-        statusElement.innerText = "✓ " + data.message;
-      } else {
-        statusElement.innerText = "❌ " + data.error;
-      }
+      document.getElementById('cciStatus').innerText = res.ok ? "✓ " + data.message : "❌ " + data.error;
     }
 
     async function cargarAuditoria() {
-      const res = await fetch('/api/audit', {
-        headers: { 'x-user-role': USER_ROLE }
-      });
+      const res = await fetch('/api/audit', { headers: { 'x-user-role': currentUser.role } });
       const data = await res.json();
       const list = document.getElementById('auditList');
       list.innerHTML = "";
       if (data.logs) {
         data.logs.forEach(log => {
           const li = document.createElement('li');
-          li.innerText = `[${log.timestamp}] [${log.auditor}] - ${log.detail}`;
+          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
           list.appendChild(li);
         });
       }
     }
 
-    cargarConfig();
+    async function cargarMensajes() {
+      const res = await fetch('/api/messages', { headers: { 'x-user-role': currentUser.role } });
+      const data = await res.json();
+      const list = document.getElementById('messageList');
+      list.innerHTML = "";
+      if (data.messages) {
+        data.messages.forEach(m => {
+          const li = document.createElement('li');
+          li.innerText = `[${m.timestamp}] ${m.sender}: ${m.text}`;
+          list.appendChild(li);
+        });
+      }
+    }
+
+    async function enviarMensaje() {
+      const text = document.getElementById('msgText').value;
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: currentUser.email, text })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('msgStatus').innerText = "✓ Mensaje enviado al Creador.";
+        document.getElementById('msgText').value = "";
+      }
+    }
   </script>
 </body>
 </html>
