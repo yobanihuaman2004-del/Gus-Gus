@@ -178,11 +178,6 @@
         </div>
 
         <div class="form-group">
-          <label>Número de DNI</label>
-          <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-        </div>
-
-        <div class="form-group">
           <label>Contraseña</label>
           <input type="password" id="loginPassword" placeholder="••••••••" required>
         </div>
@@ -321,29 +316,29 @@
       }
     };
 
+    // FORMULARIO DE INICIO DE SESIÓN
     document.getElementById('formLogin').onsubmit = async function(e) {
       e.preventDefault();
-      msg.textContent = "Verificando...";
+      msg.textContent = "Verificando credenciales...";
       msg.className = "";
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
 
       try {
         const res = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: document.getElementById('loginEmail').value,
-            dni: document.getElementById('loginDni').value,
-            password: document.getElementById('loginPassword').value
-          })
+          body: JSON.stringify({ email, password })
         });
         const data = await res.json();
 
         if (res.ok) {
-          msg.textContent = "¡Inicio de sesión exitoso!";
+          msg.textContent = "¡Inicio de sesión exitoso! Ingresando...";
           msg.className = "exito";
           localStorage.setItem('gusgus_token', data.token);
           localStorage.setItem('gusgus_user', JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = "/dashboard"; }, 1000);
+          setTimeout(() => { window.location.href = "/dashboard"; }, 800);
         } else {
           msg.textContent = data.error || "Error al iniciar sesión.";
           msg.className = "error";
