@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gus Gus - Panel Principal</title>
   <style>
     :root {
@@ -14,8 +14,11 @@
       --text-main: #231B1E;
       --text-muted: #6E6366;
       --border-color: #E2DAD5;
+      --input-bg: #FAF7F5;
       --success-bg: #EAF4EE;
       --success-text: #3A7A56;
+      --warning-bg: #FFF4E5;
+      --warning-text: #B76E00;
     }
 
     * {
@@ -33,11 +36,10 @@
     }
 
     .container {
-      max-width: 500px;
+      max-width: 440px;
       margin: 0 auto;
     }
 
-    /* Barra Superior / Header */
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -54,7 +56,6 @@
       font-size: 22px;
       font-weight: 700;
       color: var(--primary-color);
-      letter-spacing: -0.5px;
     }
 
     .btn-logout {
@@ -66,18 +67,11 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
-    .btn-logout:active {
-      background: var(--accent-color);
-      color: #FFFFFF;
-    }
-
-    /* Tarjeta de Bienvenida (Primera Fila) */
     .welcome-card {
       background: var(--card-bg);
-      padding: 24px;
+      padding: 22px 20px;
       border-radius: 20px;
       border: 1px solid rgba(226, 218, 213, 0.6);
       box-shadow: 0 8px 24px rgba(58, 39, 45, 0.04);
@@ -87,128 +81,188 @@
     .welcome-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
+      align-items: center;
+      margin-bottom: 8px;
     }
 
     .welcome-title {
       color: var(--primary-color);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
     }
 
     .status-badge {
-      padding: 6px 12px;
+      padding: 5px 10px;
       background: var(--success-bg);
       color: var(--success-text);
       border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.3px;
     }
 
     .user-details {
       color: var(--text-muted);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    .user-details strong {
-      color: var(--text-main);
-    }
-
-    /* Fila de Métricas / Accesos Rápidos */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .action-card {
+      background: var(--card-bg);
+      padding: 22px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(226, 218, 213, 0.6);
+      box-shadow: 0 8px 24px rgba(58, 39, 45, 0.04);
       margin-bottom: 20px;
     }
 
-    .stat-card {
-      background: var(--card-bg);
-      padding: 18px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(226, 218, 213, 0.6);
-      text-align: left;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
-
-    /* Lista de Operaciones Recientes */
     .section-title {
       font-size: 16px;
       font-weight: 700;
       color: var(--primary-color);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      text-align: left;
     }
 
-    .activity-card {
+    .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 15px;
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .op-item {
       background: var(--card-bg);
-      padding: 20px;
-      border-radius: 20px;
+      padding: 16px;
+      border-radius: 16px;
       border: 1px solid rgba(226, 218, 213, 0.6);
-      text-align: center;
+      margin-bottom: 12px;
+      text-align: left;
     }
 
-    .empty-state-text {
-      font-size: 13px;
-      color: var(--text-muted);
+    .op-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
     }
+
+    .op-code {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent-color);
+    }
+
+    .op-badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .op-desc {
+      font-size: 14px;
+      color: var(--text-main);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .op-amount {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    #mensaje {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .error { color: #B33A3A; }
+    .exito { color: #3A7A56; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Navegación -->
     <nav class="navbar">
       <div class="brand-logo">Gus Gus</div>
       <button class="btn-logout" id="btnLogout">Cerrar Sesión</button>
     </nav>
 
-    <!-- Fila 1: Tarjeta de Bienvenida y Usuario -->
     <div class="welcome-card">
       <div class="welcome-header">
         <h2 class="welcome-title" id="userGreeting">¡Hola!</h2>
         <span class="status-badge">ACTIVO</span>
       </div>
-      <div class="user-details" id="userInfo">
-        Cargando perfil...
-      </div>
+      <div class="user-details" id="userInfo">Cargando perfil...</div>
     </div>
 
-    <!-- Fila 2: Resumen de Estado -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Operaciones</div>
-        <div class="stat-value">0 activas</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Nivel de Seguridad</div>
-        <div class="stat-value" style="color: var(--accent-color);">Alto</div>
-      </div>
+    <div class="action-card">
+      <h3 class="section-title">Nueva Operación Segura</h3>
+      <form id="formOperacion">
+        <div class="form-group">
+          <label>Tipo de Operación</label>
+          <select id="opTipo">
+            <option value="COMPRA">Soy Comprador</option>
+            <option value="VENTA">Soy Vendedor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Monto (S/)</label>
+          <input type="number" id="opMonto" placeholder="Ej. 250.00" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción del Producto / Servicio</label>
+          <input type="text" id="opDescripcion" placeholder="Ej. Lote de ropa / Servicio web" required>
+        </div>
+
+        <button type="submit" class="btn-action">Iniciar Intermediación</button>
+      </form>
+      <div id="mensaje"></div>
     </div>
 
-    <!-- Fila 3: Actividad Reciente -->
-    <h3 class="section-title">Actividad Reciente</h3>
-    <div class="activity-card">
-      <p class="empty-state-text">No hay movimientos o transacciones recientes.</p>
+    <h3 class="section-title">Operaciones Activas</h3>
+    <div id="listaOperaciones">
+      <div class="op-item">
+        <p style="font-size: 13px; color: var(--text-muted); text-align: center;">No tienes operaciones activas actualmente.</p>
+      </div>
     </div>
   </div>
 
   <script>
-    // Validar sesión
     const user = JSON.parse(localStorage.getItem('gusgus_user') || '{}');
     const token = localStorage.getItem('gusgus_token');
 
@@ -216,13 +270,58 @@
       window.location.href = '/';
     } else {
       document.getElementById('userGreeting').textContent = `¡Hola, ${user.nombre || 'Usuario'}!`;
-      document.getElementById('userInfo').innerHTML = `
-        <p><strong>Correo:</strong> ${user.email || 'No registrado'}</p>
-        <p><strong>DNI:</strong> ${user.dni || 'No registrado'}</p>
-      `;
+      document.getElementById('userInfo').textContent = `Correo: ${user.email || 'correo@ejemplo.com'} | DNI: ${user.dni || '00000000'}`;
     }
 
-    // Cerrar Sesión
+    const operaciones = [];
+
+    document.getElementById('formOperacion').onsubmit = async function(e) {
+      e.preventDefault();
+      const msg = document.getElementById('mensaje');
+      msg.textContent = "Generando acuerdo seguro...";
+      msg.className = "";
+
+      const tipo = document.getElementById('opTipo').value;
+      const monto = parseFloat(document.getElementById('opMonto').value).toFixed(2);
+      const descripcion = document.getElementById('opDescripcion').value;
+      const codigoOp = "GG-" + Math.floor(100000 + Math.random() * 900000);
+
+      try {
+        await fetch('/api/operaciones/crear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, tipo, monto, descripcion, codigoOp })
+        });
+
+        msg.textContent = `¡Operación ${codigoOp} creada con éxito!`;
+        msg.className = "exito";
+
+        operaciones.unshift({ codigoOp, tipo, monto, descripcion, estado: "En Custodia" });
+        renderOperaciones();
+
+        document.getElementById('formOperacion').reset();
+      } catch (err) {
+        msg.textContent = "Error al crear la operación.";
+        msg.className = "error";
+      }
+    };
+
+    function renderOperaciones() {
+      const contenedor = document.getElementById('listaOperaciones');
+      if (operaciones.length === 0) return;
+
+      contenedor.innerHTML = operaciones.map(op => `
+        <div class="op-item">
+          <div class="op-header">
+            <span class="op-code">${op.codigoOp} (${op.tipo})</span>
+            <span class="op-badge">${op.estado}</span>
+          </div>
+          <div class="op-desc">${op.descripcion}</div>
+          <div class="op-amount">S/ ${op.monto}</div>
+        </div>
+      `).join('');
+    }
+
     document.getElementById('btnLogout').onclick = function() {
       localStorage.removeItem('gusgus_token');
       localStorage.removeItem('gusgus_user');
