@@ -10,65 +10,109 @@ const { Pool } = require('pg');
 
 const app = express();
 
-// --- CONFIGURACIÓN DE SEGURIDAD Y MIDDLEWARES ---
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(xss());
 app.use(express.json());
 app.use(cors());
 
-// Limitador de peticiones
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
 });
 app.use(limiter);
 
-// Base de Datos PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// --- MIDDLEWARE DE AUTENTICACIÓN JWT ---
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
+const codigosVerificacion = new Map();
+const codigosRecuperacion = new Map();
 
-  jwt.verify(token, process.env.JWT_SECRET || 'secret_key', (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token inválido o expirado.' });
-    req.user = user;
-    next();
-  });
-};
-
-// --- SERVIR ARCHIVOS ESTÁTICOS ---
 app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// --- RUTA DE REGISTRO ---
-app.post('/api/register', async (req, res) => {
-  const { nombre, email, dni, password } = req.body;
-  if (!nombre || !email || !dni || !password) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-  }
-  // Respuesta simulada de éxito
-  res.json({ message: 'Usuario registrado con éxito', user: { nombre, email, dni } });
+app.get('/register.html', (req, res) => {
+  res.sendFile(__dirname + '/register.html');
 });
 
-// --- RUTA DE LOGIN ---
-app.post('/api/login', async (req, res) => {
+app.get('/dashboard', (req, res) => {
+  res.sendFile(__dirname + '/dashboard.html');
+});
+
+// APIs
+app.post('/api/enviar-codigo', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Correo requerido.' });
+
+  const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+  codigosVerificacion.set(email, { codigo, expira: Date.now() + 10 * 60 * 1000 });
+
+  res.json({ message: 'Código de verificación enviado al correo.' });
+});
+
+app.post('/api/recuperar-codigo', (req, res) => {
+  const { contacto } = req.body;
+  if (!contacto) return res.status(400).json({ error: 'Ingresa correo o teléfono.' });
+
+  const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+  codigosRecuperacion.set(contacto, { codigo, expira: Date.now() + 10 * 60 * 1000 });
+
+  res.json({ message: `Código de recuperación enviado a ${contacto}.` });
+});
+
+app.post('/api/restablecer-password', async (req, res) => {
+  const { contacto, codigo, nuevaPassword } = req.body;
+  if (!contacto || !codigo || !nuevaPassword) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  }
+
+  const registro = codigosRecuperacion.get(contacto);
+  if (!registro || registro.codigo !== codigo) {
+    return res.status(400).json({ error: 'El código es incorrecto.' });
+  }
+
+  codigosRecuperacion.delete(contacto);
+  res.json({ message: 'Contraseña actualizada con éxito.' });
+});
+
+app.post('/api/register', async (req, res) => {
+  const { nombre, email, dni, password, codigo } = req.body;
+  if (!nombre || !email || !dni || !password || !codigo) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  }
+
+  const registroCodigo = codigosVerificacion.get(email);
+  if (!registroCodigo || registroCodigo.codigo !== codigo) {
+    return res.status(400).json({ error: 'El código de verificación es incorrecto.' });
+  }
+
+  codigosVerificacion.delete(email);
+  res.json({ message: 'Registro exitoso.', user: { nombre, email, dni } });
+});
+
+app.post('/api/login', (req, res) => {
   const { email, dni, password } = req.body;
   if (!email || !dni || !password) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
   }
-  res.json({ message: 'Inicio de sesión exitoso', user: { email, dni } });
+
+  const token = jwt.sign({ email }, process.env.JWT_SECRET || 'secret_key', { expiresIn: '2h' });
+  res.json({
+    message: 'Login exitoso',
+    token,
+    user: { nombre: email.split('@')[0], email, dni }
+  });
 });
 
-// --- PUERTO Y ARRANQUE DEL SERVIDOR ---
+app.post('/api/operaciones/crear', (req, res) => {
+  const { email, tipo, monto, descripcion, codigoOp } = req.body;
+  res.json({ message: 'Operación registrada con éxito.', codigoOp });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor de Gus Gus corriendo en el puerto ${PORT}`);
