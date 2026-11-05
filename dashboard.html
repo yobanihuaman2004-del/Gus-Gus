@@ -9,10 +9,13 @@
       --bg-color: #F4EFEA;
       --card-bg: #FFFFFF;
       --primary-color: #3A272D;
+      --primary-hover: #2B1C21;
       --accent-color: #8C6551;
       --text-main: #231B1E;
       --text-muted: #6E6366;
       --border-color: #E2DAD5;
+      --success-bg: #EAF4EE;
+      --success-text: #3A7A56;
     }
 
     * {
@@ -26,90 +29,186 @@
       background-color: var(--bg-color);
       color: var(--text-main);
       min-height: 100vh;
-      padding: 20px;
+      padding: 20px 16px;
     }
 
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Barra Superior / Header */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: var(--card-bg);
-      padding: 16px 24px;
-      border-radius: 18px;
+      padding: 16px 20px;
+      border-radius: 20px;
       border: 1px solid rgba(226, 218, 213, 0.6);
-      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(58, 39, 45, 0.03);
+      margin-bottom: 20px;
     }
 
     .brand-logo {
       font-size: 22px;
       font-weight: 700;
       color: var(--primary-color);
+      letter-spacing: -0.5px;
     }
 
     .btn-logout {
       background: transparent;
-      border: 1px solid var(--accent-color);
+      border: 1.5px solid var(--accent-color);
       color: var(--accent-color);
-      padding: 8px 16px;
-      border-radius: 10px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
+    .btn-logout:active {
+      background: var(--accent-color);
+      color: #FFFFFF;
     }
 
+    /* Tarjeta de Bienvenida (Primera Fila) */
     .welcome-card {
       background: var(--card-bg);
-      padding: 28px;
+      padding: 24px;
       border-radius: 20px;
       border: 1px solid rgba(226, 218, 213, 0.6);
-      box-shadow: 0 10px 30px rgba(58, 39, 45, 0.04);
+      box-shadow: 0 8px 24px rgba(58, 39, 45, 0.04);
       margin-bottom: 20px;
     }
 
-    .welcome-card h2 {
-      color: var(--primary-color);
-      font-size: 22px;
-      margin-bottom: 8px;
+    .welcome-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
     }
 
-    .welcome-card p {
-      color: var(--text-muted);
-      font-size: 14px;
+    .welcome-title {
+      color: var(--primary-color);
+      font-size: 22px;
+      font-weight: 700;
     }
 
     .status-badge {
-      display: inline-block;
-      margin-top: 14px;
       padding: 6px 12px;
-      background: #EAF4EE;
-      color: #3A7A56;
-      border-radius: 8px;
-      font-size: 12px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-radius: 20px;
+      font-size: 11px;
       font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .user-details {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .user-details strong {
+      color: var(--text-main);
+    }
+
+    /* Fila de Métricas / Accesos Rápidos */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 18px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(226, 218, 213, 0.6);
+      text-align: left;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* Lista de Operaciones Recientes */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 12px;
+    }
+
+    .activity-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(226, 218, 213, 0.6);
+      text-align: center;
+    }
+
+    .empty-state-text {
+      font-size: 13px;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
 
   <div class="container">
+    <!-- Navegación -->
     <nav class="navbar">
       <div class="brand-logo">Gus Gus</div>
       <button class="btn-logout" id="btnLogout">Cerrar Sesión</button>
     </nav>
 
+    <!-- Fila 1: Tarjeta de Bienvenida y Usuario -->
     <div class="welcome-card">
-      <h2 id="userGreeting">¡Bienvenido a Gus Gus!</h2>
-      <p id="userInfo">Cargando tus datos de usuario...</p>
-      <div class="status-badge">Cuenta Verificada & Inmune</div>
+      <div class="welcome-header">
+        <h2 class="welcome-title" id="userGreeting">¡Hola!</h2>
+        <span class="status-badge">ACTIVO</span>
+      </div>
+      <div class="user-details" id="userInfo">
+        Cargando perfil...
+      </div>
+    </div>
+
+    <!-- Fila 2: Resumen de Estado -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Operaciones</div>
+        <div class="stat-value">0 activas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Nivel de Seguridad</div>
+        <div class="stat-value" style="color: var(--accent-color);">Alto</div>
+      </div>
+    </div>
+
+    <!-- Fila 3: Actividad Reciente -->
+    <h3 class="section-title">Actividad Reciente</h3>
+    <div class="activity-card">
+      <p class="empty-state-text">No hay movimientos o transacciones recientes.</p>
     </div>
   </div>
 
   <script>
-    // Recuperar token e información del usuario guardada en el navegador
+    // Validar sesión
     const user = JSON.parse(localStorage.getItem('gusgus_user') || '{}');
     const token = localStorage.getItem('gusgus_token');
 
@@ -117,9 +216,13 @@
       window.location.href = '/';
     } else {
       document.getElementById('userGreeting').textContent = `¡Hola, ${user.nombre || 'Usuario'}!`;
-      document.getElementById('userInfo').textContent = `Correo: ${user.email} | DNI: ${user.dni}`;
+      document.getElementById('userInfo').innerHTML = `
+        <p><strong>Correo:</strong> ${user.email || 'No registrado'}</p>
+        <p><strong>DNI:</strong> ${user.dni || 'No registrado'}</p>
+      `;
     }
 
+    // Cerrar Sesión
     document.getElementById('btnLogout').onclick = function() {
       localStorage.removeItem('gusgus_token');
       localStorage.removeItem('gusgus_user');
