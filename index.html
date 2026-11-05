@@ -21,6 +21,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -99,6 +100,7 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
+      touch-action: manipulation;
     }
 
     .btn-secondary {
@@ -115,19 +117,21 @@
       box-sizing: border-box;
       cursor: pointer;
       text-align: center;
+      touch-action: manipulation;
     }
 
     .btn-text-action {
       background: none;
       border: none;
       color: var(--accent-color);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      padding: 8px 0;
+      padding: 12px 0;
       display: block;
       width: 100%;
       text-align: right;
+      touch-action: manipulation;
     }
 
     .btn-code {
@@ -140,10 +144,11 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+      touch-action: manipulation;
     }
 
     .divider {
-      margin: 24px 0 16px 0;
+      margin: 20px 0 16px 0;
       border-top: 1px solid var(--border-color);
     }
 
@@ -230,20 +235,31 @@
     const vistaRecuperar = document.getElementById('vistaRecuperar');
     const subtituloCard = document.getElementById('subtituloCard');
     const msg = document.getElementById('mensaje');
+    const btnAbrir = document.getElementById('btnAbrirRecuperar');
+    const btnVolver = document.getElementById('btnVolverLogin');
 
-    document.getElementById('btnAbrirRecuperar').onclick = function() {
+    function mostrarRecuperar(e) {
+      if (e) e.preventDefault();
       vistaLogin.classList.add('oculto');
       vistaRecuperar.classList.remove('oculto');
       subtituloCard.textContent = "Ingresa tu correo o teléfono para restablecer tu contraseña.";
       msg.textContent = "";
-    };
+    }
 
-    document.getElementById('btnVolverLogin').onclick = function() {
+    function mostrarLogin(e) {
+      if (e) e.preventDefault();
       vistaRecuperar.classList.add('oculto');
       vistaLogin.classList.remove('oculto');
       subtituloCard.textContent = "Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.";
       msg.textContent = "";
-    };
+    }
+
+    // Eventos táctiles directos para celulares
+    btnAbrir.addEventListener('click', mostrarRecuperar);
+    btnAbrir.addEventListener('touchstart', mostrarRecuperar, { passive: false });
+
+    btnVolver.addEventListener('click', mostrarLogin);
+    btnVolver.addEventListener('touchstart', mostrarLogin, { passive: false });
 
     document.getElementById('btnEnviarCodigoRec').onclick = async function() {
       const contacto = document.getElementById('recContacto').value;
@@ -291,7 +307,7 @@
         if (res.ok) {
           msg.textContent = "¡Contraseña actualizada! Ya puedes iniciar sesión.";
           msg.className = "exito";
-          setTimeout(() => { document.getElementById('btnVolverLogin').click(); }, 1500);
+          setTimeout(() => { mostrarLogin(); }, 1500);
         } else {
           msg.textContent = data.error || "Error al actualizar contraseña.";
           msg.className = "error";
@@ -300,5 +316,41 @@
         msg.textContent = "Error de conexión con el servidor.";
         msg.className = "error";
       }
+    };
 
-    
+    document.getElementById('formLogin').onsubmit = async function(e) {
+      e.preventDefault();
+      msg.textContent = "Verificando...";
+      msg.className = "";
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('loginEmail').value,
+            dni: document.getElementById('loginDni').value,
+            password: document.getElementById('loginPassword').value
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.textContent = "¡Inicio de sesión exitoso!";
+          msg.className = "exito";
+          localStorage.setItem('gusgus_token', data.token);
+          localStorage.setItem('gusgus_user', JSON.stringify(data.user));
+          setTimeout(() => { window.location.href = "/dashboard"; }, 1000);
+        } else {
+          msg.textContent = data.error || "Error al iniciar sesión.";
+          msg.className = "error";
+        }
+      } catch (err) {
+        msg.textContent = "Error de conexión con el servidor.";
+        msg.className = "error";
+      }
+    };
+  </script>
+
+</body>
+</html>
