@@ -3,22 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gus Gus - Dashboard de Intermediación</title>
+  <title>Gus Gus - Dashboard</title>
   <style>
     :root {
-      --bg-color: #F4EFEA;
-      --card-bg: #FFFFFF;
-      --primary-color: #3A272D;
-      --accent-color: #8C6551;
-      --text-main: #231B1E;
-      --text-muted: #6E6366;
-      --border-color: #E2DAD5;
-      --input-bg: #FAF7F5;
-      --success-bg: #EAF4EE;
-      --success-text: #3A7A56;
-      --warning-bg: #FFF4E5;
-      --warning-text: #B76E00;
-      --chat-sys-bg: #F0E8E1;
+      --bg-color: #0F172A;
+      --card-bg: #1E293B;
+      --primary-cyan: #06B6D4;
+      --accent-purple: #8B5CF6;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: #334155;
+      --input-bg: #0F172A;
+      --success: #10B981;
     }
 
     * {
@@ -52,16 +48,25 @@
       margin-bottom: 16px;
     }
 
-    .brand-logo {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--primary-color);
+    .brand-logo-small {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-gg {
+      background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
+      color: white;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 14px;
     }
 
     .btn-logout {
       background: transparent;
-      border: 1.5px solid var(--accent-color);
-      color: var(--accent-color);
+      border: 1px solid var(--accent-purple);
+      color: var(--accent-purple);
       padding: 6px 12px;
       border-radius: 10px;
       font-size: 12px;
@@ -80,7 +85,7 @@
     .section-title {
       font-size: 15px;
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary-cyan);
       margin-bottom: 12px;
     }
 
@@ -94,15 +99,17 @@
       font-size: 12px;
       font-weight: 600;
       margin-bottom: 4px;
+      color: var(--text-muted);
     }
 
-    .form-group input, .form-group select {
+    .form-group input {
       width: 100%;
       padding: 12px;
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 14px;
+      color: #FFF;
       outline: none;
     }
 
@@ -115,7 +122,7 @@
     .btn-role {
       flex: 1;
       padding: 12px;
-      border: 2px solid var(--border-color);
+      border: 1px solid var(--border-color);
       background: var(--input-bg);
       border-radius: 12px;
       font-weight: 700;
@@ -125,19 +132,19 @@
     }
 
     .btn-role.active {
-      border-color: var(--accent-color);
-      background: var(--primary-color);
+      border-color: var(--primary-cyan);
+      background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
       color: #FFF;
     }
 
     .btn-main {
       width: 100%;
       padding: 14px;
-      background: var(--primary-color);
+      background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
       color: #FFF;
       border: none;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -161,13 +168,11 @@
     }
 
     .chat-card-item.active {
-      border-color: var(--accent-color);
-      background: #FFF;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-color: var(--primary-cyan);
     }
 
     .chat-box {
-      height: 320px;
+      height: 300px;
       overflow-y: auto;
       background: var(--input-bg);
       border: 1px solid var(--border-color);
@@ -189,8 +194,8 @@
     }
 
     .msg.sistema {
-      background: var(--chat-sys-bg);
-      color: var(--primary-color);
+      background: #1E293B;
+      color: var(--primary-cyan);
       align-self: center;
       text-align: center;
       font-weight: 600;
@@ -199,15 +204,14 @@
     }
 
     .msg.propio {
-      background: var(--primary-color);
+      background: var(--accent-purple);
       color: #FFF;
       align-self: flex-end;
     }
 
     .msg.contraparte {
-      background: #FFF;
+      background: #334155;
       color: var(--text-main);
-      border: 1px solid var(--border-color);
       align-self: flex-start;
     }
 
@@ -228,7 +232,7 @@
     .btn-action-chat {
       flex: 1;
       padding: 10px;
-      background: var(--accent-color);
+      background: var(--accent-purple);
       color: white;
       border: none;
       border-radius: 10px;
@@ -254,37 +258,40 @@
       font-weight: 600;
       margin-top: 10px;
     }
-    .exito { color: var(--success-text); }
-    .error { color: #B33A3A; }
+    .exito { color: var(--success); }
+    .error { color: #EF4444; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <nav class="navbar">
-      <div class="brand-logo">Gus Gus</div>
+      <div class="brand-logo-small">
+        <span class="badge-gg">GG</span>
+        <strong style="font-size:18px;">Gus Gus</strong>
+      </div>
       <button class="btn-logout" id="btnLogout">Cerrar Sesión</button>
     </nav>
 
     <!-- REPORTES FINANCIEROS IA -->
     <div class="card">
       <h3 class="section-title">📊 Reporte Financiero IA</h3>
-      <button type="button" class="btn-main" id="btnObtenerReporte" style="background: var(--accent-color); font-size:13px; padding:10px;">Ver Mis Ganancias y Ventas</button>
+      <button type="button" class="btn-main" id="btnObtenerReporte" style="font-size:12px; padding:10px;">Consultar Ventas y Ganancias</button>
       <div id="vistaReporte" class="report-box oculto"></div>
     </div>
 
     <!-- INICIAR ACUERDO SEGURO -->
     <div class="card">
-      <h3 class="section-title">Iniciar Nuevo Acuerdo Seguro</h3>
+      <h3 class="section-title">Crear Acuerdo Seguro</h3>
       <form id="formCrearOp">
-        <label style="font-size: 12px; font-weight: 600;">¿Cuál es tu rol en este acuerdo?</label>
+        <label style="font-size: 12px; font-weight: 600; color:var(--text-muted);">Tu rol en la operación:</label>
         <div class="role-selector">
           <button type="button" class="btn-role active" id="btnRolVendedor">Soy Vendedor</button>
           <button type="button" class="btn-role" id="btnRolComprador">Soy Comprador</button>
         </div>
 
         <div class="form-group">
-          <label>Monto Acordado (S/)</label>
+          <label>Monto del Producto/Servicio (S/)</label>
           <input type="number" id="opMonto" placeholder="Ej. 150.00" step="0.01" required>
         </div>
 
@@ -294,16 +301,16 @@
         </div>
 
         <div class="form-group">
-          <label>Descripción del Producto o Servicio</label>
-          <input type="text" id="opDescripcion" placeholder="Ej. Calzado talle 41 / Servicio" required>
+          <label>Descripción del Producto/Servicio</label>
+          <input type="text" id="opDescripcion" placeholder="Ej. Zapatillas / Producto" required>
         </div>
 
         <div class="form-group">
           <label>Foto del Producto (Vendedor)</label>
-          <input type="file" id="opFotoProducto" accept="image/*">
+          <input type="file" id="opFotoProducto" accept="image/*" style="color:var(--text-muted);">
         </div>
 
-        <button type="submit" class="btn-main">Crear Chat de Intermediación</button>
+        <button type="submit" class="btn-main">Crear Chat de Custodia</button>
       </form>
     </div>
 
@@ -322,19 +329,19 @@
       <div class="chat-box" id="boxMensajes"></div>
 
       <div class="chat-controls">
-        <button type="button" class="btn-action-chat" id="btnDepositarCustodia" style="background: #3A7A56;">🟢 Confirmar Depósito</button>
-        <label class="btn-action-chat" style="background: var(--accent-color); display: inline-block;">
+        <button type="button" class="btn-action-chat" id="btnDepositarCustodia" style="background: #10B981;">🟢 Confirmar Depósito</button>
+        <label class="btn-action-chat" style="background: var(--primary-cyan); display: inline-block;">
           📷 Foto Envío
           <input type="file" id="inputFotoEnvio" accept="image/*" class="oculto">
         </label>
-        <label class="btn-action-chat" style="background: var(--primary-color); display: inline-block;">
+        <label class="btn-action-chat" style="background: var(--accent-purple); display: inline-block;">
           ✅ Foto Recepción
           <input type="file" id="inputFotoRecepcion" accept="image/*" class="oculto">
         </label>
       </div>
 
       <div style="display: flex; gap: 6px; margin-top: 10px;">
-        <input type="text" id="txtMensajeChat" placeholder="Escribe un mensaje..." style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); outline:none;">
+        <input type="text" id="txtMensajeChat" placeholder="Escribe un mensaje..." style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--input-bg); color:#FFF; outline:none;">
         <button type="button" id="btnEnviarMensaje" class="btn-main" style="width: auto; padding: 10px 16px;">Enviar</button>
       </div>
     </div>
@@ -378,7 +385,7 @@
     document.getElementById('formCrearOp').onsubmit = async function(e) {
       e.preventDefault();
       const msg = document.getElementById('mensajeGlobal');
-      msg.textContent = "Creando sala de intermediación...";
+      msg.textContent = "Creando acuerdo...";
 
       try {
         const res = await fetch('/api/operaciones/crear', {
@@ -420,11 +427,11 @@
         lista.innerHTML = data.operaciones.map(op => `
           <div class="chat-card-item ${op.codigoOp === codigoOpActiva ? 'active' : ''}" onclick="abrirChat('${op.codigoOp}')">
             <div>
-              <strong style="color: var(--accent-color);">${op.codigoOp}</strong>
+              <strong style="color: var(--primary-cyan);">${op.codigoOp}</strong>
               <div style="font-size: 13px; color: var(--text-main); font-weight:600;">${op.descripcion}</div>
               <div style="font-size: 12px; color: var(--text-muted);">S/ ${op.montoBase} (${op.estado})</div>
             </div>
-            <span style="font-size: 11px; background: var(--warning-bg); color: var(--warning-text); padding:4px 8px; border-radius:8px; font-weight:700;">
+            <span style="font-size: 11px; background: #334155; color: var(--primary-cyan); padding:4px 8px; border-radius:8px; font-weight:700;">
               ${op.estado}
             </span>
           </div>
