@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gus Gus - Iniciar Sesión</title>
+  <title>Gus Gus - Acceso</title>
   <style>
     :root {
       --bg-color: #F4EFEA;
@@ -87,18 +87,7 @@
       gap: 8px;
     }
 
-    .btn-code {
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 0 14px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
+    /* ESTILOS DE BOTONES MÓVILES REALES */
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -110,23 +99,6 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
-    }
-
-    .forgot-link {
-      display: block;
-      text-align: right;
-      font-size: 12px;
-      color: var(--accent-color);
-      font-weight: 600;
-      text-decoration: none;
-      margin-top: -8px;
-      margin-bottom: 16px;
-      cursor: pointer;
-    }
-
-    .divider {
-      margin: 24px 0 16px 0;
-      border-top: 1px solid var(--border-color);
     }
 
     .btn-secondary {
@@ -141,6 +113,38 @@
       font-weight: 700;
       text-decoration: none;
       box-sizing: border-box;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-text-action {
+      background: none;
+      border: none;
+      color: var(--accent-color);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px 0;
+      display: inline-block;
+      width: 100%;
+      text-align: right;
+    }
+
+    .btn-code {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .divider {
+      margin: 24px 0 16px 0;
+      border-top: 1px solid var(--border-color);
     }
 
     .oculto { display: none !important; }
@@ -178,7 +182,7 @@
           <input type="password" id="loginPassword" placeholder="••••••••" required>
         </div>
 
-        <a class="forgot-link" id="btnAbrirRecuperar">¿Olvidaste tu contraseña?</a>
+        <button type="button" class="btn-text-action" id="btnAbrirRecuperar">¿Olvidaste tu contraseña?</button>
 
         <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
       </form>
@@ -195,7 +199,7 @@
         <div class="form-group">
           <label>Correo o Teléfono Móvil</label>
           <div class="input-code-wrapper">
-            <input type="text" id="recContacto" placeholder="Correo o número móvil" required>
+            <input type="text" id="recContacto" placeholder="Correo o celular" required>
             <button type="button" class="btn-code" id="btnEnviarCodigoRec">Enviar Código</button>
           </div>
         </div>
@@ -215,7 +219,7 @@
 
       <div class="divider"></div>
 
-      <a class="btn-secondary" id="btnVolverLogin">Volver al Inicio de Sesión</a>
+      <button type="button" class="btn-secondary" id="btnVolverLogin">Volver al Inicio de Sesión</button>
     </div>
 
     <div id="mensaje"></div>
@@ -227,7 +231,7 @@
     const subtituloCard = document.getElementById('subtituloCard');
     const msg = document.getElementById('mensaje');
 
-    // Cambiar a Recuperar Contraseña
+    // Botón Cambiar a Recuperar
     document.getElementById('btnAbrirRecuperar').onclick = function() {
       vistaLogin.classList.add('oculto');
       vistaRecuperar.classList.remove('oculto');
@@ -235,7 +239,7 @@
       msg.textContent = "";
     };
 
-    // Volver a Login
+    // Botón Volver a Login
     document.getElementById('btnVolverLogin').onclick = function() {
       vistaRecuperar.classList.add('oculto');
       vistaLogin.classList.remove('oculto');
@@ -243,7 +247,7 @@
       msg.textContent = "";
     };
 
-    // Enviar código para recuperar
+    // Botón Enviar Código Recuperación
     document.getElementById('btnEnviarCodigoRec').onclick = async function() {
       const contacto = document.getElementById('recContacto').value;
       if (!contacto) {
@@ -270,26 +274,26 @@
       }
     };
 
-    // Restablecer contraseña
+    // Formulario Restablecer Contraseña
     document.getElementById('formRecuperar').onsubmit = async function(e) {
       e.preventDefault();
       msg.textContent = "Actualizando contraseña...";
       msg.className = "";
 
-      const contacto = document.getElementById('recContacto').value;
-      const codigo = document.getElementById('recCodigo').value;
-      const nuevaPassword = document.getElementById('recNuevaPass').value;
-
       try {
         const res = await fetch('/api/restablecer-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contacto, codigo, nuevaPassword })
+          body: JSON.stringify({
+            contacto: document.getElementById('recContacto').value,
+            codigo: document.getElementById('recCodigo').value,
+            nuevaPassword: document.getElementById('recNuevaPass').value
+          })
         });
         const data = await res.json();
 
         if (res.ok) {
-          msg.textContent = "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.";
+          msg.textContent = "¡Contraseña actualizada! Ya puedes iniciar sesión.";
           msg.className = "exito";
           setTimeout(() => { document.getElementById('btnVolverLogin').click(); }, 1500);
         } else {
@@ -302,7 +306,7 @@
       }
     };
 
-    // Submit de Login
+    // Formulario Login
     document.getElementById('formLogin').onsubmit = async function(e) {
       e.preventDefault();
       msg.textContent = "Verificando...";
@@ -332,6 +336,14 @@
         }
       } catch (err) {
         msg.textContent = "Error de conexión con el servidor.";
+        msg.className = "error";
+      }
+    };
+  </script>
+
+</body>
+</html>
+msg.textContent = "Error de conexión con el servidor.";
         msg.className = "error";
       }
     };
