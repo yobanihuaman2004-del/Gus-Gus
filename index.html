@@ -6,146 +6,97 @@
   <title>Gus Gus - Aplicación Principal</title>
   <style>
     :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e24;
-      --accent: #ffb703;
-      --text: #e0e0e0;
-      --border: 1px solid #333344;
-      --admin-badge: #d4af37;
+      --bg-dark: #12100e;
+      --panel-bg: #1c1815;
+      --gold: #d4af37;
+      --copper: #b87333;
+      --bronze: #cd7f32;
+      --text: #e8d8c8;
+      --border: 2px solid var(--copper);
     }
     body {
-      background-color: var(--bg-color);
+      background-color: var(--bg-dark);
       color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Georgia', serif;
       margin: 0;
       padding: 20px;
     }
     .header {
+      border-bottom: var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: var(--border);
-      padding-bottom: 15px;
-      margin-bottom: 25px;
     }
     .logo {
       font-size: 1.8rem;
+      color: var(--gold);
       font-weight: bold;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
-    .role-selector {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    select {
-      background: #000;
-      color: var(--accent);
-      border: var(--border);
-      padding: 8px 12px;
+    .badge {
+      background: var(--copper);
+      color: #000;
+      padding: 6px 12px;
       border-radius: 4px;
       font-weight: bold;
     }
     .card {
-      background: var(--card-bg);
+      background: var(--panel-bg);
       border: var(--border);
-      border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
+      border-radius: 6px;
     }
-    h2 {
-      color: var(--accent);
-      margin-top: 0;
-    }
-    input[type="text"], textarea {
+    h2 { color: var(--bronze); margin-top: 0; }
+    input[type="text"] {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #444;
-      background: #000;
-      color: #fff;
-      font-size: 1rem;
-      margin-bottom: 10px;
+      background: #0d0b0a;
+      border: 1px solid var(--bronze);
+      color: var(--gold);
+      font-family: monospace;
+      font-size: 1.1rem;
     }
     button {
-      background: var(--accent);
+      background: var(--bronze);
       color: #000;
       border: none;
       padding: 10px 20px;
       font-weight: bold;
-      border-radius: 4px;
       cursor: pointer;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .status-msg {
       margin-top: 10px;
-      font-weight: bold;
+      border-radius: 4px;
     }
-    .admin-only {
-      display: none;
-      border-left: 4px solid var(--admin-badge);
-    }
-    ul {
-      padding-left: 20px;
-    }
+    button:hover { background: var(--gold); }
+    ul { list-style: square; padding-left: 20px; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <div class="logo">🐭 Gus Gus</div>
-    <div class="role-selector">
-      <label for="roleSelect">Vista Actual:</label>
-      <select id="roleSelect" onchange="cambiarRol()">
-        <option value="ADMIN_MAESTRO">Creador / Admin Maestro</option>
-        <option value="USUARIO_ESTANDAR">Usuario Estándar</option>
-      </select>
-    </div>
+    <div class="logo">⚙️ Gus Gus - GG Disney</div>
+    <div class="badge">PANEL: ADMIN MAESTRO (CREADOR)</div>
   </div>
 
   <div class="card">
-    <h2>Módulo Financiero - Lemon Cash</h2>
-    <p>CCI registrado para la cuenta Gus Gus (20 dígitos):</p>
-    <input type="text" id="cciInput" maxlength="20" placeholder="Ej: 92200300000022201629">
+    <h2>Pasarela Financiera - Lemon Cash</h2>
+    <p>CCI registrado para recepción de fondos:</p>
+    <input type="text" id="cciInput" maxlength="21" placeholder="CCI de 21 dígitos">
     <br>
-    <button onclick="guardarCCI()">Actualizar CCI (Solo Admin)</button>
-    <div id="cciStatus" class="status-msg"></div>
+    <button onclick="guardarCCI()">Guardar CCI</button>
+    <p id="cciStatus" style="color: var(--gold); font-weight: bold; margin-top: 10px;"></p>
   </div>
 
-  <div class="card admin-only" id="adminPanel">
-    <h2>Panel Exclusivo Creador - Supervisión Gus & Nor #2</h2>
-    <p>Logs y eventos del sistema en tiempo real:</p>
-    <button onclick="cargarAuditoria()">Cargar Logs de Auditoría</button>
+  <div class="card">
+    <h2>Módulo de Custodia y Auditoría (Gus & Nor #2)</h2>
+    <button onclick="cargarAuditoria()">Consultar Registros de Supervisión</button>
     <ul id="auditList"></ul>
   </div>
 
-  <div class="card">
-    <h2>Centro de Ayuda y Mensajería</h2>
-    <p>Envía un mensaje directo al Administrador Maestro:</p>
-    <textarea id="msgInput" rows="3" placeholder="Escribe tu consulta..."></textarea>
-    <br>
-    <button onclick="enviarMensaje()">Enviar Mensaje</button>
-    <div id="msgStatus" class="status-msg"></div>
-  </div>
-
   <script>
-    let currentRole = "ADMIN_MAESTRO";
-
-    function cambiarRol() {
-      currentRole = document.getElementById('roleSelect').value;
-      const adminPanel = document.getElementById('adminPanel');
-      if (currentRole === 'ADMIN_MAESTRO') {
-        adminPanel.style.display = 'block';
-      } else {
-        adminPanel.style.display = 'none';
-      }
-    }
+    const USER_ROLE = "ADMIN_MAESTRO";
 
     async function cargarConfig() {
       try {
@@ -153,74 +104,45 @@
         const data = await res.json();
         document.getElementById('cciInput').value = data.lemonCashCCI || '';
       } catch (err) {
-        console.error("Error al cargar configuración", err);
+        console.error("Error al obtener la configuración", err);
       }
     }
 
     async function guardarCCI() {
       const cci = document.getElementById('cciInput').value;
-      const statusDiv = document.getElementById('cciStatus');
-      
       const res = await fetch('/api/config/cci', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-role': currentRole
+          'x-user-role': USER_ROLE
         },
         body: JSON.stringify({ cci })
       });
-      
       const data = await res.json();
+      const statusElement = document.getElementById('cciStatus');
       if (res.ok) {
-        statusDiv.style.color = '#4caf50';
-        statusDiv.innerText = "✓ " + data.message;
+        statusElement.innerText = "✓ " + data.message;
       } else {
-        statusDiv.style.color = '#f44336';
-        statusDiv.innerText = "❌ " + data.error;
+        statusElement.innerText = "❌ " + data.error;
       }
     }
 
     async function cargarAuditoria() {
-      const list = document.getElementById('auditList');
       const res = await fetch('/api/audit', {
-        headers: { 'x-user-role': currentRole }
+        headers: { 'x-user-role': USER_ROLE }
       });
       const data = await res.json();
+      const list = document.getElementById('auditList');
       list.innerHTML = "";
-      
-      if (res.ok && data.logs) {
+      if (data.logs) {
         data.logs.forEach(log => {
           const li = document.createElement('li');
-          li.innerText = `[${log.timestamp}] [${log.auditor}] ${log.status}: ${log.detail}`;
+          li.innerText = `[${log.timestamp}] [${log.auditor}] - ${log.detail}`;
           list.appendChild(li);
         });
-      } else {
-        list.innerHTML = `<li style="color:red;">${data.error}</li>`;
       }
     }
 
-    async function enviarMensaje() {
-      const message = document.getElementById('msgInput').value;
-      const statusDiv = document.getElementById('msgStatus');
-
-      const res = await fetch('/api/support/message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user: currentRole, message })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        statusDiv.style.color = '#4caf50';
-        statusDiv.innerText = "✓ " + data.message;
-        document.getElementById('msgInput').value = '';
-      } else {
-        statusDiv.style.color = '#f44336';
-        statusDiv.innerText = "❌ " + data.error;
-      }
-    }
-
-    cambiarRol();
     cargarConfig();
   </script>
 </body>
