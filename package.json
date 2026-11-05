@@ -1,7 +1,7 @@
 {
   "name": "gus-gus-app",
   "version": "1.0.0",
-  "description": "Aplicación Gus Gus con autenticación, Lemon Cash y módulo Gus & Nor #2",
+  "description": "Aplicación Gus Gus con Intermediación y Custodia",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
