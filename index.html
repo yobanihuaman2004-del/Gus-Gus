@@ -254,12 +254,8 @@
       msg.textContent = "";
     }
 
-    // Eventos táctiles directos para celulares
     btnAbrir.addEventListener('click', mostrarRecuperar);
-    btnAbrir.addEventListener('touchstart', mostrarRecuperar, { passive: false });
-
     btnVolver.addEventListener('click', mostrarLogin);
-    btnVolver.addEventListener('touchstart', mostrarLogin, { passive: false });
 
     document.getElementById('btnEnviarCodigoRec').onclick = async function() {
       const contacto = document.getElementById('recContacto').value;
@@ -269,7 +265,7 @@
         return;
       }
 
-      msg.textContent = "Enviando código de recuperación...";
+      msg.textContent = "Generando código...";
       msg.className = "";
 
       try {
@@ -279,8 +275,15 @@
           body: JSON.stringify({ contacto })
         });
         const data = await res.json();
-        msg.textContent = data.message || "Código enviado correctamente.";
-        msg.className = "exito";
+        
+        if (data.codigoPrueba) {
+          alert(`Tu código de prueba es: ${data.codigoPrueba}`);
+          msg.textContent = `Código generado: ${data.codigoPrueba}`;
+          msg.className = "exito";
+        } else {
+          msg.textContent = data.message || "Código enviado.";
+          msg.className = "exito";
+        }
       } catch (err) {
         msg.textContent = "Error al enviar código de recuperación.";
         msg.className = "error";
