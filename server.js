@@ -6,132 +6,193 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Ajustar límite para recibir fotos codificadas en Base64
+app.use(express.json({ limit: '10mb' }));
 app.use(cors());
-app.use(express.json());
 app.use(express.static(__dirname));
 
-// Base de datos en memoria
 const users = [
-  { id: 1, email: "admin@gusgus.com", pass: "admin123", role: "ADMIN_MAESTRO", name: "Creador Maestro" },
-  { id: 2, email: "user@gusgus.com", pass: "user123", role: "USUARIO_ESTANDAR", name: "Usuario Cliente" }
+  { id: 1, name: "Gus (Creador Maestro)", email: "admin@gusgus.com", phone: "999888777", pass: "admin123", role: "ADMIN_MAESTRO", verified: true },
+  { id: 2, name: "Usuario Cliente", email: "user@gusgus.com", phone: "912345678", pass: "user123", role: "USUARIO_ESTANDAR", verified: true }
 ];
 
-const systemConfig = {
-  appName: "Gus Gus",
+const verificationCodes = {};
+
+const paymentMethods = {
+  yapeNumber: "999888777",
+  plinNumber: "999888777",
   lemonCashCCI: process.env.LEMON_CASH_CCI || "922003000000222016298",
-  logo: "GG - Estilo Disney Mouse",
-  theme: "Victoriano-Industrial Elite"
+  culqiPublicKey: "pk_live_gusgus123456"
 };
 
 const deals = [
   {
-    id: "DEAL-101",
-    buyer: "cliente1@gusgus.com",
-    seller: "vendedor1@gusgus.com",
+    id: "GN-1001",
+    buyer: "user@gusgus.com",
+    seller: "912345678",
     amount: "150.00",
-    description: "Compra de cuenta digital asegurada",
-    status: "EN_CUSTODIA",
+    paymentMethod: "YAPE",
+    description: "Compra respaldada por Gus & Nor #2",
+    status: "EN_CUSTODIA", // EN_CUSTODIA, ENVIADO, RECIBIDO_CONFIRMADO, LIBERADO
+    auditor: "Nor #2 Guard",
     date: new Date().toISOString()
   }
 ];
 
 const auditLogs = [
-  { timestamp: new Date().toISOString(), auditor: "Gus & Nor #2", status: "SISTEMA OK", detail: "Sistema Gus Gus e Intermediación activos." }
+  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Módulo de fotos, envíos y confirmación de recepción activo." }
 ];
 
-const messages = [];
+const chatMessages = [
+  { id: 1, sender: "Gus (Creador)", receiver: "user@gusgus.com", text: "¡Hola! Puedes adjuntar fotos de tu comprobante de envío aquí.", image: null, type: "text", time: "10:30 AM" }
+];
 
-// Middleware de verificación para el Admin Maestro
 const verifyAdmin = (req, res, next) => {
   const role = req.headers['x-user-role'];
   if (role === 'ADMIN_MAESTRO') {
     next();
   } else {
-    res.status(403).json({ error: "Acceso denegado. Permiso exclusivo del Creador Maestro." });
+    res.status(403).json({ error: "Acceso denegado. Permiso exclusivo del Creador (Gus)." });
   }
 };
 
-// Rutas Autenticación
+// --- AUTH, VERIFY & RECOVERY ---
 app.post('/api/auth/register', (req, res) => {
-  const { name, email, pass } = req.body;
-  if (!email || !pass) return res.status(400).json({ error: "Todos los campos son obligatorios." });
-  if (users.find(u => u.email === email)) return res.status(400).json({ error: "El correo ya está registrado." });
+  const { name, email, phone, pass } = req.body;
+  if (!email || !pass || !phone) return res.status(400).json({ error: "Correo, teléfono y contraseña obligatorios." });
+  
+  if (users.find(u => u.email === email || u.phone === phone)) {
+    return res.status(400).json({ error: "El correo o teléfono ya está registrado." });
+  }
 
-  const newUser = { id: users.length + 1, name: name || "Usuario", email, pass, role: "USUARIO_ESTANDAR" };
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  verificationCodes[email] = code;
+
+  const newUser = { id: users.length + 1, name: name || "Usuario", email, phone, pass, role: "USUARIO_ESTANDAR", verified: false };
   users.push(newUser);
-  res.json({ message: "Usuario registrado con éxito.", user: newUser });
+
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "VERIFICACIÓN", detail: `Código para ${email}: [${code}]` });
+  res.json({ message: "Código enviado.", email, demoCode: code });
+});
+
+app.post('/api/auth/verify', (req, res) => {
+  const { email, code } = req.body;
+  if (verificationCodes[email] && verificationCodes[email] === code) {
+    const user = users.find(u => u.email === email);
+    if (user) {
+      user.verified = true;
+      delete verificationCodes[email];
+      return res.json({ message: "¡Cuenta verificada exitosamente!", user });
+    }
+  }
+  res.status(400).json({ error: "Código incorrecto." });
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { email, pass } = req.body;
-  const user = users.find(u => u.email === email && u.pass === pass);
+  const { emailOrPhone, pass } = req.body;
+  const user = users.find(u => (u.email === emailOrPhone || u.phone === emailOrPhone) && u.pass === pass);
   if (!user) return res.status(401).json({ error: "Credenciales incorrectas." });
+  if (!user.verified) return res.status(403).json({ error: "Cuenta no verificada." });
 
-  auditLogs.push({
-    timestamp: new Date().toISOString(),
-    auditor: "Gus & Nor #2",
-    status: "LOGIN",
-    detail: `Inicio de sesión: ${user.email} [${user.role}]`
-  });
-
-  res.json({ message: "Sesión iniciada correctamente.", user });
+  res.json({ message: "Sesión iniciada.", user });
 });
 
-// Rutas de Configuración y Lemon Cash
-app.get('/api/config', (req, res) => {
-  res.json({
-    appName: systemConfig.appName,
-    lemonCashCCI: systemConfig.lemonCashCCI,
-    logo: systemConfig.logo
-  });
+app.get('/api/users/search', (req, res) => {
+  const { query } = req.query;
+  if (!query) return res.json({ users: [] });
+
+  const results = users.filter(u => 
+    u.name.toLowerCase().includes(query.toLowerCase()) || 
+    u.phone.includes(query) || 
+    u.email.toLowerCase().includes(query.toLowerCase())
+  ).map(u => ({ name: u.name, phone: u.phone, email: u.email }));
+
+  res.json({ users: results });
 });
 
-app.post('/api/config/cci', verifyAdmin, (req, res) => {
-  const { cci } = req.body;
-  if (!cci || cci.length < 20 || !/^\d+$/.test(cci)) {
-    return res.status(400).json({ error: "El CCI debe contener entre 20 y 21 dígitos numéricos." });
-  }
-  systemConfig.lemonCashCCI = cci;
-  auditLogs.push({
-    timestamp: new Date().toISOString(),
-    auditor: "Gus & Nor #2",
-    status: "CCI ACTUALIZADO",
-    detail: `CCI guardado: ${cci}`
-  });
-  res.json({ message: "CCI de Lemon Cash actualizado exitosamente.", cci: systemConfig.lemonCashCCI });
+// --- PASARELAS DE PAGO ---
+app.get('/api/payments/methods', (req, res) => res.json(paymentMethods));
+
+app.post('/api/payments/config', verifyAdmin, (req, res) => {
+  const { yapeNumber, plinNumber, lemonCashCCI, culqiPublicKey } = req.body;
+  if (yapeNumber) paymentMethods.yapeNumber = yapeNumber;
+  if (plinNumber) paymentMethods.plinNumber = plinNumber;
+  if (lemonCashCCI) paymentMethods.lemonCashCCI = lemonCashCCI;
+  if (culqiPublicKey) paymentMethods.culqiPublicKey = culqiPublicKey;
+
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "CONFIG PAGO", detail: "Pasarelas actualizadas." });
+  res.json({ message: "Métodos de pago guardados.", paymentMethods });
 });
 
-// Rutas Módulo Intermediación
-app.get('/api/deals', (req, res) => {
-  res.json({ deals });
-});
+// --- TRATOS, ENVÍOS Y CONFIRMACIÓN DE RECEPCIÓN ---
+app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
-  const { seller, amount, description, buyer } = req.body;
-  if (!seller || !amount || !description) {
-    return res.status(400).json({ error: "Completa los datos del trato." });
-  }
+  const { sellerPhoneOrEmail, amount, description, paymentMethod, buyer } = req.body;
+  if (!sellerPhoneOrEmail || !amount || !description) return res.status(400).json({ error: "Faltan datos del trato." });
 
   const newDeal = {
-    id: `DEAL-${Math.floor(100 + Math.random() * 900)}`,
+    id: `GN-${Math.floor(1000 + Math.random() * 9000)}`,
     buyer: buyer || "Cliente",
-    seller,
+    seller: sellerPhoneOrEmail,
     amount,
+    paymentMethod: paymentMethod || "YAPE",
     description,
     status: "EN_CUSTODIA",
+    auditor: "Nor #2 Guard",
     date: new Date().toISOString()
   };
 
   deals.push(newDeal);
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "CUSTODIA", detail: `Trato ${newDeal.id} de S/ ${amount} registrado.` });
+  res.json({ message: "Trato registrado en custodia.", deal: newDeal });
+});
 
-  auditLogs.push({
-    timestamp: new Date().toISOString(),
-    auditor: "Gus & Nor #2",
-    status: "TRATO EN CUSTODIA",
-    detail: `Trato ${newDeal.id} por $${amount} entre ${newDeal.buyer} y ${seller}`
+// Notificar Envío Realizado
+app.post('/api/deals/ship', (req, res) => {
+  const { dealId, trackingPhoto } = req.body;
+  const deal = deals.find(d => d.id === dealId);
+  if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
+
+  deal.status = "ENVIADO";
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "PRODUCTO ENVIADO", detail: `El vendedor marcó como enviado el trato ${dealId}` });
+
+  // Notificar al chat automáticamente
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  chatMessages.push({
+    id: chatMessages.length + 1,
+    sender: "Sistema GG",
+    receiver: deal.buyer,
+    text: `📦 ¡ENVÍO NOTIFICADO! El pedido del trato ${dealId} fue despachado.`,
+    image: trackingPhoto || null,
+    type: "system",
+    time: timeStr
   });
 
-  res.json({ message: "Trato registrado. Fondos retenidos en custodia.", deal: newDeal });
+  res.json({ message: "Envío notificado con éxito. El comprador ya puede confirmar la recepción.", deal });
+});
+
+// Confirmar Recepción del Pedido por el Comprador
+app.post('/api/deals/confirm-receipt', (req, res) => {
+  const { dealId } = req.body;
+  const deal = deals.find(d => d.id === dealId);
+  if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
+
+  deal.status = "RECIBIDO_CONFIRMADO";
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "RECEPCIÓN CONFIRMADA", detail: `El comprador confirmó recepción conforme del trato ${dealId}` });
+
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  chatMessages.push({
+    id: chatMessages.length + 1,
+    sender: "Sistema GG",
+    receiver: "Gus & Soporte",
+    text: `✅ ¡RECEPCIÓN CONFIRMADA! El comprador ha recibido el producto del trato ${dealId} en conformidad. Listo para liberar fondos.`,
+    image: null,
+    type: "system",
+    time: timeStr
+  });
+
+  res.json({ message: "¡Recepción confirmada exitosamente! Fondos listos para su entrega.", deal });
 });
 
 app.post('/api/deals/release', verifyAdmin, (req, res) => {
@@ -140,47 +201,38 @@ app.post('/api/deals/release', verifyAdmin, (req, res) => {
   if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
 
   deal.status = "LIBERADO";
-
-  auditLogs.push({
-    timestamp: new Date().toISOString(),
-    auditor: "Gus & Nor #2",
-    status: "FONDOS LIBERADOS",
-    detail: `Fondos del trato ${dealId} liberados a favor de ${deal.seller}`
-  });
-
-  res.json({ message: `Fondos del trato ${dealId} liberados con éxito.` });
+  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Gus & Nor #2", status: "LIBERADO", detail: `Trato ${dealId} liberado` });
+  res.json({ message: `Fondos del trato ${dealId} liberados al vendedor.` });
 });
 
-// Rutas Auditoría y Mensajería
-app.get('/api/audit', verifyAdmin, (req, res) => {
-  res.json({ logs: auditLogs });
+// --- CHAT CON MULTIMEDIA (FOTOS) ---
+app.get('/api/chat', (req, res) => {
+  const { user1 } = req.query;
+  const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus") || m.type === "system");
+  res.json({ messages: msgs });
 });
 
-app.post('/api/messages', (req, res) => {
-  const { sender, text } = req.body;
-  if (!text) return res.status(400).json({ error: "El mensaje no puede estar vacío." });
+app.post('/api/chat/send', (req, res) => {
+  const { sender, receiver, text, image } = req.body;
+  if (!text && !image) return res.status(400).json({ error: "Ingresa texto o adjunta una foto." });
 
-  const newMsg = { timestamp: new Date().toISOString(), sender: sender || "Anónimo", text };
-  messages.push(newMsg);
-
-  auditLogs.push({
-    timestamp: new Date().toISOString(),
-    auditor: "Gus & Nor #2",
-    status: "MENSAJE",
-    detail: `Mensaje de ${sender}: ${text}`
-  });
-
-  res.json({ message: "Mensaje enviado al Creador." });
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const newMsg = {
+    id: chatMessages.length + 1,
+    sender,
+    receiver: receiver || "Gus & Soporte",
+    text: text || "",
+    image: image || null,
+    type: "user",
+    time: timeStr
+  };
+  chatMessages.push(newMsg);
+  res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
-app.get('/api/messages', verifyAdmin, (req, res) => {
-  res.json({ messages });
-});
+app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-app.listen(PORT, () => {
-  console.log(`[Gus Gus] Servidor completo ejecutándose en puerto ${PORT}`);
-});
+app.listen(PORT, () => console.log(`[GG] Servidor con fotos ha confirmación de envío activo en puerto ${PORT}`));
+  
