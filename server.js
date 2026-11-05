@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
-app.use(express.static(__dirname));
+
+// Desactivar caché estático
+app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
 const users = [
   { id: 1, name: "Gus (Creador Maestro)", dni: "12345678", email: "admin@gusgus.com", phone: "999888777", pass: "admin123", role: "ADMIN_MAESTRO", verified: true },
@@ -241,9 +243,10 @@ app.post('/api/chat/send', (req, res) => {
 
 app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
 
+// Forzar respuesta sin caché para la página HTML
 app.use((req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => console.log(`[GG] Servidor listo en puerto ${PORT}`));
-         
