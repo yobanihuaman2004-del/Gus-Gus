@@ -82,6 +82,23 @@
       outline: none;
     }
 
+    .input-code-wrapper {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-code {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -95,10 +112,21 @@
       margin-top: 8px;
     }
 
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--accent-color);
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: -8px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
     .divider {
       margin: 24px 0 16px 0;
       border-top: 1px solid var(--border-color);
-      position: relative;
     }
 
     .btn-secondary {
@@ -113,13 +141,9 @@
       font-weight: 700;
       text-decoration: none;
       box-sizing: border-box;
-      transition: all 0.2s;
     }
 
-    .btn-secondary:active {
-      background-color: var(--accent-color);
-      color: #FFFFFF;
-    }
+    .oculto { display: none !important; }
 
     #mensaje {
       margin-top: 16px;
@@ -134,39 +158,153 @@
 
   <div class="app-card">
     <h1 class="brand-title">Gus Gus</h1>
-    <p class="brand-subtitle">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.</p>
+    <p class="brand-subtitle" id="subtituloCard">Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.</p>
 
-    <form id="formLogin">
-      <div class="form-group">
-        <label>Correo Electrónico</label>
-        <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
-      </div>
+    <!-- FORMULARIO 1: INICIO DE SESIÓN -->
+    <div id="vistaLogin">
+      <form id="formLogin">
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+        </div>
 
-      <div class="form-group">
-        <label>Número de DNI</label>
-        <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-      </div>
+        <div class="form-group">
+          <label>Número de DNI</label>
+          <input type="text" id="loginDni" placeholder="Ingresa tus 8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
+        </div>
 
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required>
-      </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
 
-      <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
-    </form>
+        <a class="forgot-link" id="btnAbrirRecuperar">¿Olvidaste tu contraseña?</a>
+
+        <button type="submit" class="btn-submit">Ingresar a Gus Gus</button>
+      </form>
+
+      <div class="divider"></div>
+
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">¿Aún no tienes una cuenta?</p>
+      <a href="/register.html" class="btn-secondary">Crear una cuenta nueva</a>
+    </div>
+
+    <!-- FORMULARIO 2: RECUPERAR CONTRASEÑA -->
+    <div id="vistaRecuperar" class="oculto">
+      <form id="formRecuperar">
+        <div class="form-group">
+          <label>Correo o Teléfono Móvil</label>
+          <div class="input-code-wrapper">
+            <input type="text" id="recContacto" placeholder="Correo o número móvil" required>
+            <button type="button" class="btn-code" id="btnEnviarCodigoRec">Enviar Código</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Código de Verificación (6 dígitos)</label>
+          <input type="text" id="recCodigo" placeholder="Ej. 123456" maxlength="6" pattern="[0-9]{6}" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nueva Contraseña</label>
+          <input type="password" id="recNuevaPass" placeholder="Mínimo 6 caracteres" minlength="6" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Actualizar Contraseña</button>
+      </form>
+
+      <div class="divider"></div>
+
+      <a class="btn-secondary" id="btnVolverLogin">Volver al Inicio de Sesión</a>
+    </div>
 
     <div id="mensaje"></div>
-
-    <div class="divider"></div>
-
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">¿Aún no tienes una cuenta?</p>
-    <a href="/register.html" class="btn-secondary">Crear una cuenta nueva</a>
   </div>
 
   <script>
+    const vistaLogin = document.getElementById('vistaLogin');
+    const vistaRecuperar = document.getElementById('vistaRecuperar');
+    const subtituloCard = document.getElementById('subtituloCard');
+    const msg = document.getElementById('mensaje');
+
+    // Cambiar a Recuperar Contraseña
+    document.getElementById('btnAbrirRecuperar').onclick = function() {
+      vistaLogin.classList.add('oculto');
+      vistaRecuperar.classList.remove('oculto');
+      subtituloCard.textContent = "Ingresa tu correo o teléfono para restablecer tu contraseña.";
+      msg.textContent = "";
+    };
+
+    // Volver a Login
+    document.getElementById('btnVolverLogin').onclick = function() {
+      vistaRecuperar.classList.add('oculto');
+      vistaLogin.classList.remove('oculto');
+      subtituloCard.textContent = "Ingresa a tu cuenta para operar de forma segura en nuestra plataforma.";
+      msg.textContent = "";
+    };
+
+    // Enviar código para recuperar
+    document.getElementById('btnEnviarCodigoRec').onclick = async function() {
+      const contacto = document.getElementById('recContacto').value;
+      if (!contacto) {
+        msg.textContent = "Ingresa tu correo o teléfono móvil.";
+        msg.className = "error";
+        return;
+      }
+
+      msg.textContent = "Enviando código de recuperación...";
+      msg.className = "";
+
+      try {
+        const res = await fetch('/api/recuperar-codigo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contacto })
+        });
+        const data = await res.json();
+        msg.textContent = data.message || "Código enviado correctamente.";
+        msg.className = "exito";
+      } catch (err) {
+        msg.textContent = "Error al enviar código de recuperación.";
+        msg.className = "error";
+      }
+    };
+
+    // Restablecer contraseña
+    document.getElementById('formRecuperar').onsubmit = async function(e) {
+      e.preventDefault();
+      msg.textContent = "Actualizando contraseña...";
+      msg.className = "";
+
+      const contacto = document.getElementById('recContacto').value;
+      const codigo = document.getElementById('recCodigo').value;
+      const nuevaPassword = document.getElementById('recNuevaPass').value;
+
+      try {
+        const res = await fetch('/api/restablecer-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contacto, codigo, nuevaPassword })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.textContent = "¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.";
+          msg.className = "exito";
+          setTimeout(() => { document.getElementById('btnVolverLogin').click(); }, 1500);
+        } else {
+          msg.textContent = data.error || "Error al actualizar contraseña.";
+          msg.className = "error";
+        }
+      } catch (err) {
+        msg.textContent = "Error de conexión con el servidor.";
+        msg.className = "error";
+      }
+    };
+
+    // Submit de Login
     document.getElementById('formLogin').onsubmit = async function(e) {
       e.preventDefault();
-      const msg = document.getElementById('mensaje');
       msg.textContent = "Verificando...";
       msg.className = "";
 
@@ -181,11 +319,15 @@
           })
         });
         const data = await res.json();
+
         if (res.ok) {
           msg.textContent = "¡Inicio de sesión exitoso!";
           msg.className = "exito";
+          localStorage.setItem('gusgus_token', data.token);
+          localStorage.setItem('gusgus_user', JSON.stringify(data.user));
+          setTimeout(() => { window.location.href = "/dashboard"; }, 1000);
         } else {
-          msg.textContent = data.error || "Error al iniciar sesión";
+          msg.textContent = data.error || "Error al iniciar sesión.";
           msg.className = "error";
         }
       } catch (err) {
