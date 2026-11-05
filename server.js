@@ -26,6 +26,7 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
+// Memoria para códigos de verificación
 const codigosVerificacion = new Map();
 const codigosRecuperacion = new Map();
 
@@ -43,17 +44,23 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(__dirname + '/dashboard.html');
 });
 
-// APIs
+// --- PASO 1: ENVIAR CÓDIGO DE REGISTRO (CON CÓDIGO DE PRUEBA EN RESPUESTA) ---
 app.post('/api/enviar-codigo', (req, res) => {
   const { email } = req.body;
-  if (!email) return res.status(400).json({ error: 'Correo requerido.' });
+  if (!email) return res.status(400).json({ error: 'El correo es requerido.' });
 
   const codigo = Math.floor(100000 + Math.random() * 900000).toString();
   codigosVerificacion.set(email, { codigo, expira: Date.now() + 10 * 60 * 1000 });
 
-  res.json({ message: 'Código de verificación enviado al correo.' });
+  console.log(`[VERIFICACIÓN REGISTRO] Código para ${email}: ${codigo}`);
+
+  res.json({ 
+    message: `Código de verificación generado con éxito.`,
+    codigoPrueba: codigo 
+  });
 });
 
+// --- PASO 2: ENVIAR CÓDIGO DE RECUPERACIÓN ---
 app.post('/api/recuperar-codigo', (req, res) => {
   const { contacto } = req.body;
   if (!contacto) return res.status(400).json({ error: 'Ingresa correo o teléfono.' });
@@ -61,9 +68,15 @@ app.post('/api/recuperar-codigo', (req, res) => {
   const codigo = Math.floor(100000 + Math.random() * 900000).toString();
   codigosRecuperacion.set(contacto, { codigo, expira: Date.now() + 10 * 60 * 1000 });
 
-  res.json({ message: `Código de recuperación enviado a ${contacto}.` });
+  console.log(`[RECUPERACIÓN] Código para ${contacto}: ${codigo}`);
+
+  res.json({ 
+    message: `Código de recuperación generado con éxito.`,
+    codigoPrueba: codigo 
+  });
 });
 
+// --- RESTABLECER CONTRASEÑA ---
 app.post('/api/restablecer-password', async (req, res) => {
   const { contacto, codigo, nuevaPassword } = req.body;
   if (!contacto || !codigo || !nuevaPassword) {
@@ -72,13 +85,14 @@ app.post('/api/restablecer-password', async (req, res) => {
 
   const registro = codigosRecuperacion.get(contacto);
   if (!registro || registro.codigo !== codigo) {
-    return res.status(400).json({ error: 'El código es incorrecto.' });
+    return res.status(400).json({ error: 'El código ingresado es incorrecto.' });
   }
 
   codigosRecuperacion.delete(contacto);
   res.json({ message: 'Contraseña actualizada con éxito.' });
 });
 
+// --- REGISTRO DE USUARIO ---
 app.post('/api/register', async (req, res) => {
   const { nombre, email, dni, password, codigo } = req.body;
   if (!nombre || !email || !dni || !password || !codigo) {
@@ -94,6 +108,7 @@ app.post('/api/register', async (req, res) => {
   res.json({ message: 'Registro exitoso.', user: { nombre, email, dni } });
 });
 
+// --- INICIO DE SESIÓN ---
 app.post('/api/login', (req, res) => {
   const { email, dni, password } = req.body;
   if (!email || !dni || !password) {
@@ -108,6 +123,7 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+// --- CREAR OPERACIÓN ---
 app.post('/api/operaciones/crear', (req, res) => {
   const { email, tipo, monto, descripcion, codigoOp } = req.body;
   res.json({ message: 'Operación registrada con éxito.', codigoOp });
