@@ -46,23 +46,25 @@
     .auth-label { font-size: 0.85rem; margin-bottom: 6px; display: block; font-weight: 600; opacity: 0.9; }
     .auth-input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: var(--white); font-size: 1rem; outline: none; }
     
-    .btn-auth-trigger { 
-      background: var(--white); 
-      color: var(--wine-dark); 
-      border: none;
+    .btn-login-click { 
+      background: var(--white) !important; 
+      color: var(--wine-dark) !important; 
       padding: 16px; 
       border-radius: 25px; 
       font-weight: 800; 
-      font-size: 1rem; 
+      font-size: 1.05rem; 
       cursor: pointer; 
       width: 100%; 
       text-transform: uppercase; 
-      margin-top: 10px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+      margin-top: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
       text-align: center;
       display: block;
+      border: none;
+      outline: none;
+      touch-action: manipulation;
     }
-    .btn-auth-trigger:active { transform: scale(0.98); background: #eee; }
+    .btn-login-click:active { transform: scale(0.96); opacity: 0.9; }
 
     /* CABECERA PRINCIPAL */
     .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
@@ -110,8 +112,7 @@
         <p class="brand-subtitle">Plataforma de Intermediación & Custodia Financiera</p>
       </div>
 
-      <!-- FORMULARIO DE INICIO DE SESIÓN -->
-      <form id="loginForm" onsubmit="procesarInicioSesion(event)">
+      <div>
         <div class="form-group">
           <label class="auth-label">Número de DNI:</label>
           <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
@@ -127,9 +128,9 @@
           <input type="password" id="loginPass" class="auth-input" value="123456">
         </div>
 
-        <!-- BOTÓN ACTUALIZADO A "INICIAR SESIÓN" -->
-        <button type="submit" id="btnSubmitLogin" class="btn-auth-trigger">INICIAR SESIÓN</button>
-      </form>
+        <!-- BOTÓN DIRECTO SIN FORMULARIO -->
+        <a href="javascript:void(0)" id="btnStartSession" onclick="forzarEntradaApp()" ontouchstart="forzarEntradaApp()" class="btn-login-click" style="text-decoration:none;">INICIAR SESIÓN</a>
+      </div>
     </div>
 
     <!-- PANTALLA PRINCIPAL DENTRO DE LA APP -->
@@ -338,16 +339,14 @@
   <script>
     let saldoOculto = false;
 
-    // PROCESAR FORMULARIO DE INICIO DE SESIÓN
-    function procesarInicioSesion(e) {
-      if(e) e.preventDefault();
+    // ENTRADA INMEDIATA
+    function forzarEntradaApp() {
+      const auth = document.getElementById('authSection');
+      const app = document.getElementById('appSection');
 
-      const authSection = document.getElementById('authSection');
-      const appSection = document.getElementById('appSection');
-
-      if (authSection && appSection) {
-        authSection.classList.add('hidden');
-        appSection.classList.remove('hidden');
+      if (auth && app) {
+        auth.className = 'auth-card hidden';
+        app.className = '';
 
         const homeList = document.getElementById('homeDealsList');
         const fullList = document.getElementById('dealsListFull');
@@ -355,7 +354,6 @@
           fullList.innerHTML = homeList.innerHTML;
         }
       }
-      return false;
     }
 
     function guardarPerfil() {
@@ -383,4 +381,4 @@
 
     function toggleSaldo() {
       saldoOculto = !saldoOculto;
-      docume
+      document.getElementById('balanceDisplay').innerText = saldoOculto ? "S/ ••
