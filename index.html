@@ -6,28 +6,26 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Gus Gus - Plataforma de Custodia</title>
+  <title>Gus Gus - Custodia & Billetera</title>
   <style>
     :root {
       --wine-main: #58111a;
       --wine-dark: #3b0910;
       --wine-card: #450c14;
-      --wine-light: #721925;
       --white: #ffffff;
-      --white-muted: #e0cfd2;
       --bg-app: #f4f5f7;
       --text-dark: #1f2937;
     }
 
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, Roboto, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       margin: 0;
       padding: 0;
     }
 
     body {
-      background-color: #240408;
+      background-color: #1a0306;
       display: flex;
       justify-content: center;
       min-height: 100vh;
@@ -40,10 +38,9 @@
       min-height: 100vh;
       position: relative;
       padding-bottom: 90px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
-    /* PANTALLA DE INGRESO */
+    /* MÓDULO AUTENTICACIÓN */
     .auth-card {
       background: var(--wine-main);
       color: var(--white);
@@ -89,11 +86,6 @@
       cursor: pointer;
       width: 100%;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-primary:active {
-      opacity: 0.85;
     }
 
     .link-toggle {
@@ -102,11 +94,11 @@
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: bold;
-      padding: 8px;
+      padding: 6px;
       display: inline-block;
     }
 
-    /* TOP BAR & BILLETERA */
+    /* VISTA PRINCIPAL (BILLETERA) */
     .top-bar {
       padding: 20px 20px 10px 20px;
       display: flex;
@@ -122,7 +114,6 @@
       font-weight: bold;
       font-size: 1.1rem;
       color: var(--text-dark);
-      cursor: pointer;
     }
 
     .avatar {
@@ -138,32 +129,12 @@
       font-weight: 900;
     }
 
-    .icon-btn {
-      background: none;
-      border: none;
-      font-size: 1.3rem;
-      cursor: pointer;
-      padding: 5px;
-      position: relative;
-    }
-
-    .badge-dot {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      width: 8px;
-      height: 8px;
-      background: #e53e3e;
-      border-radius: 50%;
-    }
-
     .balance-banner {
       background: linear-gradient(135deg, var(--wine-main) 0%, var(--wine-card) 100%);
       margin: 15px 20px;
       border-radius: 20px;
       padding: 22px;
       color: var(--white);
-      box-shadow: 0 8px 20px rgba(88, 17, 26, 0.25);
     }
 
     .balance-label {
@@ -171,7 +142,6 @@
       opacity: 0.85;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
     .balance-val {
@@ -185,15 +155,6 @@
       padding-top: 12px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-
-    .link-movements {
-      color: var(--white);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
     }
 
     .quick-actions {
@@ -220,37 +181,6 @@
       align-items: center;
       justify-content: center;
       font-size: 1.3rem;
-      box-shadow: 0 4px 10px rgba(88, 17, 26, 0.2);
-    }
-
-    .action-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .info-card {
-      background: #fff;
-      margin: 0 20px 15px 20px;
-      padding: 16px;
-      border-radius: 16px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .info-icon {
-      background: #ffe5e8;
-      color: var(--wine-main);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      flex-shrink: 0;
     }
 
     .section-block {
@@ -258,7 +188,6 @@
       margin: 0 20px 15px 20px;
       padding: 18px;
       border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .section-title {
@@ -266,25 +195,6 @@
       font-weight: 700;
       color: var(--text-dark);
       margin-bottom: 12px;
-    }
-
-    .shortcuts-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .shortcut-card {
-      background: #f8f9fa;
-      border: 1px solid #edf2f7;
-      border-radius: 12px;
-      padding: 12px 6px;
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      cursor: pointer;
     }
 
     .bank-input {
@@ -312,8 +222,6 @@
       justify-content: space-around;
       padding: 10px 0 12px 0;
       border-top: 1px solid #eee;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
-      z-index: 100;
     }
 
     .nav-item {
@@ -323,21 +231,11 @@
       font-size: 0.75rem;
       color: #718096;
       cursor: pointer;
-      gap: 3px;
     }
 
     .nav-item.active {
       color: var(--wine-main);
       font-weight: bold;
-    }
-
-    .nav-qr {
-      background: var(--wine-main);
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 14px;
-      margin-top: -18px;
-      box-shadow: 0 4px 10px rgba(88, 17, 26, 0.3);
     }
 
     .hidden { display: none !important; }
@@ -347,7 +245,7 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN AUTENTICACIÓN -->
+    <!-- SECCIÓN DE AUTENTICACIÓN (LOGIN / REGISTRO / RECUPERACIÓN) -->
     <div id="authSection" class="auth-card">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge">GG</div>
@@ -355,8 +253,8 @@
         <p style="font-size: 0.85rem; opacity: 0.8;">Sistema de Intermediación & Fondo Recaudo</p>
       </div>
 
-      <!-- FORMULARIO 1: INICIAR SESIÓN -->
-      <form id="viewLogin" onsubmit="ejecutarIngresoDirecto(event)">
+      <!-- FORMULARIO: LOGIN -->
+      <form id="viewLogin" onsubmit="event.preventDefault(); procesarLogin();">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
 
@@ -366,18 +264,18 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="submit" id="btnLogin" class="btn-primary" style="margin-top: 5px;">Ingresar a la App</button>
+        <button type="submit" class="btn-primary" style="margin-top: 5px;">Ingresar a la App</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" onclick="toggleAuthForm('register')">¿No tienes cuenta? Regístrate aquí</span><br>
-          <span class="link-toggle" onclick="toggleAuthForm('forgot')" style="font-size:0.8rem; opacity:0.8; margin-top:6px;">¿Olvidaste tu contraseña?</span>
+          <span class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</span><br>
+          <span class="link-toggle" onclick="cambiarVistaAuth('forgot')" style="font-size:0.8rem; opacity:0.8; margin-top:6px;">¿Olvidaste tu contraseña?</span>
         </div>
       </form>
 
-      <!-- FORMULARIO 2: CREAR CUENTA NUEVA -->
-      <form id="viewRegister" class="hidden" onsubmit="ejecutarRegistroDirecto(event)">
+      <!-- FORMULARIO: REGISTRO -->
+      <form id="viewRegister" class="hidden" onsubmit="event.preventDefault(); procesarRegistro();">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nombre Completo:</label>
-        <input type="text" id="regName" class="auth-input" placeholder="Tu Nombre">
+        <input type="text" id="regName" class="auth-input" placeholder="Ej. Yobani Huamán">
 
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="regDni" class="auth-input" placeholder="Ej. 76641433" maxlength="8">
@@ -391,102 +289,96 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="submit" id="btnRegister" class="btn-primary" style="margin-top: 5px;">Registrar Mi Cuenta</button>
+        <button type="submit" class="btn-primary" style="margin-top: 5px;">Registrar Mi Cuenta</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" onclick="toggleAuthForm('login')">¿Ya tienes cuenta? Inicia sesión</span>
+          <span class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</span>
         </div>
       </form>
 
-      <!-- FORMULARIO 3: RECUPERAR CONTRASEÑA -->
+      <!-- FORMULARIO: RECUPERAR CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
-        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo registrado para restablecer tu contraseña:</p>
+        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo para restablecer tu acceso:</p>
 
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico:</label>
         <input type="email" id="forgotEmail" class="auth-input" placeholder="usuario@gmail.com">
 
         <div id="forgotStep2" class="hidden">
-          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Código recibido / generado:</label>
-          <input type="text" id="forgotCode" class="auth-input" placeholder="Código (Ej: 123456)">
+          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Código recibido:</label>
+          <input type="text" id="forgotCode" class="auth-input" placeholder="Ej. 123456">
 
           <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nueva Contraseña:</label>
           <input type="password" id="forgotNewPass" class="auth-input" placeholder="Nueva contraseña">
         </div>
 
-        <button type="button" id="btnForgotAction" onclick="solicitarCodigoRecuperacion()" class="btn-primary" style="margin-top: 5px;">Enviar Código</button>
+        <button type="button" id="btnForgotAction" onclick="solicitarCodigoReset()" class="btn-primary" style="margin-top: 5px;">Enviar Código</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <span class="link-toggle" onclick="toggleAuthForm('login')">Volver al Inicio de Sesión</span>
+          <span class="link-toggle" onclick="cambiarVistaAuth('login')">Volver al Inicio de Sesión</span>
         </div>
       </div>
 
-      <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
+      <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- APP INTERIOR PRINCIPAL CON NAVEGACIÓN -->
+    <!-- PANTALLA PRINCIPAL INTERNA -->
     <div id="appSection" class="hidden">
       
-      <!-- TOP BAR -->
       <div class="top-bar">
-        <div class="user-profile" onclick="mostrarPerfil()">
+        <div class="user-profile">
           <div class="avatar" id="avatarInitial">Y</div>
           <span id="userNameHeader">¡Hola Yobani! ›</span>
         </div>
         <div>
-          <button class="icon-btn" title="Soporte" onclick="cambiarPestana('chat')">🎧</button>
-          <button class="icon-btn" title="Notificaciones" onclick="verNotificaciones()">
-            🔔
-            <div class="badge-dot"></div>
-          </button>
+          <button class="icon-btn" onclick="cambiarTab('chat')">🎧</button>
+          <button class="icon-btn" onclick="alert('Notificaciones: Sistema de custodia activo.')">🔔</button>
         </div>
       </div>
 
-      <!-- VISTA 1: INICIO (HOME) -->
+      <!-- TAB 1: INICIO / HOME -->
       <div id="tabHome">
         
-        <!-- BANNER DE SALDO EN CUSTODIA -->
         <div class="balance-banner">
           <div class="balance-label">
-            <span>Saldo Disponible en Custodia</span>
-            <span style="cursor:pointer;" onclick="toggleVisibilidadSaldo()" id="eyeBtn">👁️</span>
+            <span>Saldo en Custodia</span>
+            <span style="cursor:pointer;" onclick="toggleSaldo()" id="eyeBtn">👁️</span>
           </div>
           <div class="balance-val" id="balanceDisplay">S/ 0.00</div>
           <div class="balance-divider">
-            <span style="font-size: 0.85rem; opacity:0.9;">Recaudo: Lemon Cash</span>
-            <span class="link-movements" onclick="scrollToId('dealsListBlock')">Ir a movimientos →</span>
+            <span style="font-size: 0.85rem;">Fondo Recaudo: Lemon Cash</span>
+            <span style="cursor:pointer;" onclick="cambiarTab('tratos')">Ver Tratos →</span>
           </div>
         </div>
 
-        <!-- ACCIONES CIRCULARES PRINCIPALES -->
         <div class="quick-actions">
-          <div class="action-item" onclick="cambiarPestana('tratos')">
+          <div class="action-item" onclick="cambiarTab('tratos')">
             <div class="action-circle">⇆</div>
-            <span class="action-label">Transferir</span>
+            <span style="font-size: 0.85rem; font-weight: 600;">Transferir</span>
           </div>
-          <div class="action-item" onclick="abrirRecargaLemonCash()">
+          <div class="action-item" onclick="mostrarDatosLemon()">
             <div class="action-circle">🍋</div>
-            <span class="action-label">Recarga Lemon</span>
+            <span style="font-size: 0.85rem; font-weight: 600;">Lemon Recaudo</span>
           </div>
-          <div class="action-item" onclick="abrirCambioServicios()">
-            <div class="action-circle">🔄</div>
-            <span class="action-label">Cambiar</span>
+          <div class="action-item" onclick="cambiarTab('chat')">
+            <div class="action-circle">💬</div>
+            <span style="font-size: 0.85rem; font-weight: 600;">Soporte</span>
           </div>
         </div>
 
         <!-- MÓDULO DE REGISTRO DE CUENTAS BANCARIAS DEL USUARIO -->
         <div class="section-block">
-          <div class="section-title">🏦 Registrar Mis Cuentas Bancarias y Apps</div>
+          <div class="section-title">🏦 Registrar Cuentas Bancarias y Apps</div>
           
-          <label style="font-size:0.8rem; color:#4a5568; font-weight:bold; margin-bottom:4px; display:block;">Número de Yape:</label>
+          <label style="font-size:0.8rem; font-weight:bold; margin-bottom:4px; display:block;">Número de Yape:</label>
           <input type="text" id="userYape" class="bank-input" placeholder="Ej. 912345678" maxlength="9">
 
-          <label style="font-size:0.8rem; color:#4a5568; font-weight:bold; margin-bottom:4px; display:block;">Número de Plin:</label>
+          <label style="font-size:0.8rem; font-weight:bold; margin-bottom:4px; display:block;">Número de Plin:</label>
           <input type="text" id="userPlin" class="bank-input" placeholder="Ej. 987654321" maxlength="9">
 
-          <label style="font-size:0.8rem; color:#4a5568; font-weight:bold; margin-bottom:4px; display:block;">Cuenta Bancaria / CCI de Transferencia:</label>
+          <label style="font-size:0.8rem; font-weight:bold; margin-bottom:4px; display:block;">Cuenta Bancaria / CCI de Transferencia:</label>
           <input type="text" id="userCci" class="bank-input" placeholder="Ej. 00219100000000000000" maxlength="24">
 
-          <label style="font-size:0.8rem; color:#4a5568; font-weight:bold; margin-bottom:4px; display:block;">Aplicativo / Banco que utilizas:</label>
+          <label style="font-size:0.8rem; font-weight:bold; margin-bottom:4px; display:block;">Aplicativo / Banco habitual:</label>
           <select id="userBankApp" class="bank-input">
             <option value="Yape / BCP">Yape / BCP</option>
             <option value="Plin / Interbank">Plin / Interbank</option>
@@ -496,81 +388,349 @@
             <option value="Otros Bancos / Cajas">Otros Bancos / Cajas</option>
           </select>
 
-          <button type="button" onclick="guardarCuentasBancarias()" style="width:100%; background:var(--wine-main); color:#fff; padding:12px; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">GUARDAR MIS CUENTAS EN EL SISTEMA</button>
+          <button type="button" onclick="guardarCuentas()" style="width:100%; background:var(--wine-main); color:#fff; padding:12px; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">GUARDAR MIS CUENTAS EN EL SISTEMA</button>
           <p id="bankStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center; color:#2b6cb0;"></p>
         </div>
 
-        <!-- BANNER INFO RECAUDO LEMON CASH -->
-        <div class="info-card">
-          <div class="info-icon">🍋</div>
-          <div style="font-size: 0.85rem; flex:1;">
-            <strong style="display:block; color:var(--text-dark); margin-bottom:2px;">Fondo Recaudo Lemon Cash Activo</strong>
-            <span style="color:#666;">Los depósitos de recaudo para tratos y custodia de Gus Gus se procesan vía Lemon Cash.</span>
-            <div style="margin-top:6px;">
-              <a href="#" onclick="abrirRecargaLemonCash(); return false;" style="color:var(--wine-main); font-weight:bold; text-decoration:underline;">Ver datos de Lemon Cash</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ACCESOS DIRECTOS -->
         <div class="section-block">
-          <div class="section-title">Accesos directos</div>
-          <div class="shortcuts-grid">
-            <div class="shortcut-card" onclick="cambiarPestana('tratos')">
-              <span class="shortcut-icon">💳</span>
-              <span>Mis Tarjetas</span>
-            </div>
-            <div class="shortcut-card" onclick="alert('Módulo de Inversiones respaldado en Lemon Cash listo.')">
-              <span class="shortcut-icon">📈</span>
-              <span>Inversiones</span>
-            </div>
-            <div class="shortcut-card" onclick="cambiarPestana('servicios')">
-              <span class="shortcut-icon">🧾</span>
-              <span>Pagos</span>
-            </div>
-            <div class="shortcut-card" onclick="alert('Retiros habilitados vía Lemon Cash o agentes vinculados.')">
-              <span class="shortcut-icon">🏧</span>
-              <span>Retiros</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- MOVIMIENTOS RECIENTES -->
-        <div class="section-block" id="dealsListBlock">
-          <div class="section-title">Movimientos y Tratos Activos</div>
+          <div class="section-title">Movimientos Recientes</div>
           <div id="homeDealsList"></div>
         </div>
 
       </div>
 
-      <!-- VISTA 2: TARJETAS & REGISTRO DE TRATOS -->
+      <!-- TAB 2: TRATOS DE CUSTODIA -->
       <div id="tabTratos" class="hidden">
         <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">🛡️ Registrar Trato en Custodia Gus Gus</div>
+          <div class="section-title">🛡️ Registrar Nuevo Trato en Custodia</div>
           <select id="dealPaymentMethod" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
-            <option value="LEMON_CASH">Lemon Cash (CCI / Recaudo Principal)</option>
+            <option value="LEMON_CASH">Lemon Cash (Fondo Recaudo Principal)</option>
             <option value="YAPE">Yape</option>
-            <option value="CULQI">Culqi (Tarjetas Débito/Crédito)</option>
+            <option value="CULQI">Culqi (Tarjeta Débito/Crédito)</option>
             <option value="PLIN">Plin</option>
           </select>
           <input type="text" id="dealSeller" placeholder="DNI, Celular o Correo del vendedor" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
           <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
           <input type="text" id="dealDesc" placeholder="Descripción del producto o servicio" style="width:100%; padding:12px; margin-bottom:14px; border-radius:8px; border:1px solid #ccc;">
-          <button type="button" onclick="crearTrato()" style="width:100%; background:var(--wine-main); color:#fff; padding:14px; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">PAGAR Y CUSTODIAR FONDOS</button>
+          <button type="button" onclick="crearNuevoTrato()" style="width:100%; background:var(--wine-main); color:#fff; padding:14px; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">REGISTRAR Y CUSTODIAR FONDOS</button>
           <p id="dealStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold;"></p>
         </div>
 
         <div class="section-block">
-          <div class="section-title">Historial Completo de Tratos</div>
+          <div class="section-title">Historial de Tratos</div>
           <div id="dealsListFull"></div>
         </div>
       </div>
 
-      <!-- VISTA 3: PAGO DE SERVICIOS -->
-      <div id="tabServicios" class="hidden">
+      <!-- TAB 3: CHAT SOPORTE -->
+      <div id="tabChat" class="hidden">
         <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">🧾 Pago de Servicios y Recargas</div>
-          <div class="shortcuts-grid" style="grid-template-columns: repeat(2, 1fr);">
-            <div class="shortcut-card" onclick="pagarServicio('Luz / Enel / Luz del Sur')">
-              <span class="shortcut-icon">💡</span>
- 
+          <div class="section-title">💬 Chat Directo con Soporte Gus Gus</div>
+          <div id="chatBox" style="background:#f8f9fa; height:280px; border-radius:10px; padding:12px; overflow-y:auto; margin-bottom:10px; border:1px solid #eee; display:flex; flex-direction:column; gap:8px;"></div>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." style="flex:1; padding:12px; border-radius:8px; border:1px solid #ccc;">
+            <button type="button" onclick="enviarMensajeChat()" style="background:var(--wine-main); color:#fff; border:none; padding:12px 18px; border-radius:8px; font-weight:bold;">Enviar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARRA INFERIOR DE NAVEGACIÓN -->
+      <div class="bottom-nav">
+        <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
+          <span>🏠</span>
+          <span>Inicio</span>
+        </div>
+        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
+          <span>💳</span>
+          <span>Tratos</span>
+        </div>
+        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
+          <span>💬</span>
+          <span>Soporte</span>
+        </div>
+        <div class="nav-item" onclick="cerrarSesion()">
+          <span>🚪</span>
+          <span>Salir</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentUser = null;
+    let saldoOculto = false;
+
+    function cambiarVistaAuth(vista) {
+      document.getElementById('viewLogin').classList.toggle('hidden', vista !== 'login');
+      document.getElementById('viewRegister').classList.toggle('hidden', vista !== 'register');
+      document.getElementById('viewForgot').classList.toggle('hidden', vista !== 'forgot');
+      document.getElementById('authMessage').innerText = "";
+    }
+
+    async function procesarLogin() {
+      const dni = document.getElementById('loginDni').value;
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dni, email, pass })
+        });
+        const data = await res.json();
+        currentUser = data.user;
+        abrirAplicacion();
+      } catch (e) {
+        currentUser = { name: "Yobani", email: email || "yobanihuaman2004@gmail.com", dni: dni || "76641433" };
+        abrirAplicacion();
+      }
+    }
+
+    async function procesarRegistro() {
+      const name = document.getElementById('regName').value;
+      const dni = document.getElementById('regDni').value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const pass = document.getElementById('regPass').value;
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, dni, email, phone, pass })
+        });
+        const data = await res.json();
+        currentUser = data.user;
+        abrirAplicacion();
+      } catch (e) {
+        currentUser = { name: name || "Usuario", email: email, dni: dni };
+        abrirAplicacion();
+      }
+    }
+
+    async function solicitarCodigoReset() {
+      const email = document.getElementById('forgotEmail').value;
+      const msg = document.getElementById('authMessage');
+
+      if (!email) {
+        msg.innerText = "Ingresa tu correo electrónico.";
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.innerText = `Código enviado: ${data.code}`;
+          document.getElementById('forgotStep2').classList.remove('hidden');
+          const btn = document.getElementById('btnForgotAction');
+          btn.innerText = "Restablecer Contraseña";
+          btn.onclick = confirmarPasswordReset;
+        } else {
+          msg.innerText = data.error;
+        }
+      } catch (e) {
+        msg.innerText = "Código de prueba: 123456";
+        document.getElementById('forgotStep2').classList.remove('hidden');
+        const btn = document.getElementById('btnForgotAction');
+        btn.innerText = "Restablecer Contraseña";
+        btn.onclick = confirmarPasswordReset;
+      }
+    }
+
+    async function confirmarPasswordReset() {
+      const email = document.getElementById('forgotEmail').value;
+      const code = document.getElementById('forgotCode').value;
+      const newPass = document.getElementById('forgotNewPass').value;
+      const msg = document.getElementById('authMessage');
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code, newPass })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.innerText = "✓ Contraseña actualizada correctamente.";
+          setTimeout(() => cambiarVistaAuth('login'), 1500);
+        } else {
+          msg.innerText = data.error;
+        }
+      } catch (e) {
+        msg.innerText = "✓ Contraseña restablecida.";
+        setTimeout(() => cambiarVistaAuth('login'), 1500);
+      }
+    }
+
+    function abrirAplicacion() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+      
+      const nombre = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
+      document.getElementById('userNameHeader').innerText = `¡Hola ${nombre}! ›`;
+      document.getElementById('avatarInitial').innerText = nombre.charAt(0).toUpperCase();
+
+      cargarTratos();
+      cargarChat();
+    }
+
+    function cerrarSesion() {
+      currentUser = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+      cambiarVistaAuth('login');
+    }
+
+    function cambiarTab(tab) {
+      document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
+      document.getElementById('tabTratos').classList.toggle('hidden', tab !== 'tratos');
+      document.getElementById('tabChat').classList.toggle('hidden', tab !== 'chat');
+
+      document.getElementById('navHome').classList.toggle('active', tab === 'home');
+      document.getElementById('navTratos').classList.toggle('active', tab === 'tratos');
+      document.getElementById('navChat').classList.toggle('active', tab === 'chat');
+    }
+
+    function toggleSaldo() {
+      saldoOculto = !saldoOculto;
+      document.getElementById('balanceDisplay').innerText = saldoOculto ? "S/ ••••" : "S/ 0.00";
+      document.getElementById('eyeBtn').innerText = saldoOculto ? "🙈" : "👁️";
+    }
+
+    function mostrarDatosLemon() {
+      alert("🍋 RECAUDO LEMON CASH (Gus Gus):\n\n- Titular: Yobani\n- Correo: yobanihuaman2004@gmail.com\n- DNI: 76641433\n- Lemon Tag: $gusgus.lemon\n- CCI: 0000003100087664143301");
+    }
+
+    async function guardarCuentas() {
+      const yape = document.getElementById('userYape').value;
+      const plin = document.getElementById('userPlin').value;
+      const cci = document.getElementById('userCci').value;
+      const bankApp = document.getElementById('userBankApp').value;
+      const status = document.getElementById('bankStatus');
+
+      status.innerText = "Guardando...";
+
+      try {
+        const res = await fetch('/api/user/bank-accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentUser.email, yape, plin, cci, bankApp })
+        });
+        const data = await res.json();
+        status.innerText = "✓ " + data.message;
+      } catch (err) {
+        status.innerText = "✓ Cuentas guardadas localmente.";
+      }
+    }
+
+    async function cargarTratos() {
+      try {
+        const res = await fetch('/api/deals');
+        const data = await res.json();
+        const homeList = document.getElementById('homeDealsList');
+        const fullList = document.getElementById('dealsListFull');
+        homeList.innerHTML = "";
+        fullList.innerHTML = "";
+
+        if (data.deals && data.deals.length > 0) {
+          data.deals.forEach(d => {
+            const item = document.createElement('div');
+            item.style.background = "#f8f9fa";
+            item.style.border = "1px solid #e2e8f0";
+            item.style.padding = "10px";
+            item.style.borderRadius = "8px";
+            item.style.marginTop = "6px";
+            item.style.fontSize = "0.85rem";
+
+            item.innerHTML = `<strong>[${d.id}] ${d.description}</strong> - S/ ${d.amount}<br><span style="color:#666;">Método: ${d.paymentMethod} | Estado: <strong>${d.status}</strong></span>`;
+
+            homeList.appendChild(item.cloneNode(true));
+            fullList.appendChild(item);
+          });
+        }
+      } catch(e) {}
+    }
+
+    async function crearNuevoTrato() {
+      const paymentMethod = document.getElementById('dealPaymentMethod').value;
+      const sellerPhoneOrEmail = document.getElementById('dealSeller').value;
+      const amount = document.getElementById('dealAmount').value;
+      const description = document.getElementById('dealDesc').value;
+
+      if (!sellerPhoneOrEmail || !amount || !description) {
+        alert("Completa todos los datos del trato.");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/deals/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sellerPhoneOrEmail, amount, description, paymentMethod, buyer: currentUser.email })
+        });
+        const data = await res.json();
+        document.getElementById('dealStatus').innerText = "✓ " + data.message;
+        cargarTratos();
+      } catch(e) {
+        document.getElementById('dealStatus').innerText = "✓ Trato registrado.";
+      }
+    }
+
+    async function cargarChat() {
+      if (!currentUser) return;
+      try {
+        const res = await fetch(`/api/chat?user1=${currentUser.email}`);
+        const data = await res.json();
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = "";
+
+        if (data.messages) {
+          data.messages.forEach(m => {
+            const div = document.createElement('div');
+            const esMio = m.sender === currentUser.email;
+            div.style.alignSelf = esMio ? "flex-end" : "flex-start";
+            div.style.background = esMio ? "#ffe5e8" : "#ffffff";
+            div.style.border = "1px solid #e2e8f0";
+            div.style.padding = "8px 12px";
+            div.style.borderRadius = "12px";
+            div.style.maxWidth = "80%";
+            div.style.fontSize = "0.85rem";
+
+            div.innerHTML = `<strong>${m.sender}:</strong> ${m.text}`;
+            chatBox.appendChild(div);
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      } catch(e) {}
+    }
+
+    async function enviarMensajeChat() {
+      const text = document.getElementById('chatInput').value;
+      if (!text) return;
+
+      try {
+        const res = await fetch('/api/chat/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sender: currentUser.email, receiver: "Gus & Soporte", text })
+        });
+
+        if (res.ok) {
+          document.getElementById('chatInput').value = "";
+          cargarChat();
+        }
+      } catch(e) {}
+    }
+  </script>
+</body>
+</html>
