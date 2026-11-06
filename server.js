@@ -12,11 +12,11 @@ app.use(cors());
 // Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de usuarios (Creador Yobani como ADMIN_MAESTRO)
+// Base de usuarios
 const users = [
   { 
     id: 1, 
-    name: "Yobani", 
+    name: "Yobani Huamán (Creador)", 
     dni: "76641433", 
     email: "yobanihuaman2004@gmail.com", 
     phone: "912345678", 
@@ -34,13 +34,11 @@ const users = [
 
 const resetTokens = {};
 
-// Pasarelas y recaudo Lemon Cash Gus Gus
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
   lemonCashCCI: process.env.LEMON_CASH_CCI || "0000003100087664143301",
-  lemonCashTag: "$gusgus.lemon",
-  culqiPublicKey: "pk_live_gusgus123456"
+  lemonCashTag: "$gusgus.lemon"
 };
 
 const deals = [
@@ -49,18 +47,19 @@ const deals = [
     buyer: "yobanihuaman2004@gmail.com",
     seller: "912345678",
     amount: "150.00",
+    fee: "4.50",
     paymentMethod: "LEMON_CASH",
-    description: "Trato inicial en custodia Gus Gus",
+    description: "Trato inicial intermediado Gus Gus",
     status: "EN_CUSTODIA",
     date: new Date().toISOString()
   }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Tu cuenta de Administrador Maestro está activa.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Soporte Gus Gus", text: "Hola, sistema listo para intermediación.", time: "10:30 AM" }
 ];
 
-/* --- ENDPOINTS DE AUTENTICACIÓN --- */
+/* --- AUTENTICACIÓN --- */
 
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
@@ -77,13 +76,13 @@ app.post('/api/auth/login', (req, res) => {
   if (!user) {
     user = {
       id: users.length + 1,
-      name: esAdmin ? "Yobani" : (cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`),
+      name: esAdmin ? "Yobani Huamán (Creador)" : (cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`),
       dni: cleanDni || "76641433",
       email: cleanEmail || "yobanihuaman2004@gmail.com",
       phone: "912345678",
       pass: pass || "123456",
       role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR",
-      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
+      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "Yape / BCP" },
       verified: true
     };
     users.push(user);
@@ -110,7 +109,7 @@ app.post('/api/auth/register', (req, res) => {
       phone: (phone || '').trim(), 
       pass: (pass || "123456").trim(), 
       role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
-      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
+      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "Yape / BCP" },
       verified: true 
     };
     users.push(user);
@@ -122,44 +121,40 @@ app.post('/api/auth/register', (req, res) => {
 app.post('/api/auth/forgot-password', (req, res) => {
   const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-
   const user = users.find(u => u.email === cleanEmail);
   if (!user) {
-    return res.status(404).json({ error: "El correo ingresado no existe en el sistema." });
+    return res.status(404).json({ error: "El correo ingresado no existe." });
   }
-
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   resetTokens[cleanEmail] = code;
-
   res.json({ message: "Código generado", code });
 });
 
 app.post('/api/auth/reset-password', (req, res) => {
   const { email, code, newPass } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-
   if (resetTokens[cleanEmail] && resetTokens[cleanEmail] === code) {
     const user = users.find(u => u.email === cleanEmail);
     if (user) {
       user.pass = newPass;
       delete resetTokens[cleanEmail];
-      return res.json({ message: "Contraseña restablecida correctamente." });
+      return res.json({ message: "Contraseña actualizada." });
     }
   }
-
-  res.status(400).json({ error: "El código ingresado es incorrecto o ha expirado." });
+  res.status(400).json({ error: "Código inválido o expirado." });
 });
 
-/* --- ENDPOINTS DE FUNCIONALIDAD --- */
+/* --- GESTIÓN DE PERFIL Y BANCARIA --- */
 
-app.post('/api/user/bank-accounts', (req, res) => {
-  const { email, yape, plin, cci, bankApp } = req.body;
+app.post('/api/user/update-profile', (req, res) => {
+  const { email, name, phone, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-
   const user = users.find(u => u.email === cleanEmail);
-  if (!user) {
-    return res.status(404).json({ error: "Usuario no encontrado." });
-  }
+
+  if (!user) return res.status(404).json({ error: "Usuario no encontrado." });
+
+  if (name) user.name = name.trim();
+  if (phone) user.phone = phone.trim();
 
   user.bankAccounts = {
     yape: (yape || '').trim(),
@@ -168,22 +163,40 @@ app.post('/api/user/bank-accounts', (req, res) => {
     bankApp: (bankApp || '').trim()
   };
 
-  res.json({ message: "Cuentas bancarias actualizadas correctamente.", bankAccounts: user.bankAccounts });
+  res.json({ message: "Perfil y datos bancarios actualizados.", user });
 });
+
+app.get('/api/users/search', (req, res) => {
+  const { query } = req.query;
+  if (!query) return res.json({ users: [] });
+
+  const results = users.filter(u => 
+    u.name.toLowerCase().includes(query.toLowerCase()) || 
+    u.phone.includes(query) || 
+    u.dni.includes(query) ||
+    u.email.toLowerCase().includes(query.toLowerCase())
+  ).map(u => ({ name: u.name, phone: u.phone, dni: u.dni, email: u.email }));
+
+  res.json({ users: results });
+});
+
+/* --- TRATOS Y CHAT --- */
 
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
   const { sellerPhoneOrEmail, amount, description, paymentMethod, buyer } = req.body;
   if (!sellerPhoneOrEmail || !amount || !description) {
-    return res.status(400).json({ error: "Completa todos los campos obligatorios." });
+    return res.status(400).json({ error: "Completa los datos requeridos." });
   }
 
+  const fee = (parseFloat(amount) * 0.03).toFixed(2);
   const newDeal = {
     id: `GN-${Math.floor(1000 + Math.random() * 9000)}`,
     buyer: buyer || "Cliente",
     seller: sellerPhoneOrEmail,
     amount,
+    fee,
     paymentMethod: paymentMethod || "LEMON_CASH",
     description,
     status: "EN_CUSTODIA",
@@ -191,26 +204,25 @@ app.post('/api/deals/create', (req, res) => {
   };
 
   deals.push(newDeal);
-  res.json({ message: "Trato en custodia registrado exitosamente.", deal: newDeal });
+  res.json({ message: "Trato registrado en custodia Gus Gus.", deal: newDeal });
 });
 
 app.get('/api/chat', (req, res) => {
   const { user1 } = req.query;
-  const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus") || m.type === "system");
+  const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Soporte"));
   res.json({ messages: msgs });
 });
 
 app.post('/api/chat/send', (req, res) => {
   const { sender, receiver, text } = req.body;
-  if (!text) return res.status(400).json({ error: "El mensaje no puede estar vacío." });
+  if (!text) return res.status(400).json({ error: "Mensaje vacío." });
 
   const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const newMsg = {
     id: chatMessages.length + 1,
     sender,
-    receiver: receiver || "Gus & Soporte",
-    text: text,
-    type: "user",
+    receiver: receiver || "Soporte Gus Gus",
+    text,
     time: timeStr
   };
   chatMessages.push(newMsg);
@@ -222,4 +234,4 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`[Servidor] Ejecutándose en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`[GusGus] Servidor activo en puerto ${PORT}`));
