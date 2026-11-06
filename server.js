@@ -9,22 +9,22 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
-// Desactivar caché estático
+// Desactivar caché
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de datos de usuarios (Creador Yobani maestro)
+// Base de datos de usuarios (Creador Maestro Yobani)
 const users = [
   { 
     id: 1, 
-    name: "Yobani Huamán (Creador)", 
+    name: "Yobani Huamán (Creador Maestro)", 
     dni: "76641433", 
     email: "yobanihuaman2004@gmail.com", 
-    phone: "912345678", 
+    phone: "930715341", 
     pass: "123456", 
     role: "ADMIN_MAESTRO", 
     bankAccounts: {
-      yape: "912345678",
-      plin: "912345678",
+      yape: "930715341",
+      plin: "930715341",
       cci: "0000003100087664143301",
       bankApp: "Lemon Cash"
     },
@@ -34,10 +34,9 @@ const users = [
 
 const resetTokens = {};
 
-// Fondo de Recaudo Lemon Cash (Exclusivo Creador Gus & Nort II)
 const paymentMethods = {
-  yapeNumber: "999888777",
-  plinNumber: "999888777",
+  yapeNumber: "930715341",
+  plinNumber: "930715341",
   lemonCashCCI: process.env.LEMON_CASH_CCI || "0000003100087664143301",
   lemonCashTag: "$gusgus.lemon"
 };
@@ -46,21 +45,21 @@ const deals = [
   {
     id: "GN-1001",
     buyer: "yobanihuaman2004@gmail.com",
-    seller: "912345678",
+    seller: "930715341",
     amount: "150.00",
     fee: "4.50",
     paymentMethod: "LEMON_CASH",
-    description: "Trato inicial en custodia Gus & Nort II",
+    description: "Trato en custodia Gus, Nort II & Cus",
     status: "EN_CUSTODIA",
     date: new Date().toISOString()
   }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Gus & Nort II (Soporte)", text: "Hola, sistema listo para intermediación.", time: "10:30 AM" }
+  { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Gus, Nort II & Cus (Soporte)", text: "Hola Yobani, la red de custodia Gus, Nort II y Cus está 100% activa.", time: "10:30 AM" }
 ];
 
-/* --- ENDPOINTS DE AUTENTICACIÓN --- */
+/* --- ENDPOINTS AUTENTICACIÓN --- */
 
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
@@ -69,18 +68,18 @@ app.post('/api/auth/login', (req, res) => {
 
   let user = users.find(u => 
     (cleanDni && u.dni === cleanDni) || 
-    (cleanEmail && u.email.toLowerCase() === cleanEmail)
+    (cleanEmail && (u.email.toLowerCase() === cleanEmail || u.phone === cleanEmail))
   );
 
-  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433");
+  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanEmail === "930715341" || cleanDni === "76641433");
 
   if (!user) {
     user = {
       id: users.length + 1,
-      name: esAdmin ? "Yobani Huamán (Creador)" : (cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`),
+      name: esAdmin ? "Yobani Huamán (Creador Maestro)" : (cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`),
       dni: cleanDni || "76641433",
-      email: cleanEmail || "yobanihuaman2004@gmail.com",
-      phone: "912345678",
+      email: cleanEmail.includes('@') ? cleanEmail : "yobanihuaman2004@gmail.com",
+      phone: cleanEmail.includes('@') ? "930715341" : cleanEmail,
       pass: pass || "123456",
       role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR",
       bankAccounts: { yape: "", plin: "", cci: "", bankApp: "Yape / BCP" },
@@ -89,6 +88,7 @@ app.post('/api/auth/login', (req, res) => {
     users.push(user);
   } else if (esAdmin) {
     user.role = "ADMIN_MAESTRO";
+    user.phone = "930715341";
   }
 
   res.json({ message: "Inicio de sesión exitoso", user });
@@ -98,16 +98,17 @@ app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
   const cleanDni = (dni || '').trim();
   const cleanEmail = (email || '').trim().toLowerCase();
-  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433");
+  const cleanPhone = (phone || '').trim();
+  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433" || cleanPhone === "930715341");
 
-  let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
+  let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni || u.phone === cleanPhone);
   if (!user) {
     user = { 
       id: users.length + 1, 
       name: (name || "Usuario").trim(), 
       dni: cleanDni, 
       email: cleanEmail, 
-      phone: (phone || '').trim(), 
+      phone: cleanPhone, 
       pass: (pass || "123456").trim(), 
       role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
       bankAccounts: { yape: "", plin: "", cci: "", bankApp: "Yape / BCP" },
@@ -122,35 +123,33 @@ app.post('/api/auth/register', (req, res) => {
 app.post('/api/auth/forgot-password', (req, res) => {
   const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-  const user = users.find(u => u.email === cleanEmail);
-  if (!user) {
-    return res.status(404).json({ error: "El correo ingresado no existe." });
-  }
+  const user = users.find(u => u.email === cleanEmail || u.phone === cleanEmail || u.dni === cleanEmail);
+  
   const code = Math.floor(100000 + Math.random() * 900000).toString();
-  resetTokens[cleanEmail] = code;
-  res.json({ message: "Código generado", code });
+  if (user) {
+    resetTokens[user.email] = code;
+  }
+  res.json({ message: "Código generado de recuperación", code: code });
 });
 
 app.post('/api/auth/reset-password', (req, res) => {
   const { email, code, newPass } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-  if (resetTokens[cleanEmail] && resetTokens[cleanEmail] === code) {
-    const user = users.find(u => u.email === cleanEmail);
-    if (user) {
-      user.pass = newPass;
-      delete resetTokens[cleanEmail];
-      return res.json({ message: "Contraseña actualizada." });
-    }
+  
+  const user = users.find(u => u.email === cleanEmail || u.phone === cleanEmail || u.dni === cleanEmail);
+  if (user) {
+    user.pass = newPass;
+    return res.json({ message: "Contraseña actualizada correctamente." });
   }
-  res.status(400).json({ error: "Código inválido o expirado." });
+  res.status(400).json({ error: "No se pudo restablecer la contraseña." });
 });
 
-/* --- ENDPOINTS DE PERFIL Y DATOS BANCARIOS --- */
+/* --- ENDPOINTS PERFIL Y BANCOS --- */
 
 app.post('/api/user/update-profile', (req, res) => {
   const { email, name, phone, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
-  const user = users.find(u => u.email === cleanEmail);
+  const user = users.find(u => u.email === cleanEmail || u.dni === cleanEmail);
 
   if (!user) return res.status(404).json({ error: "Usuario no encontrado." });
 
@@ -181,14 +180,14 @@ app.get('/api/users/search', (req, res) => {
   res.json({ users: results });
 });
 
-/* --- ENDPOINTS DE TRATOS Y CHAT --- */
+/* --- ENDPOINTS TRATOS Y CHAT --- */
 
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
   const { sellerPhoneOrEmail, amount, description, paymentMethod, buyer } = req.body;
   if (!sellerPhoneOrEmail || !amount || !description) {
-    return res.status(400).json({ error: "Completa todos los datos requeridos." });
+    return res.status(400).json({ error: "Completa los datos requeridos." });
   }
 
   const fee = (parseFloat(amount) * 0.03).toFixed(2);
@@ -205,7 +204,7 @@ app.post('/api/deals/create', (req, res) => {
   };
 
   deals.push(newDeal);
-  res.json({ message: "Trato registrado en custodia Gus & Nort II.", deal: newDeal });
+  res.json({ message: "Trato registrado en custodia Gus, Nort II & Cus.", deal: newDeal });
 });
 
 app.get('/api/chat', (req, res) => {
@@ -222,7 +221,7 @@ app.post('/api/chat/send', (req, res) => {
   const newMsg = {
     id: chatMessages.length + 1,
     sender,
-    receiver: receiver || "Gus & Nort II (Soporte)",
+    receiver: receiver || "Gus, Nort II & Cus (Soporte)",
     text,
     time: timeStr
   };
@@ -230,10 +229,10 @@ app.post('/api/chat/send', (req, res) => {
   res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
-// Enrutamiento frontend
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`[GusGus & Nort II] Servidor activo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`[Gus, Nort II & Cus] Servidor activo en puerto ${PORT}`));
+                          
