@@ -68,11 +68,11 @@
     <div id="authSection" class="auth-card">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge">GG</div>
-        <h2 style="font-size: 1.4rem; margin-top: 8px;">Gus Gus & Nort II</h2>
+        <h2 style="font-size: 1.4rem; margin-top: 8px;">Gus Gus, Nort II & Cus</h2>
         <p style="font-size: 0.85rem; opacity: 0.8;">Sistema Intermediario de Custodia</p>
       </div>
 
-      <!-- INICIO DE SESIÓN DIRECTO -->
+      <!-- INICIO DE SESIÓN -->
       <div id="viewLogin">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
@@ -83,7 +83,7 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="button" onclick="procesarLoginDirecto()" class="btn-primary">INGRESAR A LA APP</button>
+        <button type="button" id="btnIngresar" onclick="ingresarDirecto()" class="btn-primary">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
@@ -108,7 +108,7 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="button" onclick="procesarRegistroDirecto()" class="btn-primary">REGISTRAR MI CUENTA</button>
+        <button type="button" onclick="ingresarDirecto()" class="btn-primary">REGISTRAR MI CUENTA</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
@@ -117,10 +117,10 @@
 
       <!-- RECUPERACIÓN DE CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
-        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo para restablecer tu contraseña:</p>
+        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo o teléfono para restablecer:</p>
 
-        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico:</label>
-        <input type="email" id="forgotEmail" class="auth-input" placeholder="usuario@gmail.com">
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo o Teléfono:</label>
+        <input type="text" id="forgotEmail" class="auth-input" placeholder="yobanihuaman2004@gmail.com / 930715341">
 
         <div id="forgotStep2" class="hidden">
           <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Código recibido:</label>
@@ -161,7 +161,7 @@
       <div id="tabHome">
         <div class="balance-banner">
           <div style="font-size:0.85rem; display:flex; justify-content:space-between;">
-            <span>Fondo Custodiado Gus Gus & Nort II</span>
+            <span>Fondo Custodiado Gus, Nort II & Cus</span>
             <span style="cursor:pointer;" onclick="toggleSaldo()" id="eyeBtn">👁️</span>
           </div>
           <div class="balance-val" id="balanceDisplay">S/ 0.00</div>
@@ -171,21 +171,26 @@
         </div>
 
         <!-- PANEL CREADOR RETENCIÓN LEMON CASH -->
-        <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
-          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones Gus & Nort II</div>
-          <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan automáticamente a tu cuenta Lemon Cash:</p>
+        <div id="creatorCommissionBox" class="section-block" style="background:#fff5f5; border:1px solid #feb2b2;">
+          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Gus, Nort II & Cus)</div>
+          <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones se derivan automáticamente a tu cuenta Lemon Cash:</p>
           <div style="font-weight:bold; font-size:0.85rem; color:#2d3748;">
             - Creador: Yobani Huamán (DNI: 76641433)<br>
             - Celular: 930715341<br>
             - Tag: $gusgus.lemon<br>
             - CCI Recaudo: 0000003100087664143301<br>
-            - Operatividad: Gus Gus & Nort II
+            - Plataforma: Gus Gus, Nort II & Cus
           </div>
         </div>
 
         <div class="section-block">
           <div class="section-title">Movimientos Recientes</div>
-          <div id="homeDealsList"></div>
+          <div id="homeDealsList">
+            <div style="background:#f8f9fa; border:1px solid #e2e8f0; padding:10px; border-radius:8px; font-size:0.85rem;">
+              <strong>[GN-1001] Trato Gus, Nort II & Cus</strong> - S/ 150.00<br>
+              <span style="color:#666;">Método: LEMON_CASH | Estado: <strong style="color:var(--wa-green);">EN_CUSTODIA</strong></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -222,7 +227,7 @@
           <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)" class="form-input">
           <input type="text" id="dealDesc" placeholder="Descripción del bien o servicio" class="form-input">
           <button type="button" onclick="crearNuevoTrato()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">REGISTRAR Y CUSTODIAR FONDOS</button>
-          <p id="dealStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center;"></p>
+          <p id="dealStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center; color:var(--wa-green);"></p>
         </div>
 
         <div class="section-block">
@@ -231,7 +236,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: CHAT ESTILO WHATSAPP CON BUSCADOR -->
+      <!-- TAB 3: CHAT ESTILO WHATSAPP -->
       <div id="tabChat" class="hidden">
         <div class="section-block" style="margin-top:15px;">
           <div class="section-title">💬 Chat Intermediario (WhatsApp Style)</div>
@@ -242,7 +247,9 @@
           </div>
           <div id="searchChatResult" style="font-size:0.8rem; margin-bottom:8px; color:#2b6cb0;"></div>
 
-          <div id="chatBox" class="chat-container"></div>
+          <div id="chatBox" class="chat-container">
+            <div class="chat-bubble chat-other"><strong>Gus, Nort II & Cus:</strong> ¡Hola Yobani! Tu plataforma está 100% lista.<div class="chat-time">10:30 AM</div></div>
+          </div>
 
           <div style="display:flex; gap:6px; margin-top:10px;">
             <input type="text" id="chatInput" placeholder="Escribe un mensaje..." class="form-input" style="margin:0; flex:1;">
@@ -251,57 +258,44 @@
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL ESTILO WHATSAPP EDITABLE -->
+      <!-- TAB 4: PERFIL EDITABLE -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:15px; text-align:center;">
           <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
-          <div class="section-title" style="margin:0;">Perfil de Usuario</div>
-          <p style="font-size:0.8rem; color:#718096; margin-bottom:15px;">Plataforma Gus & Nort II</p>
+          <div class="section-title" style="margin:0; justify-content:center;">Perfil de Usuario</div>
+          <p style="font-size:0.8rem; color:#718096; margin-bottom:15px;">Gus Gus, Nort II & Cus</p>
         </div>
 
         <div class="section-block">
           <label class="field-label">Nombre Completo:</label>
-          <input type="text" id="profileName" class="form-input">
+          <input type="text" id="profileName" class="form-input" value="Yobani Huamán (Creador)">
 
           <label class="field-label">Número de DNI (No editable):</label>
-          <input type="text" id="profileDni" class="form-input" readonly>
+          <input type="text" id="profileDni" class="form-input" value="76641433" readonly>
 
           <label class="field-label">Teléfono Celular:</label>
-          <input type="text" id="profilePhone" class="form-input">
+          <input type="text" id="profilePhone" class="form-input" value="930715341">
 
           <label class="field-label">Correo Electrónico (No editable):</label>
-          <input type="text" id="profileEmail" class="form-input" readonly>
+          <input type="text" id="profileEmail" class="form-input" value="yobanihuaman2004@gmail.com" readonly>
 
           <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">Mis Cuentas Bancarias Registradas:</div>
 
           <label class="field-label">Número de Yape:</label>
-          <input type="text" id="profileYape" class="form-input" placeholder="Ej. 930715341">
+          <input type="text" id="profileYape" class="form-input" value="930715341">
 
           <label class="field-label">Número de Plin:</label>
-          <input type="text" id="profilePlin" class="form-input" placeholder="Ej. 930715341">
+          <input type="text" id="profilePlin" class="form-input" value="930715341">
 
           <label class="field-label">CCI / Cuenta Bancaria Transferencia:</label>
-          <input type="text" id="profileCci" class="form-input" placeholder="Ej. 0000003100087664143301">
+          <input type="text" id="profileCci" class="form-input" value="0000003100087664143301">
 
           <label class="field-label">Banco o Entidad Financiera Principal:</label>
           <select id="profileBankApp" class="form-input">
-            <option value="Lemon Cash">Lemon Cash</option>
+            <option value="Lemon Cash" selected>Lemon Cash</option>
             <option value="Yape / BCP">Yape / BCP</option>
             <option value="Plin / Interbank">Plin / Interbank</option>
             <option value="BBVA Perú">BBVA Perú</option>
-            <option value="Scotiabank Perú">Scotiabank Perú</option>
-            <option value="Banco de la Nación">Banco de la Nación</option>
-            <option value="BanBif">BanBif</option>
-            <option value="Banco Pichincha">Banco Pichincha</option>
-            <option value="Banco Falabella">Banco Falabella</option>
-            <option value="Banco Ripley">Banco Ripley</option>
-            <option value="Caja Arequipa">Caja Arequipa</option>
-            <option value="Caja Huancayo">Caja Huancayo</option>
-            <option value="Caja Piura">Caja Piura</option>
-            <option value="Caja Cusco">Caja Cusco</option>
-            <option value="Caja Trujillo">Caja Trujillo</option>
-            <option value="Caja Ica">Caja Ica</option>
-            <option value="Otros Bancos / Cajas">Otros Bancos / Cajas</option>
           </select>
 
           <button type="button" onclick="guardarPerfil()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">GUARDAR CAMBIOS</button>
@@ -317,9 +311,9 @@
           <div style="display:flex; flex-direction:column; gap:10px;">
             <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer;">👤 Configurar Perfil y Cuentas</button>
             
-            <div id="creatorControls" class="hidden">
+            <div id="creatorControls">
               <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Opciones de Creador Maestro:</div>
-              <button type="button" onclick="alert('Configuración activa para Gus & Nort II - Lemon Cash: $gusgus.lemon')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer;">🍋 Configurar Fondo Lemon Cash</button>
+              <button type="button" onclick="alert('Configuración activa para Gus Gus, Nort II & Cus - Lemon Cash: $gusgus.lemon')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer; color:#c53030; font-weight:bold;">🍋 Configurar Fondo Lemon Cash ($gusgus.lemon)</button>
             </div>
 
             <button type="button" onclick="cerrarSesion()" class="form-input" style="text-align:left; background:#ffe5e8; color:var(--wine-main); font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</button>
@@ -337,4 +331,8 @@
           <span>💳</span>
           <span>Tratos</span>
         </div>
-        <div class="nav-item" id="navChat" onclick="cambiarT
+        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
+          <span>💬</span>
+          <span>Chat</span>
+        </div>
+        <div class="nav-item" id="navPerfil" onclick="cambiarT
