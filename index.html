@@ -43,6 +43,7 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
+    /* ESTILOS DE AUTENTICACIÓN */
     .auth-card {
       background: var(--wine-main);
       color: var(--white);
@@ -91,6 +92,17 @@
       letter-spacing: 0.5px;
     }
 
+    .link-toggle {
+      color: var(--white);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      padding: 6px;
+      display: inline-block;
+    }
+
+    /* TOP BAR & BILLETERA */
     .top-bar {
       padding: 20px 20px 10px 20px;
       display: flex;
@@ -331,27 +343,83 @@
 
   <div class="app-container">
 
-    <!-- AUTENTICACIÓN DIRECTA -->
+    <!-- SECCIÓN AUTENTICACIÓN COMPLETA -->
     <div id="authSection" class="auth-card">
-      <div style="text-align: center; margin-bottom: 30px;">
+      <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge">GG</div>
         <h2 style="font-size: 1.4rem; margin-top: 8px;">Gus Gus Custodia</h2>
         <p style="font-size: 0.85rem; opacity: 0.8;">Sistema de Intermediación & Fondo Recaudo</p>
       </div>
 
-      <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI Creador:</label>
-      <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
+      <!-- FORMULARIO 1: INICIAR SESIÓN -->
+      <div id="viewLogin">
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
+        <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
 
-      <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Gmail Creador:</label>
-      <input type="text" id="loginEmail" class="auth-input" value="yobanihuaman2004@gmail.com">
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Gmail o Teléfono:</label>
+        <input type="text" id="loginEmail" class="auth-input" value="yobanihuaman2004@gmail.com">
 
-      <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
-      <input type="password" id="loginPass" class="auth-input" value="123456">
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
+        <input type="password" id="loginPass" class="auth-input" value="123456">
 
-      <button type="button" onclick="ejecutarIngresoDirecto()" class="btn-primary" style="margin-top: 10px;">Ingresar a la App</button>
+        <button type="button" onclick="ejecutarIngresoDirecto()" class="btn-primary" style="margin-top: 5px;">Ingresar a la App</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+          <span class="link-toggle" onclick="toggleAuthForm('register')">¿No tienes cuenta? Regístrate aquí</span><br>
+          <span class="link-toggle" onclick="toggleAuthForm('forgot')" style="font-size:0.8rem; opacity:0.8; margin-top:6px;">¿Olvidaste tu contraseña?</span>
+        </div>
+      </div>
+
+      <!-- FORMULARIO 2: CREAR CUENTA NUEVA -->
+      <div id="viewRegister" class="hidden">
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nombre Completo:</label>
+        <input type="text" id="regName" class="auth-input" placeholder="Tu Nombre">
+
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
+        <input type="text" id="regDni" class="auth-input" placeholder="Ej. 76641433" maxlength="8">
+
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico (Gmail):</label>
+        <input type="email" id="regEmail" class="auth-input" placeholder="usuario@gmail.com">
+
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Teléfono Celular:</label>
+        <input type="text" id="regPhone" class="auth-input" placeholder="Ej. 912345678">
+
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
+        <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
+
+        <button type="button" onclick="ejecutarRegistroDirecto()" class="btn-primary" style="margin-top: 5px;">Registrar Mi Cuenta</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+          <span class="link-toggle" onclick="toggleAuthForm('login')">¿Ya tienes cuenta? Inicia sesión</span>
+        </div>
+      </div>
+
+      <!-- FORMULARIO 3: RECUPERAR CONTRASEÑA -->
+      <div id="viewForgot" class="hidden">
+        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo registrado para restablecer tu contraseña:</p>
+
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico:</label>
+        <input type="email" id="forgotEmail" class="auth-input" placeholder="usuario@gmail.com">
+
+        <div id="forgotStep2" class="hidden">
+          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Código recibido / generado:</label>
+          <input type="text" id="forgotCode" class="auth-input" placeholder="Código (Ej: 123456)">
+
+          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nueva Contraseña:</label>
+          <input type="password" id="forgotNewPass" class="auth-input" placeholder="Nueva contraseña">
+        </div>
+
+        <button type="button" id="btnForgotAction" onclick="solicitarCodigoRecuperacion()" class="btn-primary" style="margin-top: 5px;">Enviar Código</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+          <span class="link-toggle" onclick="toggleAuthForm('login')">Volver al Inicio de Sesión</span>
+        </div>
+      </div>
+
+      <p id="authStatus" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- APP INTERIOR PRINCIPAL -->
+    <!-- APP INTERIOR PRINCIPAL CON NAVEGACIÓN -->
     <div id="appSection" class="hidden">
       
       <!-- TOP BAR -->
@@ -503,79 +571,4 @@
               <span class="shortcut-icon">💡</span>
               <span>Servicio de Luz</span>
             </div>
-            <div class="shortcut-card" onclick="pagarServicio('Agua / Sedapal')">
-              <span class="shortcut-icon">💧</span>
-              <span>Servicio de Agua</span>
-            </div>
-            <div class="shortcut-card" onclick="pagarServicio('Internet / Movistar / Claro')">
-              <span class="shortcut-icon">📡</span>
-              <span>Internet y Cable</span>
-            </div>
-            <div class="shortcut-card" onclick="pagarServicio('Recarga Celular')">
-              <span class="shortcut-icon">📱</span>
-              <span>Recarga Celular</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VISTA 4: CHAT DIRECTO Y SOPORTE -->
-      <div id="tabChat" class="hidden">
-        <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">💬 Chat Directo con Soporte Gus Gus</div>
-          <div id="chatBox" style="background:#f8f9fa; height:280px; border-radius:10px; padding:12px; overflow-y:auto; margin-bottom:10px; border:1px solid #eee; display:flex; flex-direction:column; gap:8px;"></div>
-          <div style="display:flex; gap:6px;">
-            <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." style="flex:1; padding:12px; border-radius:8px; border:1px solid #ccc;">
-            <button type="button" onclick="enviarChat()" style="background:var(--wine-main); color:#fff; border:none; padding:12px 18px; border-radius:8px; font-weight:bold;">Enviar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- VISTA 5: MÁS / CONFIGURACIÓN DEL CREADOR MAESTRO -->
-      <div id="tabMas" class="hidden">
-        <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">⚙️ Opciones de Cuenta Creador Maestro</div>
-          <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
-            <div onclick="mostrarPerfil()" style="padding:10px; background:#f8f9fa; border-radius:8px; cursor:pointer;">👤 Perfil Creador: Yobani (DNI: 76641433)</div>
-            <div onclick="abrirRecargaLemonCash()" style="padding:10px; background:#f8f9fa; border-radius:8px; cursor:pointer;">🍋 Configuración Fondo Recaudo Lemon Cash</div>
-            <div onclick="logout()" style="padding:10px; background:#ffe5e8; color:var(--wine-main); border-radius:8px; font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- NAVEGACIÓN INFERIOR -->
-      <div class="bottom-nav">
-        <div class="nav-item active" id="navHome" onclick="cambiarPestana('home')">
-          <span>🏠</span>
-          <span>Inicio</span>
-        </div>
-        <div class="nav-item" id="navTratos" onclick="cambiarPestana('tratos')">
-          <span>💳</span>
-          <span>Tarjetas</span>
-        </div>
-        <div class="nav-item nav-qr" onclick="escanearQR()">
-          <span>🔳</span>
-        </div>
-        <div class="nav-item" id="navServicios" onclick="cambiarPestana('servicios')">
-          <span>🧾</span>
-          <span>Servicios</span>
-        </div>
-        <div class="nav-item" id="navMas" onclick="cambiarPestana('mas')">
-          <span>☰</span>
-          <span>Más</span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-    let currentUser = null;
-    let saldoVisible = true;
-    let saldoMonto = "0.00";
-
-    function ejecutarIngresoDirecto() {
-      const dni = document.getElementById('loginDni').value || "76641433";
-      const email = document.getElementById('loginEmail').value || "yobanihuaman2004@gmail.com";
-      const name = 
+            <div class="sh
