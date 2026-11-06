@@ -9,14 +9,14 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
-// Desactivar caché estático
+// Desactivar caché estático para evitar problemas de refresco
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de datos de usuarios
+// Base de datos de usuarios en memoria
 const users = [
   { 
     id: 1, 
-    name: "Yobani (Creador Maestro)", 
+    name: "Yobani", 
     dni: "76641433", 
     email: "yobanihuaman2004@gmail.com", 
     phone: "912345678", 
@@ -26,7 +26,7 @@ const users = [
       yape: "912345678",
       plin: "912345678",
       cci: "0000003100087664143301",
-      bankApp: "Lemon Cash / BCP"
+      bankApp: "Lemon Cash"
     },
     verified: true 
   }
@@ -34,7 +34,7 @@ const users = [
 
 const resetTokens = {};
 
-// Pasarelas y recaudo
+// Configuración de métodos de pago y recaudo
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -52,41 +52,17 @@ const deals = [
     paymentMethod: "LEMON_CASH",
     description: "Trato inicial en custodia Gus Gus",
     status: "EN_CUSTODIA",
-    auditor: "Nor #2 Guard",
     date: new Date().toISOString()
   }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Bienvenido al panel principal de Gus Gus.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "Bienvenido al panel principal de Gus Gus.", image: null, type: "text", time: "10:30 AM" }
 ];
 
-// AUTENTICACIÓN
-app.post('/api/auth/register', (req, res) => {
-  const { name, dni, email, phone, pass } = req.body;
-  const cleanDni = (dni || '76641433').trim();
-  const cleanEmail = (email || 'yobanihuaman2004@gmail.com').trim().toLowerCase();
-  const cleanPhone = (phone || '900000000').trim();
+/* --- ENDPOINTS DE AUTENTICACIÓN --- */
 
-  let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
-  if (!user) {
-    user = { 
-      id: users.length + 1, 
-      name: (name || "Usuario").trim(), 
-      dni: cleanDni, 
-      email: cleanEmail, 
-      phone: cleanPhone, 
-      pass: (pass || "123456").trim(), 
-      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
-      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
-      verified: true 
-    };
-    users.push(user);
-  }
-
-  res.json({ message: "¡Cuenta creada y verificada exitosamente!", user });
-});
-
+// Inicio de sesión
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
   const cleanDni = (dni || '').trim();
@@ -112,47 +88,75 @@ app.post('/api/auth/login', (req, res) => {
     users.push(user);
   }
 
-  res.json({ message: "¡Bienvenido!", user });
+  res.json({ message: "Inicio de sesión exitoso", user });
 });
 
-// RECUPERACIÓN DE CONTRASEÑA
+// Registro de usuario
+app.post('/api/auth/register', (req, res) => {
+  const { name, dni, email, phone, pass } = req.body;
+  const cleanDni = (dni || '').trim();
+  const cleanEmail = (email || '').trim().toLowerCase();
+
+  let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
+  if (!user) {
+    user = { 
+      id: users.length + 1, 
+      name: (name || "Usuario").trim(), 
+      dni: cleanDni, 
+      email: cleanEmail, 
+      phone: (phone || '').trim(), 
+      pass: (pass || "123456").trim(), 
+      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
+      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
+      verified: true 
+    };
+    users.push(user);
+  }
+
+  res.json({ message: "Usuario registrado con éxito", user });
+});
+
+// Solicitar código de recuperación
 app.post('/api/auth/forgot-password', (req, res) => {
   const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
 
-  let user = users.find(u => u.email === cleanEmail);
+  const user = users.find(u => u.email === cleanEmail);
   if (!user) {
-    return res.status(404).json({ error: "El correo ingresado no está registrado." });
+    return res.status(404).json({ error: "El correo ingresado no existe en el sistema." });
   }
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   resetTokens[cleanEmail] = code;
 
-  res.json({ message: "Código de recuperación enviado.", code: code });
+  res.json({ message: "Código generado", code });
 });
 
+// Restablecer contraseña
 app.post('/api/auth/reset-password', (req, res) => {
   const { email, code, newPass } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
 
   if (resetTokens[cleanEmail] && resetTokens[cleanEmail] === code) {
-    let user = users.find(u => u.email === cleanEmail);
+    const user = users.find(u => u.email === cleanEmail);
     if (user) {
       user.pass = newPass;
       delete resetTokens[cleanEmail];
-      return res.json({ message: "Contraseña actualizada con éxito." });
+      return res.json({ message: "Contraseña restablecida correctamente." });
     }
   }
 
-  res.status(400).json({ error: "Código de verificación inválido." });
+  res.status(400).json({ error: "El código ingresado es incorrecto o ha expirado." });
 });
 
-// CUENTAS BANCARIAS
+/* --- ENDPOINTS DE FUNCIONALIDAD --- */
+
+// Guardar cuentas bancarias
 app.post('/api/user/bank-accounts', (req, res) => {
   const { email, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
 
-  let user = users.find(u => u.email === cleanEmail);
+  const user = users.find(u => u.email === cleanEmail);
   if (!user) {
     return res.status(404).json({ error: "Usuario no encontrado." });
   }
@@ -164,14 +168,17 @@ app.post('/api/user/bank-accounts', (req, res) => {
     bankApp: (bankApp || '').trim()
   };
 
-  res.json({ message: "¡Cuentas bancarias registradas con éxito!", bankAccounts: user.bankAccounts });
+  res.json({ message: "Cuentas bancarias actualizadas correctamente.", bankAccounts: user.bankAccounts });
 });
 
+// Listar y crear tratos
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
   const { sellerPhoneOrEmail, amount, description, paymentMethod, buyer } = req.body;
-  if (!sellerPhoneOrEmail || !amount || !description) return res.status(400).json({ error: "Faltan datos del trato." });
+  if (!sellerPhoneOrEmail || !amount || !description) {
+    return res.status(400).json({ error: "Completa todos los campos obligatorios." });
+  }
 
   const newDeal = {
     id: `GN-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -181,14 +188,14 @@ app.post('/api/deals/create', (req, res) => {
     paymentMethod: paymentMethod || "LEMON_CASH",
     description,
     status: "EN_CUSTODIA",
-    auditor: "Nor #2 Guard",
     date: new Date().toISOString()
   };
 
   deals.push(newDeal);
-  res.json({ message: "Trato registrado en custodia Gus Gus.", deal: newDeal });
+  res.json({ message: "Trato en custodia registrado exitosamente.", deal: newDeal });
 });
 
+// Chat de soporte
 app.get('/api/chat', (req, res) => {
   const { user1 } = req.query;
   const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus") || m.type === "system");
@@ -197,14 +204,14 @@ app.get('/api/chat', (req, res) => {
 
 app.post('/api/chat/send', (req, res) => {
   const { sender, receiver, text } = req.body;
-  if (!text) return res.status(400).json({ error: "Ingresa texto." });
+  if (!text) return res.status(400).json({ error: "El mensaje no puede estar vacío." });
 
   const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const newMsg = {
     id: chatMessages.length + 1,
     sender,
     receiver: receiver || "Gus & Soporte",
-    text: text || "",
+    text: text,
     type: "user",
     time: timeStr
   };
@@ -212,9 +219,10 @@ app.post('/api/chat/send', (req, res) => {
   res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
+// Ruta por defecto para frontend
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`[GG] Servidor listo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`[Servidor] Ejecutándose en puerto ${PORT}`));
