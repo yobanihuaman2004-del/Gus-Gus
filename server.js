@@ -12,7 +12,7 @@ app.use(cors());
 // Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de usuarios registrados con Cuentas Bancarias
+// Base de usuarios registrados (Creador Yobani como ADMIN_MAESTRO)
 const users = [
   { 
     id: 1, 
@@ -32,7 +32,7 @@ const users = [
   }
 ];
 
-const verificationCodes = {};
+const resetTokens = {};
 
 // Pasarelas y recaudo (Lemon Cash configurado para fondos de la app Gus Gus)
 const paymentMethods = {
@@ -57,22 +57,9 @@ const deals = [
   }
 ];
 
-const auditLogs = [
-  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Servidor iniciado. Módulo de Cuentas Bancarias activo." }
-];
-
 const chatMessages = [
-  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Puedes registrar tus cuentas bancarias en tu perfil.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Bienvenido al panel principal de Gus Gus.", image: null, type: "text", time: "10:30 AM" }
 ];
-
-const verifyAdmin = (req, res, next) => {
-  const role = req.headers['x-user-role'];
-  if (role === 'ADMIN_MAESTRO') {
-    next();
-  } else {
-    res.status(403).json({ error: "Acceso denegado. Permiso exclusivo del Creador Maestro (Yobani)." });
-  }
-};
 
 // --- AUTENTICACIÓN Y REGISTRO ---
 app.post('/api/auth/register', (req, res) => {
@@ -97,10 +84,7 @@ app.post('/api/auth/register', (req, res) => {
     users.push(user);
   }
 
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  verificationCodes[cleanEmail] = code;
-
-  res.json({ message: "Código generado.", email: cleanEmail, demoCode: code, user });
+  res.json({ message: "¡Cuenta creada y verificada exitosamente!", user });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -128,11 +112,42 @@ app.post('/api/auth/login', (req, res) => {
     users.push(user);
   }
 
-  auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "LOGIN OK", detail: `Acceso: ${user.name}` });
   res.json({ message: "¡Bienvenido!", user });
 });
 
-// --- REGISTRO Y GUARDADO DE CUENTAS BANCARIAS DEL USUARIO ---
+// --- RECUPERACIÓN DE CONTRASEÑA ---
+app.post('/api/auth/forgot-password', (req, res) => {
+  const { email } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
+
+  let user = users.find(u => u.email === cleanEmail);
+  if (!user) {
+    return res.status(404).json({ error: "El correo ingresado no está registrado." });
+  }
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  resetTokens[cleanEmail] = code;
+
+  res.json({ message: "Código de recuperación enviado.", code: code });
+});
+
+app.post('/api/auth/reset-password', (req, res) => {
+  const { email, code, newPass } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
+
+  if (resetTokens[cleanEmail] && resetTokens[cleanEmail] === code) {
+    let user = users.find(u => u.email === cleanEmail);
+    if (user) {
+      user.pass = newPass;
+      delete resetTokens[cleanEmail];
+      return res.json({ message: "Contraseña actualizada con éxito." });
+    }
+  }
+
+  res.status(400).json({ error: "Código de verificación inválido." });
+});
+
+// --- REGISTRO Y GUARDADO DE CUENTAS BANCARIAS ---
 app.post('/api/user/bank-accounts', (req, res) => {
   const { email, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -149,31 +164,8 @@ app.post('/api/user/bank-accounts', (req, res) => {
     bankApp: (bankApp || '').trim()
   };
 
-  auditLogs.push({ 
-    timestamp: new Date().toISOString(), 
-    auditor: "Nor #2", 
-    status: "CUENTAS REGISTRADAS", 
-    detail: `Cuentas actualizadas para ${user.name}: Yape (${user.bankAccounts.yape}), Plin (${user.bankAccounts.plin}), Banco (${user.bankAccounts.bankApp})` 
-  });
-
-  res.json({ message: "¡Cuentas bancarias registradas con éxito en el sistema!", bankAccounts: user.bankAccounts });
+  res.json({ message: "¡Cuentas bancarias registradas con éxito!", bankAccounts: user.bankAccounts });
 });
-
-app.get('/api/users/search', (req, res) => {
-  const { query } = req.query;
-  if (!query) return res.json({ users: [] });
-
-  const results = users.filter(u => 
-    u.name.toLowerCase().includes(query.toLowerCase()) || 
-    u.phone.includes(query) || 
-    u.dni.includes(query) ||
-    u.email.toLowerCase().includes(query.toLowerCase())
-  ).map(u => ({ name: u.name, phone: u.phone, dni: u.dni, email: u.email, bankAccounts: u.bankAccounts }));
-
-  res.json({ users: results });
-});
-
-app.get('/api/payments/methods', (req, res) => res.json(paymentMethods));
 
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
@@ -204,8 +196,8 @@ app.get('/api/chat', (req, res) => {
 });
 
 app.post('/api/chat/send', (req, res) => {
-  const { sender, receiver, text, image } = req.body;
-  if (!text && !image) return res.status(400).json({ error: "Ingresa texto o foto." });
+  const { sender, receiver, text } = req.body;
+  if (!text) return res.status(400).json({ error: "Ingresa texto." });
 
   const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const newMsg = {
@@ -213,7 +205,6 @@ app.post('/api/chat/send', (req, res) => {
     sender,
     receiver: receiver || "Gus & Soporte",
     text: text || "",
-    image: image || null,
     type: "user",
     time: timeStr
   };
