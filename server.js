@@ -9,10 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
-// Desactivar caché estático para evitar problemas de refresco
+// Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de datos de usuarios en memoria
+// Base de usuarios (Creador Yobani como ADMIN_MAESTRO)
 const users = [
   { 
     id: 1, 
@@ -34,7 +34,7 @@ const users = [
 
 const resetTokens = {};
 
-// Configuración de métodos de pago y recaudo
+// Pasarelas y recaudo Lemon Cash Gus Gus
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -57,12 +57,11 @@ const deals = [
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "Bienvenido al panel principal de Gus Gus.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Tu cuenta de Administrador Maestro está activa.", image: null, type: "text", time: "10:30 AM" }
 ];
 
 /* --- ENDPOINTS DE AUTENTICACIÓN --- */
 
-// Inicio de sesión
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
   const cleanDni = (dni || '').trim();
@@ -73,29 +72,33 @@ app.post('/api/auth/login', (req, res) => {
     (cleanEmail && u.email.toLowerCase() === cleanEmail)
   );
 
+  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433");
+
   if (!user) {
     user = {
       id: users.length + 1,
-      name: cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni || '76641433'}`,
+      name: esAdmin ? "Yobani" : (cleanEmail ? cleanEmail.split('@')[0] : `Usuario ${cleanDni}`),
       dni: cleanDni || "76641433",
       email: cleanEmail || "yobanihuaman2004@gmail.com",
       phone: "912345678",
       pass: pass || "123456",
-      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR",
+      role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR",
       bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
       verified: true
     };
     users.push(user);
+  } else if (esAdmin) {
+    user.role = "ADMIN_MAESTRO";
   }
 
   res.json({ message: "Inicio de sesión exitoso", user });
 });
 
-// Registro de usuario
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
   const cleanDni = (dni || '').trim();
   const cleanEmail = (email || '').trim().toLowerCase();
+  const esAdmin = (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433");
 
   let user = users.find(u => u.email === cleanEmail || u.dni === cleanDni);
   if (!user) {
@@ -106,7 +109,7 @@ app.post('/api/auth/register', (req, res) => {
       email: cleanEmail, 
       phone: (phone || '').trim(), 
       pass: (pass || "123456").trim(), 
-      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
+      role: esAdmin ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
       bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
       verified: true 
     };
@@ -116,7 +119,6 @@ app.post('/api/auth/register', (req, res) => {
   res.json({ message: "Usuario registrado con éxito", user });
 });
 
-// Solicitar código de recuperación
 app.post('/api/auth/forgot-password', (req, res) => {
   const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -132,7 +134,6 @@ app.post('/api/auth/forgot-password', (req, res) => {
   res.json({ message: "Código generado", code });
 });
 
-// Restablecer contraseña
 app.post('/api/auth/reset-password', (req, res) => {
   const { email, code, newPass } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -151,7 +152,6 @@ app.post('/api/auth/reset-password', (req, res) => {
 
 /* --- ENDPOINTS DE FUNCIONALIDAD --- */
 
-// Guardar cuentas bancarias
 app.post('/api/user/bank-accounts', (req, res) => {
   const { email, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -171,7 +171,6 @@ app.post('/api/user/bank-accounts', (req, res) => {
   res.json({ message: "Cuentas bancarias actualizadas correctamente.", bankAccounts: user.bankAccounts });
 });
 
-// Listar y crear tratos
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
@@ -195,7 +194,6 @@ app.post('/api/deals/create', (req, res) => {
   res.json({ message: "Trato en custodia registrado exitosamente.", deal: newDeal });
 });
 
-// Chat de soporte
 app.get('/api/chat', (req, res) => {
   const { user1 } = req.query;
   const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus") || m.type === "system");
@@ -219,7 +217,6 @@ app.post('/api/chat/send', (req, res) => {
   res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
-// Ruta por defecto para frontend
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
