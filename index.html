@@ -72,8 +72,8 @@
         <p style="font-size: 0.85rem; opacity: 0.8;">Sistema de Intermediación & Fondo Recaudo</p>
       </div>
 
-      <!-- LOGIN -->
-      <form id="viewLogin" onsubmit="event.preventDefault(); procesarLogin();">
+      <!-- FORMULARIO DE INICIO DE SESIÓN -->
+      <div id="viewLogin">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
 
@@ -83,16 +83,16 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="submit" class="btn-primary">Ingresar a la App</button>
+        <button type="button" onclick="procesarLogin()" class="btn-primary">Ingresar a la App</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
           <button type="button" class="link-toggle" style="font-size:0.8rem; opacity:0.8; margin-top:6px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña?</button>
         </div>
-      </form>
+      </div>
 
-      <!-- REGISTRO -->
-      <form id="viewRegister" class="hidden" onsubmit="event.preventDefault(); procesarRegistro();">
+      <!-- FORMULARIO DE REGISTRO -->
+      <div id="viewRegister" class="hidden">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nombre Completo:</label>
         <input type="text" id="regName" class="auth-input" placeholder="Ej. Yobani Huamán">
 
@@ -108,14 +108,14 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="submit" class="btn-primary">Registrar Mi Cuenta</button>
+        <button type="button" onclick="procesarRegistro()" class="btn-primary">Registrar Mi Cuenta</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
         </div>
-      </form>
+      </div>
 
-      <!-- RECUPERACIÓN -->
+      <!-- RECUPERACIÓN DE CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
         <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo para restablecer tu contraseña:</p>
 
@@ -140,7 +140,7 @@
       <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL -->
+    <!-- PANTALLA PRINCIPAL DE LA APLICACIÓN -->
     <div id="appSection" class="hidden">
       
       <div class="top-bar">
@@ -170,7 +170,7 @@
           </div>
         </div>
 
-        <!-- COMISIONES LEMON CASH EXCLUSIVO CREADOR -->
+        <!-- CREADOR PANEL DE COMISIONES LEMON CASH -->
         <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
           <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Exclusivo Creador)</div>
           <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan a tu cuenta Lemon Cash:</p>
@@ -187,7 +187,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: TRATOS CON LISTA EXPANDIDA DE BANCOS -->
+      <!-- TAB 2: TRATOS CON BANCOS COMPLETOS -->
       <div id="tabTratos" class="hidden">
         <div class="section-block" style="margin-top:15px;">
           <div class="section-title">🛡️ Registrar Nuevo Trato de Intermediación</div>
@@ -249,7 +249,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL CON LISTA COMPLETA DE BANCOS PERUANOS -->
+      <!-- TAB 4: PERFIL EDITABLE Y DATOS BANCARIOS -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:15px; text-align:center;">
           <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
@@ -300,9 +300,6 @@
             <option value="Caja Cusco">Caja Cusco</option>
             <option value="Caja Trujillo">Caja Trujillo</option>
             <option value="Caja Ica">Caja Ica</option>
-            <option value="Caja Tacna">Caja Tacna</option>
-            <option value="Caja Maynas">Caja Maynas</option>
-            <option value="Caja Sullana">Caja Sullana</option>
             <option value="Lemon Cash">Lemon Cash</option>
             <option value="Otros Bancos / Cajas">Otros Bancos / Cajas</option>
           </select>
@@ -330,10 +327,14 @@
         </div>
       </div>
 
-      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+      <!-- BARRA DE NAVEGACIÓN -->
       <div class="bottom-nav">
         <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
           <span>🏠</span>
           <span>Inicio</span>
         </div>
-        <
+        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
+          <span>💳</span>
+          <span>Tratos</span>
+        </div>
+        <div class="nav-item" id="navChat" onclick="cambiarT
