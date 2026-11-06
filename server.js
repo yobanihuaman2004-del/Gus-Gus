@@ -12,7 +12,7 @@ app.use(cors());
 // Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de usuarios registrados (Creador Yobani como ADMIN_MAESTRO)
+// Base de datos de usuarios
 const users = [
   { 
     id: 1, 
@@ -34,7 +34,7 @@ const users = [
 
 const resetTokens = {};
 
-// Pasarelas y recaudo (Lemon Cash configurado para fondos de la app Gus Gus)
+// Pasarelas y recaudo
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -61,7 +61,7 @@ const chatMessages = [
   { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Bienvenido al panel principal de Gus Gus.", image: null, type: "text", time: "10:30 AM" }
 ];
 
-// --- AUTENTICACIÓN Y REGISTRO ---
+// AUTENTICACIÓN
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
   const cleanDni = (dni || '76641433').trim();
@@ -115,7 +115,7 @@ app.post('/api/auth/login', (req, res) => {
   res.json({ message: "¡Bienvenido!", user });
 });
 
-// --- RECUPERACIÓN DE CONTRASEÑA ---
+// RECUPERACIÓN DE CONTRASEÑA
 app.post('/api/auth/forgot-password', (req, res) => {
   const { email } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -147,7 +147,7 @@ app.post('/api/auth/reset-password', (req, res) => {
   res.status(400).json({ error: "Código de verificación inválido." });
 });
 
-// --- REGISTRO Y GUARDADO DE CUENTAS BANCARIAS ---
+// CUENTAS BANCARIAS
 app.post('/api/user/bank-accounts', (req, res) => {
   const { email, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
