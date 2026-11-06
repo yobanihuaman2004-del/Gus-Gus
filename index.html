@@ -26,21 +26,20 @@
       margin: 0; 
       padding: 0; 
       -webkit-tap-highlight-color: transparent !important;
-      -webkit-touch-callout: none !important;
+      user-select: none !important;
     }
     
     input, select, textarea {
       user-select: auto !important;
-      -webkit-user-select: auto !important;
     }
 
     body { background-color: #1a0306; display: flex; justify-content: center; min-height: 100vh; }
     .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 75px; }
 
-    /* AUTENTICACIÓN SÓLO INICIO DE SESIÓN */
+    /* AUTENTICACIÓN */
     .auth-card { background: linear-gradient(180deg, var(--wine-main) 0%, var(--wine-dark) 100%); color: var(--white); padding: 35px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
     .brand-header { text-align: center; margin-bottom: 30px; }
-    .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 22px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; letter-spacing: 1px; }
+    .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 22px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; }
     .brand-title { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
     .brand-subtitle { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
 
@@ -48,8 +47,21 @@
     .auth-label { font-size: 0.85rem; margin-bottom: 6px; display: block; font-weight: 600; opacity: 0.9; }
     .auth-input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: var(--white); font-size: 1rem; outline: none; }
     
-    .btn-auth { background: var(--white); color: var(--wine-dark); border: none; padding: 16px; border-radius: 25px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center; }
-    .btn-auth:active { transform: scale(0.97); background: #eee; }
+    .btn-auth-trigger { 
+      background: var(--white); 
+      color: var(--wine-dark); 
+      padding: 16px; 
+      border-radius: 25px; 
+      font-weight: 800; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      width: 100%; 
+      text-transform: uppercase; 
+      margin-top: 10px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+      text-align: center;
+      display: block;
+    }
 
     /* CABECERA PRINCIPAL */
     .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
@@ -89,7 +101,7 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN AUTENTICACIÓN (ÚNICAMENTE INICIO DE SESIÓN) -->
+    <!-- SECCIÓN AUTENTICACIÓN -->
     <div id="authSection" class="auth-card">
       <div class="brand-header">
         <div class="logo-badge">GUS | NORT II | CUS</div>
@@ -97,7 +109,6 @@
         <p class="brand-subtitle">Plataforma de Intermediación & Custodia Financiera</p>
       </div>
 
-      <!-- FORMULARIO ÚNICO DE INICIO DE SESIÓN -->
       <div>
         <div class="form-group">
           <label class="auth-label">Número de DNI:</label>
@@ -114,9 +125,7 @@
           <input type="password" id="loginPass" class="auth-input" value="123456">
         </div>
 
-        <button type="button" onclick="ejecutarLoginCreador()" class="btn-auth">INGRESAR A LA APP</button>
-
-        <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 14px; font-weight: bold;"></p>
+        <div id="btnIngresarAccion" class="btn-auth-trigger">INGRESAR A LA APP</div>
       </div>
     </div>
 
@@ -151,7 +160,7 @@
           </div>
         </div>
 
-        <!-- PANEL CREADOR MAESTRO LEMON CASH -->
+        <!-- PANEL CREADOR LEMON CASH -->
         <div class="section-block" style="background:#fff5f5; border:1px solid #feb2b2;">
           <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Gus, Nort II & Cus)</div>
           <p style="font-size:0.8rem; color:#4b5563; margin-bottom:8px;">Comisiones derivadas automáticamente a Lemon Cash:</p>
@@ -214,5 +223,164 @@
       <!-- TAB 3: CHAT ESTILO WHATSAPP -->
       <div id="tabChat" class="hidden">
         <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">💬 Chat Intermediario (Gus, Nort II
+          <div class="section-title">💬 Chat Intermediario (Gus, Nort II & Cus)</div>
+          
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" id="chatSearchInput" placeholder="Buscar por DNI o Celular..." class="form-input" style="margin:0;">
+            <button type="button" onclick="buscarContactoChat()" style="background:var(--wine-main); color:#fff; border:none; padding:0 12px; border-radius:8px; font-weight:bold; cursor:pointer;">Buscar</button>
+          </div>
+          <div id="searchChatResult" style="font-size:0.8rem; margin-bottom:8px; color:#2563eb; font-weight:bold;"></div>
+
+          <div id="chatBox" class="chat-container">
+            <div class="chat-bubble chat-other"><strong>Gus, Nort II & Cus:</strong> ¡Hola Yobani! Tu plataforma está lista y funcional.<div class="chat-time">10:30 AM</div></div>
+          </div>
+
+          <div style="display:flex; gap:6px; margin-top:10px;">
+            <input type="text" id="chatInput" placeholder="Escribe un mensaje..." class="form-input" style="margin:0; flex:1;">
+            <button type="button" onclick="enviarMensajeChat()" style="background:var(--wa-green); color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:bold; cursor:pointer;">Enviar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: PERFIL -->
+      <div id="tabPerfil" class="hidden">
+        <div class="section-block" style="margin-top:15px; text-align:center;">
+          <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;">Y</div>
+          <div class="section-title" style="margin:0; justify-content:center;">Perfil de Usuario</div>
+          <p style="font-size:0.8rem; color:#6b7280; margin-bottom:15px;">Gus, Nort II & Cus</p>
+        </div>
+
+        <div class="section-block">
+          <label class="field-label">Nombre Completo:</label>
+          <input type="text" id="profileName" class="form-input" value="Yobani Huamán (Creador Maestro)">
+
+          <label class="field-label">Número de DNI:</label>
+          <input type="text" id="profileDni" class="form-input" value="76641433" readonly>
+
+          <label class="field-label">Teléfono Celular:</label>
+          <input type="text" id="profilePhone" class="form-input" value="930715341">
+
+          <label class="field-label">Correo Electrónico:</label>
+          <input type="text" id="profileEmail" class="form-input" value="yobanihuaman2004@gmail.com" readonly>
+
+          <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">💳 Cuentas Bancarias Registradas:</div>
+
+          <label class="field-label">Número de Yape:</label>
+          <input type="text" id="profileYape" class="form-input" value="930715341">
+
+          <label class="field-label">Número de Plin:</label>
+          <input type="text" id="profilePlin" class="form-input" value="930715341">
+
+          <label class="field-label">CCI / Cuenta Bancaria Transferencia:</label>
+          <input type="text" id="profileCci" class="form-input" value="0000003100087664143301">
+
+          <label class="field-label">Banco Principal:</label>
+          <select id="profileBankApp" class="form-input">
+            <option value="Lemon Cash" selected>Lemon Cash</option>
+            <option value="Yape / BCP">Yape / BCP</option>
+            <option value="Plin / Interbank">Plin / Interbank</option>
+          </select>
+
+          <button type="button" onclick="guardarPerfil()" class="btn-primary">GUARDAR CAMBIOS</button>
+          <p id="profileStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center; color:#2563eb;"></p>
+        </div>
+      </div>
+
+      <!-- TAB 5: AJUSTES -->
+      <div id="tabAjustes" class="hidden">
+        <div class="section-block" style="margin-top:15px;">
+          <div class="section-title">⚙️ Ajustes Gus, Nort II & Cus</div>
+          
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer; font-weight:bold;">👤 Configurar Perfil y Cuentas Bancarias</button>
             
+            <div>
+              <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Panel Maestro:</div>
+              <button type="button" onclick="alert('Configuración activa: Lemon Cash $gusgus.lemon (Celular: 930715341)')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer; color:#c53030; font-weight:bold;">🍋 Panel de Fondo Lemon Cash</button>
+            </div>
+
+            <button type="button" onclick="cerrarSesion()" class="form-input" style="text-align:left; background:#ffe5e8; color:var(--wine-main); font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+      <div class="bottom-nav">
+        <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
+          <span style="font-size:1.2rem;">🏠</span>
+          <span>Inicio</span>
+        </div>
+        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
+          <span style="font-size:1.2rem;">💳</span>
+          <span>Tratos</span>
+        </div>
+        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
+          <span style="font-size:1.2rem;">💬</span>
+          <span>Chat</span>
+        </div>
+        <div class="nav-item" id="navPerfil" onclick="cambiarTab('perfil')">
+          <span style="font-size:1.2rem;">👤</span>
+          <span>Perfil</span>
+        </div>
+        <div class="nav-item" id="navAjustes" onclick="cambiarTab('ajustes')">
+          <span style="font-size:1.2rem;">⚙️</span>
+          <span>Ajustes</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let saldoOculto = false;
+
+    // EVENTOS DE ENTRADA DIRECTA (TANTO TOUCH COMO CLICK)
+    document.addEventListener("DOMContentLoaded", function() {
+      const btn = document.getElementById("btnIngresarAccion");
+      if(btn) {
+        btn.addEventListener("click", ingresarAccionDirecta);
+        btn.addEventListener("touchstart", function(e) {
+          e.preventDefault();
+          ingresarAccionDirecta();
+        });
+      }
+    });
+
+    function ingresarAccionDirecta() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+
+      const homeList = document.getElementById('homeDealsList');
+      const fullList = document.getElementById('dealsListFull');
+      if (homeList && fullList) {
+        fullList.innerHTML = homeList.innerHTML;
+      }
+    }
+
+    function guardarPerfil() {
+      document.getElementById('profileStatus').innerText = "✓ Perfil guardado con éxito.";
+    }
+
+    function cerrarSesion() {
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+    }
+
+    function cambiarTab(tab) {
+      document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
+      document.getElementById('tabTratos').classList.toggle('hidden', tab !== 'tratos');
+      document.getElementById('tabChat').classList.toggle('hidden', tab !== 'chat');
+      document.getElementById('tabPerfil').classList.toggle('hidden', tab !== 'perfil');
+      document.getElementById('tabAjustes').classList.toggle('hidden', tab !== 'ajustes');
+
+      document.getElementById('navHome').classList.toggle('active', tab === 'home');
+      document.getElementById('navTratos').classList.toggle('active', tab === 'tratos');
+      document.getElementById('navChat').classList.toggle('active', tab === 'chat');
+      document.getElementById('navPerfil').classList.toggle('active', tab === 'perfil');
+      document.getElementById('navAjustes').classList.toggle('active', tab === 'ajustes');
+    }
+
+    function toggleSaldo() {
+      saldoOculto = !saldoOculto;
+      document.getElementById('balanceDisplay').innerText = sald
