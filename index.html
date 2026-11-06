@@ -28,7 +28,7 @@
     .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 6px 20px; border-radius: 12px; display: inline-block; background: var(--wine-dark); margin-bottom: 10px; }
     .auth-input { width: 100%; padding: 14px; background: var(--wine-dark); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; color: var(--white); margin-bottom: 14px; font-size: 1rem; outline: none; }
     .btn-primary { background: var(--white); color: var(--wine-dark); border: none; padding: 15px; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; }
-    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; padding: 6px; display: inline-block; }
+    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; padding: 6px; display: inline-block; background: none; border: none; }
 
     /* VISTA SUPERIOR */
     .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #eee; }
@@ -46,7 +46,7 @@
     .form-input[readonly] { background-color: #edf2f7; color: #718096; }
 
     /* CHAT ESTILO WHATSAPP */
-    .chat-container { background: #efeae2; height: 350px; border-radius: 12px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid #ddd; }
+    .chat-container { background: #efeae2; height: 320px; border-radius: 12px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid #ddd; }
     .chat-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; position: relative; }
     .chat-me { align-self: flex-end; background: var(--wa-bubble); color: #000; }
     .chat-other { align-self: flex-start; background: #ffffff; color: #000; }
@@ -86,8 +86,8 @@
         <button type="submit" class="btn-primary">Ingresar a la App</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <button type="button" class="link-toggle" style="background:none; border:none;" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
-          <button type="button" class="link-toggle" style="background:none; border:none; font-size:0.8rem; opacity:0.8; margin-top:6px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña?</button>
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
+          <button type="button" class="link-toggle" style="font-size:0.8rem; opacity:0.8; margin-top:6px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña?</button>
         </div>
       </form>
 
@@ -111,7 +111,7 @@
         <button type="submit" class="btn-primary">Registrar Mi Cuenta</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <button type="button" class="link-toggle" style="background:none; border:none;" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
         </div>
       </form>
 
@@ -133,7 +133,7 @@
         <button type="button" id="btnForgotAction" onclick="solicitarCodigoReset()" class="btn-primary">Enviar Código</button>
 
         <div style="text-align: center; margin-top: 15px;">
-          <button type="button" class="link-toggle" style="background:none; border:none;" onclick="cambiarVistaAuth('login')">Volver al Inicio de Sesión</button>
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">Volver al Inicio de Sesión</button>
         </div>
       </div>
 
@@ -170,10 +170,10 @@
           </div>
         </div>
 
-        <!-- MÓDULO FONDOS Y COMISIONES EXCLUSIVO CREADOR -->
+        <!-- COMISIONES LEMON CASH EXCLUSIVO CREADOR -->
         <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
           <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Exclusivo Creador)</div>
-          <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan automáticamente a tu cuenta Lemon Cash:</p>
+          <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan a tu cuenta Lemon Cash:</p>
           <div style="font-weight:bold; font-size:0.85rem; color:#2d3748;">
             - Tag: $gusgus.lemon<br>
             - CCI Recaudo: 0000003100087664143301<br>
@@ -187,16 +187,35 @@
         </div>
       </div>
 
-      <!-- TAB 2: TRATOS DE CUSTODIA -->
+      <!-- TAB 2: TRATOS CON LISTA EXPANDIDA DE BANCOS -->
       <div id="tabTratos" class="hidden">
         <div class="section-block" style="margin-top:15px;">
           <div class="section-title">🛡️ Registrar Nuevo Trato de Intermediación</div>
+          
+          <label class="field-label">Método / Banco de Pago:</label>
           <select id="dealPaymentMethod" class="form-input">
-            <option value="YAPE">Yape (Cualquier Banco)</option>
-            <option value="PLIN">Plin (Cualquier Banco)</option>
-            <option value="TRANSFERENCIA">Transferencia CCI (Cualquier Aplicativo)</option>
-            <option value="LEMON_CASH">Lemon Cash</option>
+            <option value="YAPE">Yape (BCP / Tarjeta)</option>
+            <option value="PLIN">Plin (Interbank / BBVA / Scotiabank)</option>
+            <option value="BCP">BCP - Banco de Crédito del Perú</option>
+            <option value="INTERBANK">Interbank</option>
+            <option value="BBVA">BBVA Perú</option>
+            <option value="SCOTIABANK">Scotiabank Perú</option>
+            <option value="BANBIF">BanBif</option>
+            <option value="BANCO_PICHINCHA">Banco Pichincha</option>
+            <option value="BANCO_FALABELLA">Banco Falabella</option>
+            <option value="BANCO_RIPLEY">Banco Ripley</option>
+            <option value="BANCO_GNB">Banco GNB</option>
+            <option value="BANCO_NACION">Banco de la Nación</option>
+            <option value="CAJA_AREQUIPA">Caja Arequipa</option>
+            <option value="CAJA_HUANCAYO">Caja Huancayo</option>
+            <option value="CAJA_PIURA">Caja Piura</option>
+            <option value="CAJA_CUSCO">Caja Cusco</option>
+            <option value="CAJA_TRUJILLO">Caja Trujillo</option>
+            <option value="CAJA_ICA">Caja Ica</option>
+            <option value="LEMON_CASH">Lemon Cash (Fondo Recaudo Creador)</option>
+            <option value="TRANSFERENCIA_CCI">Transferencia Interbancaria (CCI)</option>
           </select>
+
           <input type="text" id="dealSeller" placeholder="DNI, Celular o Correo del vendedor" class="form-input">
           <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)" class="form-input">
           <input type="text" id="dealDesc" placeholder="Descripción del bien o servicio" class="form-input">
@@ -210,13 +229,13 @@
         </div>
       </div>
 
-      <!-- TAB 3: CHAT ESTILO WHATSAPP CON BUSCADOR -->
+      <!-- TAB 3: CHAT ESTILO WHATSAPP -->
       <div id="tabChat" class="hidden">
         <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">💬 Chat Intermediario (WhatsApp Style)</div>
+          <div class="section-title">💬 Chat Intermediario</div>
           
           <div style="display:flex; gap:6px; margin-bottom:10px;">
-            <input type="text" id="chatSearchInput" placeholder="Buscar por DNI o Teléfono de comprador/vendedor..." class="form-input" style="margin:0;">
+            <input type="text" id="chatSearchInput" placeholder="Buscar por DNI o Teléfono..." class="form-input" style="margin:0;">
             <button type="button" onclick="buscarContactoChat()" style="background:var(--wine-main); color:#fff; border:none; padding:0 12px; border-radius:8px; font-weight:bold;">Buscar</button>
           </div>
           <div id="searchChatResult" style="font-size:0.8rem; margin-bottom:8px; color:#2b6cb0;"></div>
@@ -230,12 +249,12 @@
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL ESTILO WHATSAPP -->
+      <!-- TAB 4: PERFIL CON LISTA COMPLETA DE BANCOS PERUANOS -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:15px; text-align:center;">
           <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
           <div class="section-title" style="margin:0;">Perfil de Usuario</div>
-          <p style="font-size:0.8rem; color:#718096; margin-bottom:15px;">Datos visibles para tratos e intermediación</p>
+          <p style="font-size:0.8rem; color:#718096; margin-bottom:15px;">Datos de cuenta e intermediación</p>
         </div>
 
         <div class="section-block">
@@ -251,7 +270,7 @@
           <label class="field-label">Correo Electrónico (No editable):</label>
           <input type="text" id="profileEmail" class="form-input" readonly>
 
-          <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">Cuentas Bancarias Registradas:</div>
+          <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">Mis Cuentas Bancarias Registradas:</div>
 
           <label class="field-label">Número de Yape:</label>
           <input type="text" id="profileYape" class="form-input" placeholder="Ej. 912345678">
@@ -262,32 +281,48 @@
           <label class="field-label">CCI / Cuenta Bancaria Transferencia:</label>
           <input type="text" id="profileCci" class="form-input" placeholder="Ej. 00219100000000000000">
 
-          <label class="field-label">Aplicativo Bancario:</label>
+          <label class="field-label">Banco o Entidad Financiera Principal:</label>
           <select id="profileBankApp" class="form-input">
             <option value="Yape / BCP">Yape / BCP</option>
             <option value="Plin / Interbank">Plin / Interbank</option>
-            <option value="BBVA">BBVA</option>
-            <option value="Scotiabank">Scotiabank</option>
+            <option value="BBVA Perú">BBVA Perú</option>
+            <option value="Scotiabank Perú">Scotiabank Perú</option>
+            <option value="Banco de la Nación">Banco de la Nación</option>
+            <option value="BanBif">BanBif</option>
+            <option value="Banco Pichincha">Banco Pichincha</option>
+            <option value="Banco Falabella">Banco Falabella</option>
+            <option value="Banco Ripley">Banco Ripley</option>
+            <option value="Banco GNB">Banco GNB</option>
+            <option value="Banco Comercio">Banco Comercio</option>
+            <option value="Caja Arequipa">Caja Arequipa</option>
+            <option value="Caja Huancayo">Caja Huancayo</option>
+            <option value="Caja Piura">Caja Piura</option>
+            <option value="Caja Cusco">Caja Cusco</option>
+            <option value="Caja Trujillo">Caja Trujillo</option>
+            <option value="Caja Ica">Caja Ica</option>
+            <option value="Caja Tacna">Caja Tacna</option>
+            <option value="Caja Maynas">Caja Maynas</option>
+            <option value="Caja Sullana">Caja Sullana</option>
             <option value="Lemon Cash">Lemon Cash</option>
             <option value="Otros Bancos / Cajas">Otros Bancos / Cajas</option>
           </select>
 
-          <button type="button" onclick="guardarPerfil()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">GUARDAR CAMBIOS EN PERFIL</button>
+          <button type="button" onclick="guardarPerfil()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">GUARDAR CAMBIOS</button>
           <p id="profileStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center; color:#2b6cb0;"></p>
         </div>
       </div>
 
-      <!-- TAB 5: AJUSTES & PANEL CREADOR -->
+      <!-- TAB 5: AJUSTES -->
       <div id="tabAjustes" class="hidden">
         <div class="section-block" style="margin-top:15px;">
-          <div class="section-title">⚙️ Ajustes del Sistema</div>
+          <div class="section-title">⚙️ Ajustes de Cuenta</div>
           
           <div style="display:flex; flex-direction:column; gap:10px;">
-            <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer;">👤 Ver / Editar Mi Perfil</button>
+            <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer;">👤 Configurar Perfil y Cuentas</button>
             
             <div id="creatorControls" class="hidden">
-              <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Panel Exclusivo Creador:</div>
-              <button type="button" onclick="alert('Configuración de Lemon Cash recaudo activa: $gusgus.lemon')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer;">🍋 Gestionar Recaudo Lemon Cash</button>
+              <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Opciones de Creador Maestro:</div>
+              <button type="button" onclick="alert('Módulo de comisiones Lemon Cash activo: $gusgus.lemon')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer;">🍋 Configuración Lemon Cash</button>
             </div>
 
             <button type="button" onclick="cerrarSesion()" class="form-input" style="text-align:left; background:#ffe5e8; color:var(--wine-main); font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</button>
@@ -295,65 +330,10 @@
         </div>
       </div>
 
-      <!-- BARRA INFERIOR -->
+      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
       <div class="bottom-nav">
         <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
           <span>🏠</span>
           <span>Inicio</span>
         </div>
-        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
-          <span>💳</span>
-          <span>Tratos</span>
-        </div>
-        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
-          <span>💬</span>
-          <span>Chat</span>
-        </div>
-        <div class="nav-item" id="navPerfil" onclick="cambiarTab('perfil')">
-          <span>👤</span>
-          <span>Perfil</span>
-        </div>
-        <div class="nav-item" id="navAjustes" onclick="cambiarTab('ajustes')">
-          <span>⚙️</span>
-          <span>Ajustes</span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-    let currentUser = null;
-    let saldoOculto = false;
-    let chatTarget = "Soporte Gus Gus";
-
-    function cambiarVistaAuth(vista) {
-      document.getElementById('viewLogin').classList.toggle('hidden', vista !== 'login');
-      document.getElementById('viewRegister').classList.toggle('hidden', vista !== 'register');
-      document.getElementById('viewForgot').classList.toggle('hidden', vista !== 'forgot');
-      document.getElementById('authMessage').innerText = "";
-    }
-
-    async function procesarLogin() {
-      const dni = document.getElementById('loginDni').value;
-      const email = document.getElementById('loginEmail').value;
-      const pass = document.getElementById('loginPass').value;
-
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ dni, email, pass })
-        });
-        const data = await res.json();
-        currentUser = data.user;
-        abrirAplicacion();
-      } catch (e) {
-        currentUser = { 
-          name: "Yobani Huamán (Creador)", 
-          email: email || "yobanihuaman2004@gmail.com", 
-          dni: dni || "76641433",
-          phone: "912345678",
-          role: "ADMIN_MAESTRO",
-          bankAccounts: { yape: "912345678", plin: "912345678", cci: "0000003100087664
+        <
