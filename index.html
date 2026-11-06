@@ -25,10 +25,10 @@
     body { background-color: #1a0306; display: flex; justify-content: center; min-height: 100vh; }
     .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
 
-    /* PANTALLA AUTENTICACIÓN */
+    /* AUTENTICACIÓN */
     .auth-card { background: linear-gradient(180deg, var(--wine-main) 0%, var(--wine-dark) 100%); color: var(--white); padding: 40px 24px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
     .brand-header { text-align: center; margin-bottom: 30px; }
-    .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 20px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; letter-spacing: 1px; }
+    .logo-badge { font-size: 2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 16px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; letter-spacing: 1px; }
     .brand-title { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
     .brand-subtitle { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; font-weight: 500; }
 
@@ -97,7 +97,7 @@
         </div>
 
         <div class="form-group">
-          <label class="auth-label">Correo Electrónico (Gmail) o Celular (930715341):</label>
+          <label class="auth-label">Correo Electrónico o Celular:</label>
           <input type="text" id="loginEmail" class="auth-input" value="yobanihuaman2004@gmail.com" placeholder="ejemplo@gmail.com o 930715341">
         </div>
 
@@ -106,7 +106,7 @@
           <input type="password" id="loginPass" class="auth-input" value="123456" placeholder="******">
         </div>
 
-        <button type="button" onclick="procesarLoginGarantizado()" class="btn-primary">INGRESAR A LA APP</button>
+        <button type="button" id="btnLoginSubmit" onclick="iniciarSesionDirecto()" class="btn-primary">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 20px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
@@ -338,4 +338,4 @@
           <input type="text" id="profileCci" class="form-input" placeholder="Ej. 0000003100087664143301">
 
           <label class="field-label">Banco o Entidad Financiera Principal:</label>
-         
+          <select id="pr
