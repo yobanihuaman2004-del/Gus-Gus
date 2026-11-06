@@ -327,11 +327,14 @@
       <div class="top-bar">
         <div class="user-profile">
           <div class="avatar" id="avatarInitial">Y</div>
-          <span id="userNameHeader">¡Hola Yobani! ›</span>
+          <div>
+            <span id="userNameHeader">¡Hola Yobani! ›</span>
+            <div id="adminBadge" style="font-size:0.65rem; background:var(--wine-main); color:#fff; padding:2px 6px; border-radius:4px; font-weight:bold; display:inline-block; margin-left:4px;">ADMIN MAESTRO</div>
+          </div>
         </div>
         <div>
           <button class="icon-btn" onclick="cambiarTab('chat')">🎧</button>
-          <button class="icon-btn" onclick="alert('Notificaciones: Sistema de custodia activo.')">🔔</button>
+          <button class="icon-btn" onclick="alert('Notificaciones: Cuenta de Administrador Maestro Yobani activa.')">🔔</button>
         </div>
       </div>
 
@@ -484,7 +487,12 @@
         currentUser = data.user;
         abrirAplicacion();
       } catch (e) {
-        currentUser = { name: "Yobani", email: email || "yobanihuaman2004@gmail.com", dni: dni || "76641433" };
+        currentUser = { 
+          name: "Yobani", 
+          email: email || "yobanihuaman2004@gmail.com", 
+          dni: dni || "76641433",
+          role: "ADMIN_MAESTRO"
+        };
         abrirAplicacion();
       }
     }
@@ -506,7 +514,7 @@
         currentUser = data.user;
         abrirAplicacion();
       } catch (e) {
-        currentUser = { name: name || "Usuario", email: email, dni: dni };
+        currentUser = { name: name || "Usuario", email: email, dni: dni, role: "USUARIO_ESTANDAR" };
         abrirAplicacion();
       }
     }
@@ -534,203 +542,4 @@
           const btn = document.getElementById('btnForgotAction');
           btn.innerText = "Restablecer Contraseña";
           btn.onclick = confirmarPasswordReset;
-        } else {
-          msg.innerText = data.error;
-        }
-      } catch (e) {
-        msg.innerText = "Código de prueba: 123456";
-        document.getElementById('forgotStep2').classList.remove('hidden');
-        const btn = document.getElementById('btnForgotAction');
-        btn.innerText = "Restablecer Contraseña";
-        btn.onclick = confirmarPasswordReset;
-      }
-    }
-
-    async function confirmarPasswordReset() {
-      const email = document.getElementById('forgotEmail').value;
-      const code = document.getElementById('forgotCode').value;
-      const newPass = document.getElementById('forgotNewPass').value;
-      const msg = document.getElementById('authMessage');
-
-      try {
-        const res = await fetch('/api/auth/reset-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code, newPass })
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          msg.innerText = "✓ Contraseña actualizada correctamente.";
-          setTimeout(() => cambiarVistaAuth('login'), 1500);
-        } else {
-          msg.innerText = data.error;
-        }
-      } catch (e) {
-        msg.innerText = "✓ Contraseña restablecida.";
-        setTimeout(() => cambiarVistaAuth('login'), 1500);
-      }
-    }
-
-    function abrirAplicacion() {
-      document.getElementById('authSection').classList.add('hidden');
-      document.getElementById('appSection').classList.remove('hidden');
-      
-      const nombre = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
-      document.getElementById('userNameHeader').innerText = `¡Hola ${nombre}! ›`;
-      document.getElementById('avatarInitial').innerText = nombre.charAt(0).toUpperCase();
-
-      cargarTratos();
-      cargarChat();
-    }
-
-    function cerrarSesion() {
-      currentUser = null;
-      document.getElementById('appSection').classList.add('hidden');
-      document.getElementById('authSection').classList.remove('hidden');
-      cambiarVistaAuth('login');
-    }
-
-    function cambiarTab(tab) {
-      document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
-      document.getElementById('tabTratos').classList.toggle('hidden', tab !== 'tratos');
-      document.getElementById('tabChat').classList.toggle('hidden', tab !== 'chat');
-
-      document.getElementById('navHome').classList.toggle('active', tab === 'home');
-      document.getElementById('navTratos').classList.toggle('active', tab === 'tratos');
-      document.getElementById('navChat').classList.toggle('active', tab === 'chat');
-    }
-
-    function toggleSaldo() {
-      saldoOculto = !saldoOculto;
-      document.getElementById('balanceDisplay').innerText = saldoOculto ? "S/ ••••" : "S/ 0.00";
-      document.getElementById('eyeBtn').innerText = saldoOculto ? "🙈" : "👁️";
-    }
-
-    function mostrarDatosLemon() {
-      alert("🍋 RECAUDO LEMON CASH (Gus Gus):\n\n- Titular: Yobani\n- Correo: yobanihuaman2004@gmail.com\n- DNI: 76641433\n- Lemon Tag: $gusgus.lemon\n- CCI: 0000003100087664143301");
-    }
-
-    async function guardarCuentas() {
-      const yape = document.getElementById('userYape').value;
-      const plin = document.getElementById('userPlin').value;
-      const cci = document.getElementById('userCci').value;
-      const bankApp = document.getElementById('userBankApp').value;
-      const status = document.getElementById('bankStatus');
-
-      status.innerText = "Guardando...";
-
-      try {
-        const res = await fetch('/api/user/bank-accounts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: currentUser.email, yape, plin, cci, bankApp })
-        });
-        const data = await res.json();
-        status.innerText = "✓ " + data.message;
-      } catch (err) {
-        status.innerText = "✓ Cuentas guardadas localmente.";
-      }
-    }
-
-    async function cargarTratos() {
-      try {
-        const res = await fetch('/api/deals');
-        const data = await res.json();
-        const homeList = document.getElementById('homeDealsList');
-        const fullList = document.getElementById('dealsListFull');
-        homeList.innerHTML = "";
-        fullList.innerHTML = "";
-
-        if (data.deals && data.deals.length > 0) {
-          data.deals.forEach(d => {
-            const item = document.createElement('div');
-            item.style.background = "#f8f9fa";
-            item.style.border = "1px solid #e2e8f0";
-            item.style.padding = "10px";
-            item.style.borderRadius = "8px";
-            item.style.marginTop = "6px";
-            item.style.fontSize = "0.85rem";
-
-            item.innerHTML = `<strong>[${d.id}] ${d.description}</strong> - S/ ${d.amount}<br><span style="color:#666;">Método: ${d.paymentMethod} | Estado: <strong>${d.status}</strong></span>`;
-
-            homeList.appendChild(item.cloneNode(true));
-            fullList.appendChild(item);
-          });
-        }
-      } catch(e) {}
-    }
-
-    async function crearNuevoTrato() {
-      const paymentMethod = document.getElementById('dealPaymentMethod').value;
-      const sellerPhoneOrEmail = document.getElementById('dealSeller').value;
-      const amount = document.getElementById('dealAmount').value;
-      const description = document.getElementById('dealDesc').value;
-
-      if (!sellerPhoneOrEmail || !amount || !description) {
-        alert("Completa todos los datos del trato.");
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/deals/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sellerPhoneOrEmail, amount, description, paymentMethod, buyer: currentUser.email })
-        });
-        const data = await res.json();
-        document.getElementById('dealStatus').innerText = "✓ " + data.message;
-        cargarTratos();
-      } catch(e) {
-        document.getElementById('dealStatus').innerText = "✓ Trato registrado.";
-      }
-    }
-
-    async function cargarChat() {
-      if (!currentUser) return;
-      try {
-        const res = await fetch(`/api/chat?user1=${currentUser.email}`);
-        const data = await res.json();
-        const chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML = "";
-
-        if (data.messages) {
-          data.messages.forEach(m => {
-            const div = document.createElement('div');
-            const esMio = m.sender === currentUser.email;
-            div.style.alignSelf = esMio ? "flex-end" : "flex-start";
-            div.style.background = esMio ? "#ffe5e8" : "#ffffff";
-            div.style.border = "1px solid #e2e8f0";
-            div.style.padding = "8px 12px";
-            div.style.borderRadius = "12px";
-            div.style.maxWidth = "80%";
-            div.style.fontSize = "0.85rem";
-
-            div.innerHTML = `<strong>${m.sender}:</strong> ${m.text}`;
-            chatBox.appendChild(div);
-          });
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }
-      } catch(e) {}
-    }
-
-    async function enviarMensajeChat() {
-      const text = document.getElementById('chatInput').value;
-      if (!text) return;
-
-      try {
-        const res = await fetch('/api/chat/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sender: currentUser.email, receiver: "Gus & Soporte", text })
-        });
-
-        if (res.ok) {
-          document.getElementById('chatInput').value = "";
-          cargarChat();
-        }
-      } catch(e) {}
-    }
-  </script>
-</body>
-</html>
+     
