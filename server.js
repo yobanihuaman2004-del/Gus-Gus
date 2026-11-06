@@ -9,10 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
-// Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
-// Base de usuarios
 const users = [
   { 
     id: 1, 
@@ -34,7 +32,6 @@ const users = [
 
 const resetTokens = {};
 
-// Configuración Lemon Cash (Fondo Recaudo Creador)
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -59,8 +56,6 @@ const deals = [
 const chatMessages = [
   { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Soporte Gus Gus", text: "Hola, sistema listo para intermediación.", time: "10:30 AM" }
 ];
-
-/* --- AUTENTICACIÓN --- */
 
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
@@ -145,8 +140,6 @@ app.post('/api/auth/reset-password', (req, res) => {
   res.status(400).json({ error: "Código inválido o expirado." });
 });
 
-/* --- PERFIL Y CUENTAS BANCARIAS --- */
-
 app.post('/api/user/update-profile', (req, res) => {
   const { email, name, phone, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -180,8 +173,6 @@ app.get('/api/users/search', (req, res) => {
 
   res.json({ users: results });
 });
-
-/* --- TRATOS Y CHAT --- */
 
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
@@ -231,5 +222,8 @@ app.post('/api/chat/send', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-re
-  
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(PORT, () => console.log(`[GusGus] Servidor activo en puerto ${PORT}`));
