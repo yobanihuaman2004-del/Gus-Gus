@@ -9,8 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 
+// Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
+// Base de datos de usuarios (Creador Yobani maestro)
 const users = [
   { 
     id: 1, 
@@ -32,6 +34,7 @@ const users = [
 
 const resetTokens = {};
 
+// Fondo de Recaudo Lemon Cash (Exclusivo Creador Gus & Nort II)
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -47,15 +50,17 @@ const deals = [
     amount: "150.00",
     fee: "4.50",
     paymentMethod: "LEMON_CASH",
-    description: "Trato inicial en custodia Gus Gus",
+    description: "Trato inicial en custodia Gus & Nort II",
     status: "EN_CUSTODIA",
     date: new Date().toISOString()
   }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Soporte Gus Gus", text: "Hola, sistema listo para intermediación.", time: "10:30 AM" }
+  { id: 1, sender: "yobanihuaman2004@gmail.com", receiver: "Gus & Nort II (Soporte)", text: "Hola, sistema listo para intermediación.", time: "10:30 AM" }
 ];
+
+/* --- ENDPOINTS DE AUTENTICACIÓN --- */
 
 app.post('/api/auth/login', (req, res) => {
   const { dni, email, pass } = req.body;
@@ -140,6 +145,8 @@ app.post('/api/auth/reset-password', (req, res) => {
   res.status(400).json({ error: "Código inválido o expirado." });
 });
 
+/* --- ENDPOINTS DE PERFIL Y DATOS BANCARIOS --- */
+
 app.post('/api/user/update-profile', (req, res) => {
   const { email, name, phone, yape, plin, cci, bankApp } = req.body;
   const cleanEmail = (email || '').trim().toLowerCase();
@@ -174,12 +181,14 @@ app.get('/api/users/search', (req, res) => {
   res.json({ users: results });
 });
 
+/* --- ENDPOINTS DE TRATOS Y CHAT --- */
+
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
 app.post('/api/deals/create', (req, res) => {
   const { sellerPhoneOrEmail, amount, description, paymentMethod, buyer } = req.body;
   if (!sellerPhoneOrEmail || !amount || !description) {
-    return res.status(400).json({ error: "Completa los datos requeridos." });
+    return res.status(400).json({ error: "Completa todos los datos requeridos." });
   }
 
   const fee = (parseFloat(amount) * 0.03).toFixed(2);
@@ -196,12 +205,12 @@ app.post('/api/deals/create', (req, res) => {
   };
 
   deals.push(newDeal);
-  res.json({ message: "Trato registrado en custodia Gus Gus.", deal: newDeal });
+  res.json({ message: "Trato registrado en custodia Gus & Nort II.", deal: newDeal });
 });
 
 app.get('/api/chat', (req, res) => {
   const { user1 } = req.query;
-  const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Soporte"));
+  const msgs = chatMessages.filter(m => m.sender === user1 || m.receiver === user1 || m.sender.includes("Gus"));
   res.json({ messages: msgs });
 });
 
@@ -213,7 +222,7 @@ app.post('/api/chat/send', (req, res) => {
   const newMsg = {
     id: chatMessages.length + 1,
     sender,
-    receiver: receiver || "Soporte Gus Gus",
+    receiver: receiver || "Gus & Nort II (Soporte)",
     text,
     time: timeStr
   };
@@ -221,9 +230,10 @@ app.post('/api/chat/send', (req, res) => {
   res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
+// Enrutamiento frontend
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`[GusGus] Servidor activo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`[GusGus & Nort II] Servidor activo en puerto ${PORT}`));
