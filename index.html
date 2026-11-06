@@ -42,7 +42,7 @@
     .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: 600; padding: 8px; display: inline-block; background: none; border: none; }
 
     /* CABECERA PRINCIPAL */
-    .top-bar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; sticky: top; top: 0; z-index: 10; }
+    .top-bar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
     .user-profile-bar { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.05rem; color: var(--text-dark); cursor: pointer; }
     .avatar-circle { width: 44px; height: 44px; background: #ffe5e8; color: var(--wine-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; border: 2px solid var(--wine-main); }
     .admin-badge { font-size: 0.65rem; background: var(--wine-main); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-left: 6px; letter-spacing: 0.5px; }
@@ -81,7 +81,7 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN DE AUTENTICACIÓN (LOGIN / REGISTRO / RECUPERACIÓN) -->
+    <!-- AUTENTICACIÓN -->
     <div id="authSection" class="auth-card">
       <div class="brand-header">
         <div class="logo-badge">GG</div>
@@ -89,7 +89,7 @@
         <p class="brand-subtitle">Plataforma de Intermediación & Custodia Financiera</p>
       </div>
 
-      <!-- VISTA INICIO DE SESIÓN -->
+      <!-- INICIO DE SESIÓN -->
       <div id="viewLogin">
         <div class="form-group">
           <label class="auth-label">Número de DNI:</label>
@@ -106,7 +106,7 @@
           <input type="password" id="loginPass" class="auth-input" value="123456" placeholder="******">
         </div>
 
-        <button type="button" onclick="procesarLogin()" class="btn-primary">INGRESAR A LA APP</button>
+        <button type="button" onclick="procesarLoginDirecto()" class="btn-primary">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 20px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
@@ -114,7 +114,7 @@
         </div>
       </div>
 
-      <!-- VISTA REGISTRO DE USUARIO -->
+      <!-- REGISTRO -->
       <div id="viewRegister" class="hidden">
         <div class="form-group">
           <label class="auth-label">Nombre Completo:</label>
@@ -141,16 +141,16 @@
           <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
         </div>
 
-        <button type="button" onclick="procesarRegistro()" class="btn-primary">REGISTRAR MI CUENTA</button>
+        <button type="button" onclick="procesarRegistroDirecto()" class="btn-primary">REGISTRAR MI CUENTA</button>
 
         <div style="text-align: center; margin-top: 20px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
         </div>
       </div>
 
-      <!-- VISTA RECUPERACIÓN DE CONTRASEÑA -->
+      <!-- RECUPERACIÓN DE CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
-        <p style="font-size:0.9rem; margin-bottom:16px; text-align:center; opacity:0.9;">Ingresa tu correo electrónico registrado para enviarte las instrucciones:</p>
+        <p style="font-size:0.9rem; margin-bottom:16px; text-align:center; opacity:0.9;">Ingresa tu correo registrado para enviarte las instrucciones:</p>
 
         <div class="form-group">
           <label class="auth-label">Correo Electrónico:</label>
@@ -179,7 +179,7 @@
       <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.9rem; margin-top: 16px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL DENTRO DE LA APLICACIÓN -->
+    <!-- PANTALLA PRINCIPAL INTERNA -->
     <div id="appSection" class="hidden">
       
       <!-- CABECERA DE USUARIO -->
@@ -197,7 +197,7 @@
         </div>
       </div>
 
-      <!-- TAB 1: INICIO Y RESUMEN -->
+      <!-- TAB 1: INICIO -->
       <div id="tabHome">
         <div class="balance-banner">
           <div class="balance-header">
@@ -211,9 +211,9 @@
           </div>
         </div>
 
-        <!-- PANEL EXCLUSIVO CREADOR LEMON CASH -->
+        <!-- PANEL CREADOR LEMON CASH -->
         <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
-          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Creador Maestro)</div>
+          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones Gus & Nort II</div>
           <p style="font-size:0.82rem; color:#4b5563; margin-bottom:10px; line-height:1.4;">
             Las comisiones cobradas por intermediación se derivan automáticamente a tu cuenta Lemon Cash registrada:
           </p>
@@ -221,7 +221,7 @@
             • Creador: <strong>Yobani Huamán</strong> (DNI: 76641433)<br>
             • Tag Lemon Cash: <strong>$gusgus.lemon</strong><br>
             • CCI Recaudo: <strong>0000003100087664143301</strong><br>
-            • Retención Automática: 3% por trato
+            • Operatividad: <strong>Gus Gus & Nort II</strong>
           </div>
         </div>
 
@@ -231,10 +231,10 @@
         </div>
       </div>
 
-      <!-- TAB 2: TRATOS E INTERMEDIACIÓN MULTI-BANCO -->
+      <!-- TAB 2: TRATOS (TODOS LOS BANCOS DEL PERÚ) -->
       <div id="tabTratos" class="hidden">
         <div class="section-block" style="margin-top:20px;">
-          <div class="section-title">🛡️ Registrar Nuevo Trato de Intermediación</div>
+          <div class="section-title">🛡️ Registrar Trato de Intermediación</div>
           
           <label class="field-label">Método / Banco de Pago:</label>
           <select id="dealPaymentMethod" class="form-input">
@@ -259,7 +259,7 @@
             <option value="CAJA_TACNA">Caja Tacna</option>
             <option value="CAJA_MAYNAS">Caja Maynas</option>
             <option value="CAJA_SULLANA">Caja Sullana</option>
-            <option value="LEMON_CASH">Lemon Cash ($gusgus.lemon)</option>
+            <option value="LEMON_CASH">Lemon Cash (Gus & Nort II)</option>
             <option value="TRANSFERENCIA_CCI">Transferencia Interbancaria (CCI)</option>
           </select>
 
@@ -282,10 +282,10 @@
         </div>
       </div>
 
-      <!-- TAB 3: CHAT ESTILO WHATSAPP CON BUSCADOR -->
+      <!-- TAB 3: CHAT ESTILO WHATSAPP -->
       <div id="tabChat" class="hidden">
         <div class="section-block" style="margin-top:20px;">
-          <div class="section-title">💬 Chat Intermediario (WhatsApp Style)</div>
+          <div class="section-title">💬 Chat Intermediario (Gus / Nort II)</div>
           
           <div style="display:flex; gap:8px; margin-bottom:12px;">
             <input type="text" id="chatSearchInput" placeholder="Buscar comprador/vendedor por DNI o Celular..." class="form-input" style="margin:0;">
@@ -296,18 +296,18 @@
           <div id="chatBox" class="chat-container"></div>
 
           <div style="display:flex; gap:8px; margin-top:12px;">
-            <input type="text" id="chatInput" placeholder="Escribe un mensaje..." class="form-input" style="margin:0; flex:1;">
+            <input type="text" id="chatInput" placeholder="Escribe un mensaje a Gus o Nort II..." class="form-input" style="margin:0; flex:1;">
             <button type="button" onclick="enviarMensajeChat()" style="background:var(--wa-green); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-weight:700; cursor:pointer;">Enviar</button>
           </div>
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL ESTILO WHATSAPP Y CUENTAS BANCARIAS -->
+      <!-- TAB 4: PERFIL EDITABLE -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:20px; text-align:center;">
           <div class="avatar-circle" style="width:84px; height:84px; font-size:2.2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
           <div class="section-title" style="justify-content:center; margin:0;">Perfil de Usuario</div>
-          <p style="font-size:0.82rem; color:#6b7280; margin-bottom:16px;">Gestión de datos de intermediación Gus & Nort II</p>
+          <p style="font-size:0.82rem; color:#6b7280; margin-bottom:16px;">Plataforma Gus Gus & Nort II</p>
         </div>
 
         <div class="section-block">
@@ -324,7 +324,7 @@
           <input type="text" id="profileEmail" class="form-input" readonly>
 
           <div style="font-weight:800; font-size:0.95rem; margin:20px 0 12px 0; color:var(--wine-main); border-top:1px solid #eee; padding-top:14px;">
-            💳 Cuentas Bancarias para Recibir Fondos:
+            💳 Cuentas Bancarias Registradas:
           </div>
 
           <label class="field-label">Número de Yape:</label>
@@ -338,4 +338,6 @@
 
           <label class="field-label">Banco o Entidad Financiera Principal:</label>
           <select id="profileBankApp" class="form-input">
-            <optio
+            <option value="Yape / BCP">Yape / BCP</option>
+            <option value="Plin / Interbank">Plin / Interbank</option>
+            <option value="BBVA Perú">BBV
