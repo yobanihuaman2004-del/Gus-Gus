@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Gus Gus & Nort II - Intermediación Financiera</title>
+  <title>Gus Gus & Nort II - Plataforma de Intermediación</title>
   <style>
     :root {
       --wine-main: #58111a;
@@ -23,14 +23,14 @@
     body { background-color: #1a0306; display: flex; justify-content: center; min-height: 100vh; }
     .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 75px; }
 
-    /* AUTENTICACIÓN */
+    /* PANTALLAS DE AUTENTICACIÓN */
     .auth-card { background: var(--wine-main); color: var(--white); padding: 30px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
     .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 6px 20px; border-radius: 12px; display: inline-block; background: var(--wine-dark); margin-bottom: 10px; }
     .auth-input { width: 100%; padding: 14px; background: var(--wine-dark); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; color: var(--white); margin-bottom: 14px; font-size: 1rem; outline: none; }
     .btn-primary { background: var(--white); color: var(--wine-dark); border: none; padding: 15px; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; }
     .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; padding: 6px; display: inline-block; background: none; border: none; }
 
-    /* VISTA SUPERIOR */
+    /* CABECERA Y TARJETAS */
     .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #eee; }
     .user-profile-bar { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1rem; color: var(--text-dark); cursor: pointer; }
     .avatar-circle { width: 40px; height: 40px; background: #ffe5e8; color: var(--wine-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; overflow: hidden; }
@@ -52,7 +52,7 @@
     .chat-other { align-self: flex-start; background: #ffffff; color: #000; }
     .chat-time { font-size: 0.65rem; color: #888; text-align: right; margin-top: 4px; }
 
-    /* BARRA INFERIOR */
+    /* NAVEGACIÓN INFERIOR */
     .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #718096; cursor: pointer; }
     .nav-item.active { color: var(--wine-main); font-weight: bold; }
@@ -64,7 +64,7 @@
 
   <div class="app-container">
 
-    <!-- AUTENTICACIÓN -->
+    <!-- SECCIÓN DE AUTENTICACIÓN -->
     <div id="authSection" class="auth-card">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge">GG</div>
@@ -72,7 +72,7 @@
         <p style="font-size: 0.85rem; opacity: 0.8;">Sistema Intermediario de Custodia</p>
       </div>
 
-      <!-- INICIO DE SESIÓN DIRECTO -->
+      <!-- INICIO DE SESIÓN -->
       <div id="viewLogin">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
@@ -83,7 +83,7 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="button" onclick="procesarLoginDirecto()" class="btn-primary">INGRESAR A LA APP</button>
+        <button type="button" onclick="procesarLogin()" class="btn-primary">INGRESAR A LA APP</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
@@ -108,7 +108,7 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="button" onclick="procesarRegistroDirecto()" class="btn-primary">REGISTRAR MI CUENTA</button>
+        <button type="button" onclick="procesarRegistro()" class="btn-primary">REGISTRAR MI CUENTA</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
@@ -140,7 +140,7 @@
       <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL INTERNA -->
+    <!-- PANTALLA PRINCIPAL DENTRO DE LA APP -->
     <div id="appSection" class="hidden">
       
       <div class="top-bar">
@@ -170,13 +170,13 @@
           </div>
         </div>
 
-        <!-- PANEL CREADOR RETENCIÓN LEMON CASH -->
+        <!-- PANEL CREADOR CON RETENCIÓN A LEMON CASH -->
         <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
           <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones Gus & Nort II</div>
           <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan automáticamente a tu cuenta Lemon Cash:</p>
           <div style="font-weight:bold; font-size:0.85rem; color:#2d3748;">
             - Creador: Yobani Huamán (DNI: 76641433)<br>
-            - Tag: $gusgus.lemon<br>
+            - Tag Recaudo: $gusgus.lemon<br>
             - CCI Recaudo: 0000003100087664143301<br>
             - Operatividad: Gus & Nort II
           </div>
@@ -188,7 +188,7 @@
         </div>
       </div>
 
-      <!-- TAB 2: TRATOS MULTI-BANCO -->
+      <!-- TAB 2: TRATOS (TODOS LOS BANCOS DE PERÚ) -->
       <div id="tabTratos" class="hidden">
         <div class="section-block" style="margin-top:15px;">
           <div class="section-title">🛡️ Registrar Trato de Intermediación</div>
@@ -250,7 +250,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL ESTILO WHATSAPP EDITABLE -->
+      <!-- TAB 4: PERFIL ESTILO WHATSAPP Y EDITABLE -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:15px; text-align:center;">
           <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
@@ -336,6 +336,4 @@
           <span>💳</span>
           <span>Tratos</span>
         </div>
-        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
-          <span>💬</span>
-       
+        <div class="nav-item" id="navChat" onclick=
