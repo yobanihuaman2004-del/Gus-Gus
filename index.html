@@ -35,36 +35,37 @@
     body { background-color: #1a0306; display: flex; justify-content: center; min-height: 100vh; }
     .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 75px; }
 
-    /* AUTENTICACIÓN */
-    .auth-card { background: linear-gradient(180deg, var(--wine-main) 0%, var(--wine-dark) 100%); color: var(--white); padding: 35px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-    .brand-header { text-align: center; margin-bottom: 30px; }
-    .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 22px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; }
-    .brand-title { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
-    .brand-subtitle { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+    /* AUTENTICACIÓN Y REGISTRO */
+    .auth-card { background: linear-gradient(180deg, var(--wine-main) 0%, var(--wine-dark) 100%); color: var(--white); padding: 30px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    .brand-header { text-align: center; margin-bottom: 20px; }
+    .logo-badge { font-size: 2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 6px 18px; border-radius: 14px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 8px; letter-spacing: 1px; }
+    .brand-title { font-size: 1.35rem; font-weight: 800; margin-top: 2px; }
+    .brand-subtitle { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
 
-    .form-group { margin-bottom: 16px; }
-    .auth-label { font-size: 0.85rem; margin-bottom: 6px; display: block; font-weight: 600; opacity: 0.9; }
-    .auth-input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: var(--white); font-size: 1rem; outline: none; }
+    .form-group { margin-bottom: 12px; }
+    .auth-label { font-size: 0.82rem; margin-bottom: 4px; display: block; font-weight: 600; opacity: 0.9; }
+    .auth-input { width: 100%; padding: 12px 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: var(--white); font-size: 0.95rem; outline: none; }
     
-    .btn-login-click { 
-      background: var(--white) !important; 
-      color: var(--wine-dark) !important; 
-      padding: 16px; 
+    .btn-auth-trigger { 
+      background: var(--white); 
+      color: var(--wine-dark); 
+      padding: 14px; 
       border-radius: 25px; 
       font-weight: 800; 
-      font-size: 1.05rem; 
+      font-size: 1rem; 
       cursor: pointer; 
       width: 100%; 
       text-transform: uppercase; 
-      margin-top: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+      margin-top: 10px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
       text-align: center;
       display: block;
       border: none;
-      outline: none;
       touch-action: manipulation;
     }
-    .btn-login-click:active { transform: scale(0.96); opacity: 0.9; }
+    .btn-auth-trigger:active { transform: scale(0.96); opacity: 0.9; }
+
+    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-weight: 600; padding: 6px; display: inline-block; background: none; border: none; }
 
     /* CABECERA PRINCIPAL */
     .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
@@ -104,7 +105,7 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN AUTENTICACIÓN -->
+    <!-- SECCIÓN AUTENTICACIÓN (INICIAR SESIÓN / CREAR CUENTA / RECUPERAR) -->
     <div id="authSection" class="auth-card">
       <div class="brand-header">
         <div class="logo-badge">GUS | NORT II | CUS</div>
@@ -112,7 +113,8 @@
         <p class="brand-subtitle">Plataforma de Intermediación & Custodia Financiera</p>
       </div>
 
-      <div>
+      <!-- VISTA 1: INICIAR SESIÓN -->
+      <div id="viewLogin">
         <div class="form-group">
           <label class="auth-label">Número de DNI:</label>
           <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
@@ -128,9 +130,67 @@
           <input type="password" id="loginPass" class="auth-input" value="123456">
         </div>
 
-        <!-- BOTÓN DIRECTO SIN FORMULARIO -->
-        <a href="javascript:void(0)" id="btnStartSession" onclick="forzarEntradaApp()" ontouchstart="forzarEntradaApp()" class="btn-login-click" style="text-decoration:none;">INICIAR SESIÓN</a>
+        <button type="button" onclick="ejecutarLogin()" ontouchstart="ejecutarLogin()" class="btn-auth-trigger">INICIAR SESIÓN</button>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
+          <button type="button" class="link-toggle" style="font-size:0.8rem; opacity:0.8; margin-top:4px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña?</button>
+        </div>
       </div>
+
+      <!-- VISTA 2: CREAR CUENTA -->
+      <div id="viewRegister" class="hidden">
+        <div class="form-group">
+          <label class="auth-label">Nombre Completo:</label>
+          <input type="text" id="regName" class="auth-input" placeholder="Ej. Juan Pérez">
+        </div>
+        <div class="form-group">
+          <label class="auth-label">Número de DNI:</label>
+          <input type="text" id="regDni" class="auth-input" placeholder="Ej. 12345678" maxlength="8">
+        </div>
+        <div class="form-group">
+          <label class="auth-label">Correo Electrónico:</label>
+          <input type="email" id="regEmail" class="auth-input" placeholder="usuario@gmail.com">
+        </div>
+        <div class="form-group">
+          <label class="auth-label">Teléfono Celular:</label>
+          <input type="text" id="regPhone" class="auth-input" placeholder="Ej. 912345678">
+        </div>
+        <div class="form-group">
+          <label class="auth-label">Contraseña:</label>
+          <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
+        </div>
+
+        <button type="button" onclick="ejecutarRegistro()" ontouchstart="ejecutarRegistro()" class="btn-auth-trigger">CREAR MI CUENTA</button>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
+        </div>
+      </div>
+
+      <!-- VISTA 3: CAMBIAR / RECUPERAR CONTRASEÑA -->
+      <div id="viewForgot" class="hidden">
+        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu DNI, Correo o Celular registrado:</p>
+        <div class="form-group">
+          <input type="text" id="forgotEmail" class="auth-input" placeholder="DNI, Correo o Celular">
+        </div>
+        <div id="forgotStep2" class="hidden">
+          <div class="form-group">
+            <input type="text" id="forgotCode" class="auth-input" placeholder="Código: 123456">
+          </div>
+          <div class="form-group">
+            <input type="password" id="forgotNewPass" class="auth-input" placeholder="Nueva contraseña">
+          </div>
+        </div>
+
+        <button type="button" id="btnForgotAction" onclick="solicitarCodigoReset()" ontouchstart="solicitarCodigoReset()" class="btn-auth-trigger">ENVIAR CÓDIGO</button>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">Volver al Inicio de Sesión</button>
+        </div>
+      </div>
+
+      <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 14px; font-weight: bold;"></p>
     </div>
 
     <!-- PANTALLA PRINCIPAL DENTRO DE LA APP -->
@@ -139,10 +199,10 @@
       <!-- CABECERA -->
       <div class="top-bar">
         <div class="user-profile-bar" onclick="cambiarTab('perfil')">
-          <div class="avatar-circle">Y</div>
+          <div class="avatar-circle" id="userAvatarHeader">Y</div>
           <div>
-            <span>¡Hola Yobani! ›</span>
-            <div class="admin-badge">CREADOR MAESTRO</div>
+            <span id="userNameHeader">¡Hola Yobani! ›</span>
+            <div id="adminBadge" class="admin-badge hidden">CREADOR MAESTRO</div>
           </div>
         </div>
         <div style="display:flex; gap:10px;">
@@ -164,8 +224,8 @@
           </div>
         </div>
 
-        <!-- PANEL CREADOR LEMON CASH -->
-        <div class="section-block" style="background:#fff5f5; border:1px solid #feb2b2;">
+        <!-- PANEL CREADOR MAESTRO LEMON CASH -->
+        <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
           <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Gus, Nort II & Cus)</div>
           <p style="font-size:0.8rem; color:#4b5563; margin-bottom:8px;">Comisiones derivadas automáticamente a Lemon Cash:</p>
           <div style="font-weight:bold; font-size:0.85rem; color:#1f2937;">
@@ -236,7 +296,7 @@
           <div id="searchChatResult" style="font-size:0.8rem; margin-bottom:8px; color:#2563eb; font-weight:bold;"></div>
 
           <div id="chatBox" class="chat-container">
-            <div class="chat-bubble chat-other"><strong>Gus, Nort II & Cus:</strong> ¡Hola Yobani! Tu plataforma está lista y funcional.<div class="chat-time">10:30 AM</div></div>
+            <div class="chat-bubble chat-other"><strong>Gus, Nort II & Cus:</strong> ¡Hola! Bienvenido a la plataforma de custodia financiera.<div class="chat-time">10:30 AM</div></div>
           </div>
 
           <div style="display:flex; gap:6px; margin-top:10px;">
@@ -249,38 +309,38 @@
       <!-- TAB 4: PERFIL -->
       <div id="tabPerfil" class="hidden">
         <div class="section-block" style="margin-top:15px; text-align:center;">
-          <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;">Y</div>
+          <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">U</div>
           <div class="section-title" style="margin:0; justify-content:center;">Perfil de Usuario</div>
           <p style="font-size:0.8rem; color:#6b7280; margin-bottom:15px;">Gus, Nort II & Cus</p>
         </div>
 
         <div class="section-block">
           <label class="field-label">Nombre Completo:</label>
-          <input type="text" id="profileName" class="form-input" value="Yobani Huamán (Creador Maestro)">
+          <input type="text" id="profileName" class="form-input">
 
           <label class="field-label">Número de DNI:</label>
-          <input type="text" id="profileDni" class="form-input" value="76641433" readonly>
+          <input type="text" id="profileDni" class="form-input" readonly>
 
           <label class="field-label">Teléfono Celular:</label>
-          <input type="text" id="profilePhone" class="form-input" value="930715341">
+          <input type="text" id="profilePhone" class="form-input">
 
           <label class="field-label">Correo Electrónico:</label>
-          <input type="text" id="profileEmail" class="form-input" value="yobanihuaman2004@gmail.com" readonly>
+          <input type="text" id="profileEmail" class="form-input" readonly>
 
           <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">💳 Cuentas Bancarias Registradas:</div>
 
           <label class="field-label">Número de Yape:</label>
-          <input type="text" id="profileYape" class="form-input" value="930715341">
+          <input type="text" id="profileYape" class="form-input" placeholder="Ej. 930715341">
 
           <label class="field-label">Número de Plin:</label>
-          <input type="text" id="profilePlin" class="form-input" value="930715341">
+          <input type="text" id="profilePlin" class="form-input" placeholder="Ej. 930715341">
 
           <label class="field-label">CCI / Cuenta Bancaria Transferencia:</label>
-          <input type="text" id="profileCci" class="form-input" value="0000003100087664143301">
+          <input type="text" id="profileCci" class="form-input" placeholder="Ej. 0000003100087664143301">
 
           <label class="field-label">Banco Principal:</label>
           <select id="profileBankApp" class="form-input">
-            <option value="Lemon Cash" selected>Lemon Cash</option>
+            <option value="Lemon Cash">Lemon Cash</option>
             <option value="Yape / BCP">Yape / BCP</option>
             <option value="Plin / Interbank">Plin / Interbank</option>
           </select>
@@ -298,87 +358,6 @@
           <div style="display:flex; flex-direction:column; gap:10px;">
             <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer; font-weight:bold;">👤 Configurar Perfil y Cuentas Bancarias</button>
             
-            <div>
+            <div id="creatorControls" class="hidden">
               <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Panel Maestro:</div>
-              <button type="button" onclick="alert('Configuración activa: Lemon Cash $gusgus.lemon (Celular: 930715341)')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer; color:#c53030; font-weight:bold;">🍋 Panel de Fondo Lemon Cash</button>
-            </div>
-
-            <button type="button" onclick="cerrarSesion()" class="form-input" style="text-align:left; background:#ffe5e8; color:var(--wine-main); font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- BARRA DE NAVEGACIÓN INFERIOR -->
-      <div class="bottom-nav">
-        <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
-          <span style="font-size:1.2rem;">🏠</span>
-          <span>Inicio</span>
-        </div>
-        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
-          <span style="font-size:1.2rem;">💳</span>
-          <span>Tratos</span>
-        </div>
-        <div class="nav-item" id="navChat" onclick="cambiarTab('chat')">
-          <span style="font-size:1.2rem;">💬</span>
-          <span>Chat</span>
-        </div>
-        <div class="nav-item" id="navPerfil" onclick="cambiarTab('perfil')">
-          <span style="font-size:1.2rem;">👤</span>
-          <span>Perfil</span>
-        </div>
-        <div class="nav-item" id="navAjustes" onclick="cambiarTab('ajustes')">
-          <span style="font-size:1.2rem;">⚙️</span>
-          <span>Ajustes</span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-    let saldoOculto = false;
-
-    // ENTRADA INMEDIATA
-    function forzarEntradaApp() {
-      const auth = document.getElementById('authSection');
-      const app = document.getElementById('appSection');
-
-      if (auth && app) {
-        auth.className = 'auth-card hidden';
-        app.className = '';
-
-        const homeList = document.getElementById('homeDealsList');
-        const fullList = document.getElementById('dealsListFull');
-        if (homeList && fullList) {
-          fullList.innerHTML = homeList.innerHTML;
-        }
-      }
-    }
-
-    function guardarPerfil() {
-      document.getElementById('profileStatus').innerText = "✓ Perfil guardado con éxito.";
-    }
-
-    function cerrarSesion() {
-      document.getElementById('appSection').classList.add('hidden');
-      document.getElementById('authSection').classList.remove('hidden');
-    }
-
-    function cambiarTab(tab) {
-      document.getElementById('tabHome').classList.toggle('hidden', tab !== 'home');
-      document.getElementById('tabTratos').classList.toggle('hidden', tab !== 'tratos');
-      document.getElementById('tabChat').classList.toggle('hidden', tab !== 'chat');
-      document.getElementById('tabPerfil').classList.toggle('hidden', tab !== 'perfil');
-      document.getElementById('tabAjustes').classList.toggle('hidden', tab !== 'ajustes');
-
-      document.getElementById('navHome').classList.toggle('active', tab === 'home');
-      document.getElementById('navTratos').classList.toggle('active', tab === 'tratos');
-      document.getElementById('navChat').classList.toggle('active', tab === 'chat');
-      document.getElementById('navPerfil').classList.toggle('active', tab === 'perfil');
-      document.getElementById('navAjustes').classList.toggle('active', tab === 'ajustes');
-    }
-
-    function toggleSaldo() {
-      saldoOculto = !saldoOculto;
-      document.getElementById('balanceDisplay').innerText = saldoOculto ? "S/ ••
+              <button type="button" onclick="alert('Configuración activa: Lemon Cash $gusgus.lemon
