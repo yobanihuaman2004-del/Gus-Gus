@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Gus, Nort II & Cus - Plataforma Intermediaria</title>
+  <title>Gus Gus & Nort II - Plataforma de Intermediación</title>
   <style>
     :root {
       --wine-main: #58111a;
@@ -15,64 +15,47 @@
       --white: #ffffff;
       --bg-app: #f4f5f7;
       --text-dark: #1f2937;
-      --text-muted: #6b7280;
       --wa-green: #075e54;
       --wa-bubble: #e1ffc7;
-      --border-color: #cbd5e0;
     }
 
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, Roboto, sans-serif; margin: 0; padding: 0; }
     body { background-color: #1a0306; display: flex; justify-content: center; min-height: 100vh; }
-    .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .app-container { width: 100%; max-width: 480px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 75px; }
 
     /* AUTENTICACIÓN */
-    .auth-card { background: linear-gradient(180deg, var(--wine-main) 0%, var(--wine-dark) 100%); color: var(--white); padding: 40px 24px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-    .brand-header { text-align: center; margin-bottom: 30px; }
-    .logo-badge { font-size: 2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 8px 16px; border-radius: 16px; display: inline-block; background: rgba(0,0,0,0.2); margin-bottom: 12px; letter-spacing: 1px; }
-    .brand-title { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
-    .brand-subtitle { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; font-weight: 500; }
+    .auth-card { background: var(--wine-main); color: var(--white); padding: 30px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    .logo-badge { font-size: 2.2rem; font-weight: 900; color: var(--white); border: 3px solid var(--white); padding: 6px 20px; border-radius: 12px; display: inline-block; background: var(--wine-dark); margin-bottom: 10px; }
+    .auth-input { width: 100%; padding: 14px; background: var(--wine-dark); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; color: var(--white); margin-bottom: 14px; font-size: 1rem; outline: none; }
+    .btn-primary { background: var(--white); color: var(--wine-dark); border: none; padding: 15px; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; }
+    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: bold; padding: 6px; display: inline-block; background: none; border: none; }
 
-    .form-group { margin-bottom: 16px; }
-    .auth-label { font-size: 0.85rem; margin-bottom: 6px; display: block; font-weight: 600; opacity: 0.9; }
-    .auth-input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; color: var(--white); font-size: 1rem; outline: none; transition: all 0.3s ease; }
-    .auth-input:focus { border-color: var(--white); background: rgba(0, 0, 0, 0.5); }
-    
-    .btn-primary { background: var(--white); color: var(--wine-dark); border: none; padding: 16px; border-radius: 30px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin-top: 8px; }
-    .btn-primary:active { transform: scale(0.98); }
-    .link-toggle { color: var(--white); text-decoration: underline; cursor: pointer; font-size: 0.9rem; font-weight: 600; padding: 8px; display: inline-block; background: none; border: none; }
+    /* VISTA SUPERIOR */
+    .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #eee; }
+    .user-profile-bar { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1rem; color: var(--text-dark); cursor: pointer; }
+    .avatar-circle { width: 40px; height: 40px; background: #ffe5e8; color: var(--wine-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; overflow: hidden; }
 
-    /* CABECERA PRINCIPAL */
-    .top-bar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
-    .user-profile-bar { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.05rem; color: var(--text-dark); cursor: pointer; }
-    .avatar-circle { width: 44px; height: 44px; background: #ffe5e8; color: var(--wine-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; border: 2px solid var(--wine-main); }
-    .admin-badge { font-size: 0.65rem; background: var(--wine-main); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-left: 6px; letter-spacing: 0.5px; }
+    .balance-banner { background: linear-gradient(135deg, var(--wine-main) 0%, var(--wine-card) 100%); margin: 15px 20px; border-radius: 20px; padding: 20px; color: var(--white); }
+    .balance-val { font-size: 2.2rem; font-weight: 800; margin: 10px 0; }
 
-    /* BANNER DE SALDO */
-    .balance-banner { background: linear-gradient(135deg, var(--wine-main) 0%, var(--wine-card) 100%); margin: 20px; border-radius: 20px; padding: 24px; color: var(--white); box-shadow: 0 8px 16px rgba(88, 17, 26, 0.25); }
-    .balance-header { font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; opacity: 0.9; }
-    .balance-val { font-size: 2.4rem; font-weight: 900; margin: 12px 0; letter-spacing: -1px; }
-    .balance-footer { font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; display: flex; justify-content: space-between; opacity: 0.85; }
+    .section-block { background: #fff; margin: 0 20px 15px 20px; padding: 16px; border-radius: 16px; }
+    .section-title { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; }
 
-    /* SECCIONES Y BLOQUES */
-    .section-block { background: #ffffff; margin: 0 20px 20px 20px; padding: 20px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f0f0f0; }
-    .section-title { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .field-label { font-size: 0.82rem; font-weight: 700; color: #4b5563; margin-bottom: 6px; display: block; }
-    .form-input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 14px; font-size: 0.95rem; outline: none; background: #fff; color: var(--text-dark); }
-    .form-input:focus { border-color: var(--wine-main); }
-    .form-input[readonly] { background-color: #f3f4f6; color: #6b7280; cursor: not-allowed; }
+    .field-label { font-size: 0.8rem; font-weight: bold; color: #4a5568; margin-bottom: 4px; display: block; }
+    .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; outline: none; }
+    .form-input[readonly] { background-color: #edf2f7; color: #718096; }
 
     /* CHAT ESTILO WHATSAPP */
-    .chat-container { background: #efeae2; height: 350px; border-radius: 14px; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; border: 1px solid #d1d5db; }
-    .chat-bubble { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; position: relative; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-    .chat-me { align-self: flex-end; background: var(--wa-bubble); color: #000; border-top-right-radius: 2px; }
-    .chat-other { align-self: flex-start; background: #ffffff; color: #000; border-top-left-radius: 2px; }
-    .chat-time { font-size: 0.65rem; color: #6b7280; text-align: right; margin-top: 4px; }
+    .chat-container { background: #efeae2; height: 320px; border-radius: 12px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid #ddd; }
+    .chat-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; position: relative; }
+    .chat-me { align-self: flex-end; background: var(--wa-bubble); color: #000; }
+    .chat-other { align-self: flex-start; background: #ffffff; color: #000; }
+    .chat-time { font-size: 0.65rem; color: #888; text-align: right; margin-top: 4px; }
 
-    /* BARRA NAVEGACIÓN INFERIOR */
-    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #ffffff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e5e7eb; z-index: 20; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6b7280; cursor: pointer; font-weight: 600; gap: 4px; }
-    .nav-item.active { color: var(--wine-main); font-weight: 800; }
-    .nav-icon { font-size: 1.3rem; }
+    /* BARRA INFERIOR */
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #718096; cursor: pointer; }
+    .nav-item.active { color: var(--wine-main); font-weight: bold; }
 
     .hidden { display: none !important; }
   </style>
@@ -81,160 +64,134 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN AUTENTICACIÓN -->
+    <!-- AUTENTICACIÓN -->
     <div id="authSection" class="auth-card">
-      <div class="brand-header">
-        <div class="logo-badge">GUS | NORT II | CUS</div>
-        <h1 class="brand-title">Gus, Nort II & Cus</h1>
-        <p class="brand-subtitle">Plataforma de Intermediación & Custodia Financiera</p>
+      <div style="text-align: center; margin-bottom: 25px;">
+        <div class="logo-badge">GG</div>
+        <h2 style="font-size: 1.4rem; margin-top: 8px;">Gus Gus & Nort II</h2>
+        <p style="font-size: 0.85rem; opacity: 0.8;">Sistema Intermediario de Custodia</p>
       </div>
 
-      <!-- INICIO DE SESIÓN -->
+      <!-- INICIO DE SESIÓN DIRECTO -->
       <div id="viewLogin">
-        <div class="form-group">
-          <label class="auth-label">Número de DNI:</label>
-          <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8" placeholder="Ingrese su DNI">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
+        <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
 
-        <div class="form-group">
-          <label class="auth-label">Correo Electrónico o Celular:</label>
-          <input type="text" id="loginEmail" class="auth-input" value="yobanihuaman2004@gmail.com" placeholder="ejemplo@gmail.com o 930715341">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Gmail o Teléfono:</label>
+        <input type="text" id="loginEmail" class="auth-input" value="yobanihuaman2004@gmail.com">
 
-        <div class="form-group">
-          <label class="auth-label">Contraseña:</label>
-          <input type="password" id="loginPass" class="auth-input" value="123456" placeholder="******">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
+        <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="button" id="btnLoginSubmit" onclick="iniciarSesionDirecto()" class="btn-primary">INGRESAR A LA APP</button>
+        <button type="button" onclick="procesarLoginDirecto()" class="btn-primary">INGRESAR A LA APP</button>
 
-        <div style="text-align: center; margin-top: 20px;">
+        <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('register')">¿No tienes cuenta? Regístrate aquí</button><br>
-          <button type="button" class="link-toggle" style="font-size:0.8rem; opacity:0.8; margin-top:8px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña / Recuperar datos?</button>
+          <button type="button" class="link-toggle" style="font-size:0.8rem; opacity:0.8; margin-top:6px;" onclick="cambiarVistaAuth('forgot')">¿Olvidaste tu contraseña?</button>
         </div>
       </div>
 
-      <!-- REGISTRO DE USUARIOS -->
+      <!-- REGISTRO -->
       <div id="viewRegister" class="hidden">
-        <div class="form-group">
-          <label class="auth-label">Nombre Completo:</label>
-          <input type="text" id="regName" class="auth-input" placeholder="Ej. Yobani Huamán">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nombre Completo:</label>
+        <input type="text" id="regName" class="auth-input" placeholder="Ej. Yobani Huamán">
 
-        <div class="form-group">
-          <label class="auth-label">Número de DNI:</label>
-          <input type="text" id="regDni" class="auth-input" placeholder="Ej. 76641433" maxlength="8">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
+        <input type="text" id="regDni" class="auth-input" placeholder="Ej. 76641433" maxlength="8">
 
-        <div class="form-group">
-          <label class="auth-label">Correo Electrónico (Gmail):</label>
-          <input type="email" id="regEmail" class="auth-input" placeholder="usuario@gmail.com">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico (Gmail):</label>
+        <input type="email" id="regEmail" class="auth-input" placeholder="usuario@gmail.com">
 
-        <div class="form-group">
-          <label class="auth-label">Teléfono Celular:</label>
-          <input type="text" id="regPhone" class="auth-input" placeholder="Ej. 930715341">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Teléfono Celular:</label>
+        <input type="text" id="regPhone" class="auth-input" placeholder="Ej. 930715341">
 
-        <div class="form-group">
-          <label class="auth-label">Contraseña:</label>
-          <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
+        <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="button" onclick="procesarRegistroGarantizado()" class="btn-primary">REGISTRAR MI CUENTA</button>
+        <button type="button" onclick="procesarRegistroDirecto()" class="btn-primary">REGISTRAR MI CUENTA</button>
 
-        <div style="text-align: center; margin-top: 20px;">
+        <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">¿Ya tienes cuenta? Inicia sesión</button>
         </div>
       </div>
 
-      <!-- RECUPERACIÓN DE CONTRASEÑA O DATOS -->
+      <!-- RECUPERACIÓN DE CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
-        <p style="font-size:0.9rem; margin-bottom:16px; text-align:center; opacity:0.9;">Ingresa tu Correo, Celular o DNI registrado para recibir tu código de acceso:</p>
+        <p style="font-size:0.85rem; margin-bottom:12px; text-align:center;">Ingresa tu correo para restablecer tu contraseña:</p>
 
-        <div class="form-group">
-          <label class="auth-label">Correo, DNI o Número de Celular:</label>
-          <input type="text" id="forgotEmail" class="auth-input" placeholder="yobanihuaman2004@gmail.com / 930715341 / 76641433">
-        </div>
+        <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Correo Electrónico:</label>
+        <input type="email" id="forgotEmail" class="auth-input" placeholder="usuario@gmail.com">
 
         <div id="forgotStep2" class="hidden">
-          <div class="form-group">
-            <label class="auth-label">Código de Verificación Recibido:</label>
-            <input type="text" id="forgotCode" class="auth-input" placeholder="Ej. 123456">
-          </div>
+          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Código recibido:</label>
+          <input type="text" id="forgotCode" class="auth-input" placeholder="Ej. 123456">
 
-          <div class="form-group">
-            <label class="auth-label">Nueva Contraseña:</label>
-            <input type="password" id="forgotNewPass" class="auth-input" placeholder="Ingresa tu nueva contraseña">
-          </div>
+          <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nueva Contraseña:</label>
+          <input type="password" id="forgotNewPass" class="auth-input" placeholder="Nueva contraseña">
         </div>
 
-        <button type="button" id="btnForgotAction" onclick="solicitarCodigoReset()" class="btn-primary">ENVIAR CÓDIGO</button>
+        <button type="button" id="btnForgotAction" onclick="solicitarCodigoReset()" class="btn-primary">Enviar Código</button>
 
-        <div style="text-align: center; margin-top: 20px;">
+        <div style="text-align: center; margin-top: 15px;">
           <button type="button" class="link-toggle" onclick="cambiarVistaAuth('login')">Volver al Inicio de Sesión</button>
         </div>
       </div>
 
-      <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.9rem; margin-top: 16px; font-weight: bold;"></p>
+      <p id="authMessage" style="color: #ff8a80; text-align: center; font-size: 0.85rem; margin-top: 12px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA PRINCIPAL DENTRO DE LA APP -->
+    <!-- PANTALLA PRINCIPAL INTERNA -->
     <div id="appSection" class="hidden">
       
-      <!-- CABECERA DE USUARIO -->
       <div class="top-bar">
         <div class="user-profile-bar" onclick="cambiarTab('perfil')">
           <div class="avatar-circle" id="userAvatarHeader">Y</div>
           <div>
             <span id="userNameHeader">¡Hola Yobani! ›</span>
-            <div id="adminBadge" class="admin-badge">CREADOR MAESTRO</div>
+            <div id="adminBadge" style="font-size:0.65rem; background:var(--wine-main); color:#fff; padding:2px 6px; border-radius:4px; font-weight:bold; display:inline-block; margin-left:4px;">CREADOR MAESTRO</div>
           </div>
         </div>
-        <div style="display:flex; gap:12px;">
-          <button type="button" style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="cambiarTab('chat')">💬</button>
-          <button type="button" style="background:none; border:none; font-size:1.4rem; cursor:pointer;" onclick="cambiarTab('ajustes')">⚙️</button>
+        <div>
+          <button type="button" style="background:none; border:none; font-size:1.3rem; cursor:pointer;" onclick="cambiarTab('chat')">💬</button>
+          <button type="button" style="background:none; border:none; font-size:1.3rem; cursor:pointer;" onclick="cambiarTab('ajustes')">⚙️</button>
         </div>
       </div>
 
       <!-- TAB 1: INICIO -->
       <div id="tabHome">
         <div class="balance-banner">
-          <div class="balance-header">
-            <span>Saldo Custodiado Gus, Nort II & Cus</span>
-            <span style="cursor:pointer; font-size:1.2rem;" onclick="toggleSaldo()" id="eyeBtn">👁️</span>
+          <div style="font-size:0.85rem; display:flex; justify-content:space-between;">
+            <span>Fondo Custodiado Gus Gus & Nort II</span>
+            <span style="cursor:pointer;" onclick="toggleSaldo()" id="eyeBtn">👁️</span>
           </div>
           <div class="balance-val" id="balanceDisplay">S/ 0.00</div>
-          <div class="balance-footer">
-            <span>Fondo de Intermediación Activo</span>
-            <span>Gus | Nort II | Cus</span>
+          <div style="font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:8px;">
+            Intermediación Directa Garantizada
           </div>
         </div>
 
-        <!-- PANEL CREADOR LEMON CASH -->
+        <!-- PANEL CREADOR RETENCIÓN LEMON CASH -->
         <div id="creatorCommissionBox" class="section-block hidden" style="background:#fff5f5; border:1px solid #feb2b2;">
-          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones (Gus, Nort II & Cus)</div>
-          <p style="font-size:0.82rem; color:#4b5563; margin-bottom:10px; line-height:1.4;">
-            Las comisiones cobradas por intermediación se derivan automáticamente a tu cuenta Lemon Cash registrada:
-          </p>
-          <div style="font-weight:700; font-size:0.85rem; color:#1f2937; line-height:1.6; background:#fff; padding:12px; border-radius:10px; border:1px solid #fecaca;">
-            • Creador: <strong>Yobani Huamán</strong> (DNI: 76641433)<br>
-            • Celular Creador: <strong>930715341</strong><br>
-            • Tag Lemon Cash: <strong>$gusgus.lemon</strong><br>
-            • CCI Recaudo: <strong>0000003100087664143301</strong><br>
-            • Custodia: <strong>Gus, Nort II & Cus</strong>
+          <div class="section-title" style="color:#c53030;">🍋 Retención de Comisiones Gus & Nort II</div>
+          <p style="font-size:0.8rem; color:#4a5568; margin-bottom:8px;">Las comisiones de intermediación se derivan automáticamente a tu cuenta Lemon Cash:</p>
+          <div style="font-weight:bold; font-size:0.85rem; color:#2d3748;">
+            - Creador: Yobani Huamán (DNI: 76641433)<br>
+            - Celular: 930715341<br>
+            - Tag: $gusgus.lemon<br>
+            - CCI Recaudo: 0000003100087664143301<br>
+            - Operatividad: Gus Gus & Nort II
           </div>
         </div>
 
         <div class="section-block">
-          <div class="section-title">📊 Movimientos Recientes de Custodia</div>
+          <div class="section-title">Movimientos Recientes</div>
           <div id="homeDealsList"></div>
         </div>
       </div>
 
-      <!-- TAB 2: TRATOS -->
+      <!-- TAB 2: TRATOS MULTI-BANCO -->
       <div id="tabTratos" class="hidden">
-        <div class="section-block" style="margin-top:20px;">
+        <div class="section-block" style="margin-top:15px;">
           <div class="section-title">🛡️ Registrar Trato de Intermediación</div>
           
           <label class="field-label">Método / Banco de Pago:</label>
@@ -257,76 +214,65 @@
             <option value="CAJA_CUSCO">Caja Cusco</option>
             <option value="CAJA_TRUJILLO">Caja Trujillo</option>
             <option value="CAJA_ICA">Caja Ica</option>
-            <option value="CAJA_TACNA">Caja Tacna</option>
-            <option value="CAJA_MAYNAS">Caja Maynas</option>
-            <option value="CAJA_SULLANA">Caja Sullana</option>
-            <option value="LEMON_CASH">Lemon Cash (Gus, Nort II & Cus)</option>
+            <option value="LEMON_CASH">Lemon Cash (Gus & Nort II)</option>
             <option value="TRANSFERENCIA_CCI">Transferencia Interbancaria (CCI)</option>
           </select>
 
-          <label class="field-label">Datos del Vendedor:</label>
           <input type="text" id="dealSeller" placeholder="DNI, Celular o Correo del vendedor" class="form-input">
-
-          <label class="field-label">Monto de la Operación (S/):</label>
-          <input type="number" id="dealAmount" placeholder="Ej. 150.00" class="form-input">
-
-          <label class="field-label">Descripción del Bien o Servicio:</label>
-          <input type="text" id="dealDesc" placeholder="Ej. Venta de cuenta o servicio digital" class="form-input">
-
-          <button type="button" onclick="crearNuevoTrato()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:12px;">REGISTRAR Y CUSTODIAR FONDOS</button>
-          <p id="dealStatus" style="font-size:0.85rem; margin-top:10px; font-weight:bold; text-align:center; color:var(--wa-green);"></p>
+          <input type="number" id="dealAmount" placeholder="Monto en Soles (S/)" class="form-input">
+          <input type="text" id="dealDesc" placeholder="Descripción del bien o servicio" class="form-input">
+          <button type="button" onclick="crearNuevoTrato()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">REGISTRAR Y CUSTODIAR FONDOS</button>
+          <p id="dealStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center;"></p>
         </div>
 
         <div class="section-block">
-          <div class="section-title">📋 Historial Completo de Tratos</div>
+          <div class="section-title">Historial de Tratos</div>
           <div id="dealsListFull"></div>
         </div>
       </div>
 
-      <!-- TAB 3: CHAT ESTILO WHATSAPP -->
+      <!-- TAB 3: CHAT ESTILO WHATSAPP CON BUSCADOR -->
       <div id="tabChat" class="hidden">
-        <div class="section-block" style="margin-top:20px;">
-          <div class="section-title">💬 Chat Intermediario (Gus, Nort II & Cus)</div>
+        <div class="section-block" style="margin-top:15px;">
+          <div class="section-title">💬 Chat Intermediario (WhatsApp Style)</div>
           
-          <div style="display:flex; gap:8px; margin-bottom:12px;">
-            <input type="text" id="chatSearchInput" placeholder="Buscar comprador/vendedor por DNI o Celular..." class="form-input" style="margin:0;">
-            <button type="button" onclick="buscarContactoChat()" style="background:var(--wine-main); color:#fff; border:none; padding:0 16px; border-radius:10px; font-weight:700; cursor:pointer;">Buscar</button>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" id="chatSearchInput" placeholder="Buscar por DNI o Teléfono..." class="form-input" style="margin:0;">
+            <button type="button" onclick="buscarContactoChat()" style="background:var(--wine-main); color:#fff; border:none; padding:0 12px; border-radius:8px; font-weight:bold;">Buscar</button>
           </div>
-          <div id="searchChatResult" style="font-size:0.82rem; margin-bottom:10px; color:#2563eb; font-weight:600;"></div>
+          <div id="searchChatResult" style="font-size:0.8rem; margin-bottom:8px; color:#2b6cb0;"></div>
 
           <div id="chatBox" class="chat-container"></div>
 
-          <div style="display:flex; gap:8px; margin-top:12px;">
-            <input type="text" id="chatInput" placeholder="Escribe un mensaje a Gus, Nort II o Cus..." class="form-input" style="margin:0; flex:1;">
-            <button type="button" onclick="enviarMensajeChat()" style="background:var(--wa-green); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-weight:700; cursor:pointer;">Enviar</button>
+          <div style="display:flex; gap:6px; margin-top:10px;">
+            <input type="text" id="chatInput" placeholder="Escribe un mensaje..." class="form-input" style="margin:0; flex:1;">
+            <button type="button" onclick="enviarMensajeChat()" style="background:var(--wa-green); color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:bold;">Enviar</button>
           </div>
         </div>
       </div>
 
-      <!-- TAB 4: PERFIL EDITABLE -->
+      <!-- TAB 4: PERFIL ESTILO WHATSAPP EDITABLE -->
       <div id="tabPerfil" class="hidden">
-        <div class="section-block" style="margin-top:20px; text-align:center;">
-          <div class="avatar-circle" style="width:84px; height:84px; font-size:2.2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
-          <div class="section-title" style="justify-content:center; margin:0;">Perfil de Usuario</div>
-          <p style="font-size:0.82rem; color:#6b7280; margin-bottom:16px;">Plataforma Gus, Nort II & Cus</p>
+        <div class="section-block" style="margin-top:15px; text-align:center;">
+          <div class="avatar-circle" style="width:80px; height:80px; font-size:2rem; margin:0 auto 12px auto;" id="profileAvatarBig">Y</div>
+          <div class="section-title" style="margin:0;">Perfil de Usuario</div>
+          <p style="font-size:0.8rem; color:#718096; margin-bottom:15px;">Plataforma Gus & Nort II</p>
         </div>
 
         <div class="section-block">
           <label class="field-label">Nombre Completo:</label>
           <input type="text" id="profileName" class="form-input">
 
-          <label class="field-label">Número de DNI (Protegido / No editable):</label>
+          <label class="field-label">Número de DNI (No editable):</label>
           <input type="text" id="profileDni" class="form-input" readonly>
 
           <label class="field-label">Teléfono Celular:</label>
           <input type="text" id="profilePhone" class="form-input">
 
-          <label class="field-label">Correo Electrónico (Protegido / No editable):</label>
+          <label class="field-label">Correo Electrónico (No editable):</label>
           <input type="text" id="profileEmail" class="form-input" readonly>
 
-          <div style="font-weight:800; font-size:0.95rem; margin:20px 0 12px 0; color:var(--wine-main); border-top:1px solid #eee; padding-top:14px;">
-            💳 Cuentas Bancarias Registradas:
-          </div>
+          <div style="font-weight:bold; font-size:0.9rem; margin:15px 0 10px 0; color:var(--wine-main);">Mis Cuentas Bancarias Registradas:</div>
 
           <label class="field-label">Número de Yape:</label>
           <input type="text" id="profileYape" class="form-input" placeholder="Ej. 930715341">
@@ -338,4 +284,57 @@
           <input type="text" id="profileCci" class="form-input" placeholder="Ej. 0000003100087664143301">
 
           <label class="field-label">Banco o Entidad Financiera Principal:</label>
-          <select id="pr
+          <select id="profileBankApp" class="form-input">
+            <option value="Lemon Cash">Lemon Cash</option>
+            <option value="Yape / BCP">Yape / BCP</option>
+            <option value="Plin / Interbank">Plin / Interbank</option>
+            <option value="BBVA Perú">BBVA Perú</option>
+            <option value="Scotiabank Perú">Scotiabank Perú</option>
+            <option value="Banco de la Nación">Banco de la Nación</option>
+            <option value="BanBif">BanBif</option>
+            <option value="Banco Pichincha">Banco Pichincha</option>
+            <option value="Banco Falabella">Banco Falabella</option>
+            <option value="Banco Ripley">Banco Ripley</option>
+            <option value="Caja Arequipa">Caja Arequipa</option>
+            <option value="Caja Huancayo">Caja Huancayo</option>
+            <option value="Caja Piura">Caja Piura</option>
+            <option value="Caja Cusco">Caja Cusco</option>
+            <option value="Caja Trujillo">Caja Trujillo</option>
+            <option value="Caja Ica">Caja Ica</option>
+            <option value="Otros Bancos / Cajas">Otros Bancos / Cajas</option>
+          </select>
+
+          <button type="button" onclick="guardarPerfil()" class="btn-primary" style="background:var(--wine-main); color:#fff; border-radius:10px;">GUARDAR CAMBIOS</button>
+          <p id="profileStatus" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:center; color:#2b6cb0;"></p>
+        </div>
+      </div>
+
+      <!-- TAB 5: AJUSTES -->
+      <div id="tabAjustes" class="hidden">
+        <div class="section-block" style="margin-top:15px;">
+          <div class="section-title">⚙️ Ajustes Gus & Nort II</div>
+          
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" onclick="cambiarTab('perfil')" class="form-input" style="text-align:left; background:#f8f9fa; cursor:pointer;">👤 Configurar Perfil y Cuentas</button>
+            
+            <div id="creatorControls" class="hidden">
+              <div style="font-weight:bold; font-size:0.85rem; margin:10px 0 5px 0; color:var(--wine-main);">Opciones de Creador Maestro:</div>
+              <button type="button" onclick="alert('Configuración activa para Gus & Nort II - Lemon Cash: $gusgus.lemon')" class="form-input" style="text-align:left; background:#fff5f5; border-color:#feb2b2; cursor:pointer;">🍋 Configurar Fondo Lemon Cash</button>
+            </div>
+
+            <button type="button" onclick="cerrarSesion()" class="form-input" style="text-align:left; background:#ffe5e8; color:var(--wine-main); font-weight:bold; cursor:pointer;">🚪 Cerrar Sesión</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARRA DE NAVEGACIÓN -->
+      <div class="bottom-nav">
+        <div class="nav-item active" id="navHome" onclick="cambiarTab('home')">
+          <span>🏠</span>
+          <span>Inicio</span>
+        </div>
+        <div class="nav-item" id="navTratos" onclick="cambiarTab('tratos')">
+          <span>💳</span>
+          <span>Tratos</span>
+        </div>
+        <div class="nav-item" id="navChat" onclick="cambiarT
