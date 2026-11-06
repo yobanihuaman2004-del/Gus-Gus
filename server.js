@@ -12,28 +12,45 @@ app.use(cors());
 // Desactivar caché estático
 app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
 
+// Base de usuarios registrados con Cuentas Bancarias
 const users = [
-  { id: 1, name: "Gus (Creador Maestro)", dni: "12345678", email: "admin@gusgus.com", phone: "999888777", pass: "admin123", role: "ADMIN_MAESTRO", verified: true },
-  { id: 2, name: "Usuario Cliente", dni: "87654321", email: "user@gusgus.com", phone: "912345678", pass: "user123", role: "USUARIO_ESTANDAR", verified: true }
+  { 
+    id: 1, 
+    name: "Yobani (Creador Maestro)", 
+    dni: "76641433", 
+    email: "yobanihuaman2004@gmail.com", 
+    phone: "912345678", 
+    pass: "123456", 
+    role: "ADMIN_MAESTRO", 
+    bankAccounts: {
+      yape: "912345678",
+      plin: "912345678",
+      cci: "0000003100087664143301",
+      bankApp: "Lemon Cash / BCP"
+    },
+    verified: true 
+  }
 ];
 
 const verificationCodes = {};
 
+// Pasarelas y recaudo (Lemon Cash configurado para fondos de la app Gus Gus)
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
-  lemonCashCCI: process.env.LEMON_CASH_CCI || "922003000000222016298",
+  lemonCashCCI: process.env.LEMON_CASH_CCI || "0000003100087664143301",
+  lemonCashTag: "$gusgus.lemon",
   culqiPublicKey: "pk_live_gusgus123456"
 };
 
 const deals = [
   {
     id: "GN-1001",
-    buyer: "user@gusgus.com",
+    buyer: "yobanihuaman2004@gmail.com",
     seller: "912345678",
     amount: "150.00",
-    paymentMethod: "YAPE",
-    description: "Compra respaldada por Gus & Nor #2",
+    paymentMethod: "LEMON_CASH",
+    description: "Trato inicial en custodia Gus Gus",
     status: "EN_CUSTODIA",
     auditor: "Nor #2 Guard",
     date: new Date().toISOString()
@@ -41,11 +58,11 @@ const deals = [
 ];
 
 const auditLogs = [
-  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Sistema iniciado correctamente." }
+  { timestamp: new Date().toISOString(), auditor: "Nor #2 Security", status: "SISTEMA OK", detail: "Servidor iniciado. Módulo de Cuentas Bancarias activo." }
 ];
 
 const chatMessages = [
-  { id: 1, sender: "Gus (Creador)", receiver: "Soporte", text: "¡Hola! Bienvenido a GG. La app está 100% activa.", image: null, type: "text", time: "10:30 AM" }
+  { id: 1, sender: "Soporte Gus Gus", receiver: "yobanihuaman2004@gmail.com", text: "¡Hola Yobani! Puedes registrar tus cuentas bancarias en tu perfil.", image: null, type: "text", time: "10:30 AM" }
 ];
 
 const verifyAdmin = (req, res, next) => {
@@ -53,10 +70,11 @@ const verifyAdmin = (req, res, next) => {
   if (role === 'ADMIN_MAESTRO') {
     next();
   } else {
-    res.status(403).json({ error: "Acceso denegado. Permiso exclusivo del Creador (Gus)." });
+    res.status(403).json({ error: "Acceso denegado. Permiso exclusivo del Creador Maestro (Yobani)." });
   }
 };
 
+// --- AUTENTICACIÓN Y REGISTRO ---
 app.post('/api/auth/register', (req, res) => {
   const { name, dni, email, phone, pass } = req.body;
   const cleanDni = (dni || '76641433').trim();
@@ -72,7 +90,8 @@ app.post('/api/auth/register', (req, res) => {
       email: cleanEmail, 
       phone: cleanPhone, 
       pass: (pass || "123456").trim(), 
-      role: "USUARIO_ESTANDAR", 
+      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR", 
+      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
       verified: true 
     };
     users.push(user);
@@ -82,14 +101,6 @@ app.post('/api/auth/register', (req, res) => {
   verificationCodes[cleanEmail] = code;
 
   res.json({ message: "Código generado.", email: cleanEmail, demoCode: code, user });
-});
-
-app.post('/api/auth/verify', (req, res) => {
-  const { email } = req.body;
-  const cleanEmail = (email || '').trim().toLowerCase();
-  const user = users.find(u => u.email === cleanEmail) || users[0];
-  user.verified = true;
-  res.json({ message: "¡Cuenta verificada!", user });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -110,7 +121,8 @@ app.post('/api/auth/login', (req, res) => {
       email: cleanEmail || "yobanihuaman2004@gmail.com",
       phone: "912345678",
       pass: pass || "123456",
-      role: "USUARIO_ESTANDAR",
+      role: (cleanEmail === "yobanihuaman2004@gmail.com" || cleanDni === "76641433") ? "ADMIN_MAESTRO" : "USUARIO_ESTANDAR",
+      bankAccounts: { yape: "", plin: "", cci: "", bankApp: "" },
       verified: true
     };
     users.push(user);
@@ -118,6 +130,33 @@ app.post('/api/auth/login', (req, res) => {
 
   auditLogs.push({ timestamp: new Date().toISOString(), auditor: "Nor #2", status: "LOGIN OK", detail: `Acceso: ${user.name}` });
   res.json({ message: "¡Bienvenido!", user });
+});
+
+// --- REGISTRO Y GUARDADO DE CUENTAS BANCARIAS DEL USUARIO ---
+app.post('/api/user/bank-accounts', (req, res) => {
+  const { email, yape, plin, cci, bankApp } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
+
+  let user = users.find(u => u.email === cleanEmail);
+  if (!user) {
+    return res.status(404).json({ error: "Usuario no encontrado." });
+  }
+
+  user.bankAccounts = {
+    yape: (yape || '').trim(),
+    plin: (plin || '').trim(),
+    cci: (cci || '').trim(),
+    bankApp: (bankApp || '').trim()
+  };
+
+  auditLogs.push({ 
+    timestamp: new Date().toISOString(), 
+    auditor: "Nor #2", 
+    status: "CUENTAS REGISTRADAS", 
+    detail: `Cuentas actualizadas para ${user.name}: Yape (${user.bankAccounts.yape}), Plin (${user.bankAccounts.plin}), Banco (${user.bankAccounts.bankApp})` 
+  });
+
+  res.json({ message: "¡Cuentas bancarias registradas con éxito en el sistema!", bankAccounts: user.bankAccounts });
 });
 
 app.get('/api/users/search', (req, res) => {
@@ -129,22 +168,12 @@ app.get('/api/users/search', (req, res) => {
     u.phone.includes(query) || 
     u.dni.includes(query) ||
     u.email.toLowerCase().includes(query.toLowerCase())
-  ).map(u => ({ name: u.name, phone: u.phone, dni: u.dni, email: u.email }));
+  ).map(u => ({ name: u.name, phone: u.phone, dni: u.dni, email: u.email, bankAccounts: u.bankAccounts }));
 
   res.json({ users: results });
 });
 
 app.get('/api/payments/methods', (req, res) => res.json(paymentMethods));
-
-app.post('/api/payments/config', verifyAdmin, (req, res) => {
-  const { yapeNumber, plinNumber, lemonCashCCI, culqiPublicKey } = req.body;
-  if (yapeNumber) paymentMethods.yapeNumber = yapeNumber;
-  if (plinNumber) paymentMethods.plinNumber = plinNumber;
-  if (lemonCashCCI) paymentMethods.lemonCashCCI = lemonCashCCI;
-  if (culqiPublicKey) paymentMethods.culqiPublicKey = culqiPublicKey;
-
-  res.json({ message: "Métodos de pago guardados.", paymentMethods });
-});
 
 app.get('/api/deals', (req, res) => res.json({ deals }));
 
@@ -157,7 +186,7 @@ app.post('/api/deals/create', (req, res) => {
     buyer: buyer || "Cliente",
     seller: sellerPhoneOrEmail,
     amount,
-    paymentMethod: paymentMethod || "YAPE",
+    paymentMethod: paymentMethod || "LEMON_CASH",
     description,
     status: "EN_CUSTODIA",
     auditor: "Nor #2 Guard",
@@ -165,56 +194,7 @@ app.post('/api/deals/create', (req, res) => {
   };
 
   deals.push(newDeal);
-  res.json({ message: "Trato registrado en custodia.", deal: newDeal });
-});
-
-app.post('/api/deals/ship', (req, res) => {
-  const { dealId, trackingPhoto } = req.body;
-  const deal = deals.find(d => d.id === dealId);
-  if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
-
-  deal.status = "ENVIADO";
-  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  chatMessages.push({
-    id: chatMessages.length + 1,
-    sender: "Sistema GG",
-    receiver: deal.buyer,
-    text: `📦 ¡ENVÍO NOTIFICADO! El pedido del trato ${dealId} fue despachado.`,
-    image: trackingPhoto || null,
-    type: "system",
-    time: timeStr
-  });
-
-  res.json({ message: "Envío notificado.", deal });
-});
-
-app.post('/api/deals/confirm-receipt', (req, res) => {
-  const { dealId } = req.body;
-  const deal = deals.find(d => d.id === dealId);
-  if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
-
-  deal.status = "RECIBIDO_CONFIRMADO";
-  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  chatMessages.push({
-    id: chatMessages.length + 1,
-    sender: "Sistema GG",
-    receiver: "Gus & Soporte",
-    text: `✅ ¡RECEPCIÓN CONFIRMADA! El comprador ha recibido el producto del trato ${dealId}.`,
-    image: null,
-    type: "system",
-    time: timeStr
-  });
-
-  res.json({ message: "¡Recepción confirmada!", deal });
-});
-
-app.post('/api/deals/release', verifyAdmin, (req, res) => {
-  const { dealId } = req.body;
-  const deal = deals.find(d => d.id === dealId);
-  if (!deal) return res.status(404).json({ error: "Trato no encontrado." });
-
-  deal.status = "LIBERADO";
-  res.json({ message: `Fondos del trato ${dealId} liberados con éxito.` });
+  res.json({ message: "Trato registrado en custodia Gus Gus.", deal: newDeal });
 });
 
 app.get('/api/chat', (req, res) => {
@@ -241,9 +221,6 @@ app.post('/api/chat/send', (req, res) => {
   res.json({ message: "Mensaje enviado", chat: newMsg });
 });
 
-app.get('/api/audit', verifyAdmin, (req, res) => res.json({ logs: auditLogs }));
-
-// Forzar respuesta sin caché para la página HTML
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.sendFile(path.join(__dirname, 'index.html'));
