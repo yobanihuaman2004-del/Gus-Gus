@@ -43,7 +43,7 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
-    /* ESTILOS DE AUTENTICACIÓN */
+    /* PANTALLA DE INGRESO */
     .auth-card {
       background: var(--wine-main);
       color: var(--white);
@@ -92,13 +92,17 @@
       letter-spacing: 0.5px;
     }
 
+    .btn-primary:active {
+      opacity: 0.85;
+    }
+
     .link-toggle {
       color: var(--white);
       text-decoration: underline;
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: bold;
-      padding: 6px;
+      padding: 8px;
       display: inline-block;
     }
 
@@ -343,7 +347,7 @@
 
   <div class="app-container">
 
-    <!-- SECCIÓN AUTENTICACIÓN COMPLETA -->
+    <!-- SECCIÓN AUTENTICACIÓN -->
     <div id="authSection" class="auth-card">
       <div style="text-align: center; margin-bottom: 25px;">
         <div class="logo-badge">GG</div>
@@ -352,7 +356,7 @@
       </div>
 
       <!-- FORMULARIO 1: INICIAR SESIÓN -->
-      <div id="viewLogin">
+      <form id="viewLogin" onsubmit="ejecutarIngresoDirecto(event)">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Número de DNI:</label>
         <input type="text" id="loginDni" class="auth-input" value="76641433" maxlength="8">
 
@@ -362,16 +366,16 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="loginPass" class="auth-input" value="123456">
 
-        <button type="button" onclick="ejecutarIngresoDirecto()" class="btn-primary" style="margin-top: 5px;">Ingresar a la App</button>
+        <button type="submit" id="btnLogin" class="btn-primary" style="margin-top: 5px;">Ingresar a la App</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <span class="link-toggle" onclick="toggleAuthForm('register')">¿No tienes cuenta? Regístrate aquí</span><br>
           <span class="link-toggle" onclick="toggleAuthForm('forgot')" style="font-size:0.8rem; opacity:0.8; margin-top:6px;">¿Olvidaste tu contraseña?</span>
         </div>
-      </div>
+      </form>
 
       <!-- FORMULARIO 2: CREAR CUENTA NUEVA -->
-      <div id="viewRegister" class="hidden">
+      <form id="viewRegister" class="hidden" onsubmit="ejecutarRegistroDirecto(event)">
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Nombre Completo:</label>
         <input type="text" id="regName" class="auth-input" placeholder="Tu Nombre">
 
@@ -387,12 +391,12 @@
         <label style="font-size:0.8rem; margin-bottom:4px; display:block;">Contraseña:</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Crea tu contraseña">
 
-        <button type="button" onclick="ejecutarRegistroDirecto()" class="btn-primary" style="margin-top: 5px;">Registrar Mi Cuenta</button>
+        <button type="submit" id="btnRegister" class="btn-primary" style="margin-top: 5px;">Registrar Mi Cuenta</button>
 
         <div style="text-align: center; margin-top: 15px;">
           <span class="link-toggle" onclick="toggleAuthForm('login')">¿Ya tienes cuenta? Inicia sesión</span>
         </div>
-      </div>
+      </form>
 
       <!-- FORMULARIO 3: RECUPERAR CONTRASEÑA -->
       <div id="viewForgot" class="hidden">
@@ -569,6 +573,4 @@
           <div class="shortcuts-grid" style="grid-template-columns: repeat(2, 1fr);">
             <div class="shortcut-card" onclick="pagarServicio('Luz / Enel / Luz del Sur')">
               <span class="shortcut-icon">💡</span>
-              <span>Servicio de Luz</span>
-            </div>
-            <div class="sh
+ 
