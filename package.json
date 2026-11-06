@@ -1,7 +1,7 @@
 {
-  "name": "gus-gus",
+  "name": "gus-gus-nort-ii",
   "version": "1.0.0",
-  "description": "Plataforma de Intermediación Gus Gus",
+  "description": "Plataforma de Intermediacion Financiera Gus, Nort II y Cus",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
