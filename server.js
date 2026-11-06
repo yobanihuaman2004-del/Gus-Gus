@@ -34,6 +34,7 @@ const users = [
 
 const resetTokens = {};
 
+// Configuración Lemon Cash (Fondo Recaudo Creador)
 const paymentMethods = {
   yapeNumber: "999888777",
   plinNumber: "999888777",
@@ -49,7 +50,7 @@ const deals = [
     amount: "150.00",
     fee: "4.50",
     paymentMethod: "LEMON_CASH",
-    description: "Trato inicial intermediado Gus Gus",
+    description: "Trato inicial en custodia Gus Gus",
     status: "EN_CUSTODIA",
     date: new Date().toISOString()
   }
@@ -144,7 +145,7 @@ app.post('/api/auth/reset-password', (req, res) => {
   res.status(400).json({ error: "Código inválido o expirado." });
 });
 
-/* --- GESTIÓN DE PERFIL Y BANCARIA --- */
+/* --- PERFIL Y CUENTAS BANCARIAS --- */
 
 app.post('/api/user/update-profile', (req, res) => {
   const { email, name, phone, yape, plin, cci, bankApp } = req.body;
@@ -230,8 +231,5 @@ app.post('/api/chat/send', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.listen(PORT, () => console.log(`[GusGus] Servidor activo en puerto ${PORT}`));
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-re
+  
