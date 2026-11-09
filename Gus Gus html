@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gus Gus</title>
+<style>
+:root{--vino:#58111a;--vino2:#3b0910;--fondo:#f5f3f1;--tinta:#241418;--gris:#6b6266;--linea:#ddd5d7;--ok:#1e6b4a;--alerta:#a8431a}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Roboto,sans-serif}
+body{background:#1a0306;display:flex;justify-content:center}
+#app{width:100%;max-width:480px;min-height:100vh;background:var(--fondo);position:relative;padding-bottom:70px}
+.demo{background:#f2c14e;color:#3b2a00;font-size:.75rem;text-align:center;padding:5px;font-weight:600;position:sticky;top:0;z-index:30}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#fff;border-bottom:1px solid var(--linea)}
+.saldo{background:#f3e6e8;color:var(--vino);padding:5px 10px;border-radius:20px;font-weight:700;font-size:.85rem}
+.cuerpo{padding:14px 16px}
+.blk{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:14px;margin-bottom:12px}
+.nota{background:#fff8e6;border-color:#f0dca0;font-size:.85rem;line-height:1.4}
+h2{font-size:1rem;margin-bottom:10px;color:var(--tinta)}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--gris);margin:8px 0 3px}
+input,select{width:100%;padding:11px;border:1px solid var(--linea);border-radius:8px;font-size:.95rem;background:#fff;color:var(--tinta)}
+input[readonly]{background:#f1eeee;color:var(--gris)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--vino);outline-offset:1px}
+.btn{width:100%;margin-top:12px;padding:13px;border:0;border-radius:10px;background:var(--vino);color:#fff;font-weight:700;font-size:1rem}
+.btn.sec{background:#fff;color:var(--vino);border:1px solid var(--vino)}
+.mini{padding:8px 11px;border:0;border-radius:8px;background:var(--vino);color:#fff;font-weight:600;font-size:.8rem}
+.mini.sec{background:#f3e6e8;color:var(--vino)}
+.sub{font-size:.8rem;color:var(--gris);margin-top:4px;line-height:1.35}
+.msg{font-size:.85rem;margin-top:8px;color:var(--alerta);font-weight:600;min-height:1.1em}
+.fila{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card{border:1px solid var(--linea);border-radius:10px;padding:11px;margin-bottom:9px;background:#fffdfd}
+.acc{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.tag{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:12px;background:#eee;color:#444}
+.e-EN_CUSTODIA,.e-ENVIADO,.e-LIBERADO{background:#e3f1ea;color:var(--ok)}
+.e-DISPUTA{background:#fbe3d6;color:var(--alerta)}
+.hero{background:var(--vino);color:#fff;border-radius:14px;padding:18px;margin-bottom:12px;display:flex;flex-direction:column;gap:4px;font-size:.85rem}
+.hero b{font-size:2rem}
+.chat{background:#efeae2;border-radius:10px;height:290px;overflow-y:auto;padding:10px;margin:10px 0;display:flex;flex-direction:column;gap:7px}
+.bur{max-width:80%;padding:7px 11px;border-radius:10px;font-size:.88rem;line-height:1.35;word-break:break-word}
+.bur small{display:block;font-size:.65rem;color:var(--gris);text-align:right;margin-top:3px}
+.yo{align-self:flex-end;background:#e1ffc7}.otro{align-self:flex-start;background:#fff}
+.sis{align-self:center;background:#fff3cd;color:#5c4400;font-size:.75rem;padding:4px 10px;border-radius:10px;text-align:center}
+nav{position:fixed;bottom:0;width:100%;max-width:480px;background:#fff;display:flex;border-top:1px solid var(--linea);z-index:20}
+nav button{flex:1;padding:14px 0;border:0;background:none;font-size:.85rem;font-weight:600;color:var(--gris)}
+nav button.on{color:var(--vino);box-shadow:inset 0 3px 0 var(--vino)}
+.auth{background:var(--vino);color:#fff;min-height:100vh;padding:34px 22px;display:flex;flex-direction:column;justify-content:center}
+.marca{font-size:2.4rem;font-weight:800}
+.lema{opacity:.85;margin:4px 0 18px;font-size:.9rem}
+.auth label{color:#ecd9dc}
+.auth input{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.3);color:#fff}
+.auth .btn{background:#fff;color:var(--vino2)}
+.auth .msg{color:#ffb4a2}
+.link{background:none;border:0;color:#fff;text-decoration:underline;margin-top:14px;font-size:.9rem;padding:6px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+<div id="app"><div class="auth"><div class="marca">Gus Gus</div><p class="lema">Cargando…</p></div></div>
+<script>
+/* La clave publishable es pública por diseño: la seguridad real está en las reglas (RLS) de Supabase. */
+const SB_URL='https://zbeidmuunsmgzeuovcko.supabase.co';
+const SB_KEY='sb_publishable_T54DQZRoqNG44DhoEjpDCw_ox7m7LgG';
+const db=supabase.createClient(SB_URL,SB_KEY);
+let me=null,deals=[],msgs=[],tab='inicio',chatDeal=null,modo='login',timer=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r2=n=>Math.round(Number(n)*100)/100;
+const money=n=>'S/ '+r2(n).toFixed(2);
+const hora=t=>new Date(t).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+const code=d=>'GG-'+(1000+d.id);
+const ETQ={PENDIENTE:'Esperando pago',EN_CUSTODIA:'Dinero en custodia',ENVIADO:'Enviado',LIBERADO:'Pago liberado',DISPUTA:'En disputa',DEVUELTO:'Devuelto',CANCELADO:'Cancelado'};
+const fees=m=>{const h=r2(Math.max(m*0.07,3)/2);return{c:h,v:h}};
 
+/* ===== Acceso al servidor ===== */
+async function rpc(fn,args){const r=await db.rpc(fn,args);if(r.error){alert(r.error.message);return null}return r.data==null?true:r.data}
+async function entrar(){
+  const u=(await db.auth.getUser()).data.user;
+  if(!u){me=null;return render()}
+  const p=await db.from('profiles').select('*').eq('id',u.id).single();
+  if(p.error){alert('No se encontró tu perfil.');await db.auth.signOut();me=null;return render()}
+  me=p.data;me.email=u.email;
+  await refrescar();tab='inicio';render();
+  clearInterval(timer);timer=setInterval(poll,5000);
+}
+async function refrescar(){
+  const [p,d]=await Promise.all([db.from('profiles').select('*').eq('id',me.id).single(),db.from('deals').select('*').order('id',{ascending:false})]);
+  if(p.data){const e=me.email;me=p.data;me.email=e}
+  deals=d.data||[];
+}
+async function cargarMsgs(){
+  if(!chatDeal)return;
+  const r=await db.from('messages').select('*').eq('deal_id',chatDeal).order('id');
+  msgs=r.data||[];
+}
+async function poll(){
+  if(!me)return;
+  await refrescar();
+  if(tab==='chat'){await cargarMsgs();pintarChat()}
+  else if(!['INPUT','SELECT'].includes((document.activeElement||{}).tagName))render();
+}
+
+/* ===== Acceso ===== */
+function setModo(m){modo=m;render()}
+function msg(t){$('a_msg').textContent=t}
+async function doLogin(){
+  const r=await db.auth.signInWithPassword({email:$('a_mail').value.trim(),password:$('a_pass').value});
+  if(r.error)return msg('Correo o contraseña incorrectos.');
+  await entrar();
+}
+async function doReg(){
+  const n=$('a_name').value.trim(),d=$('a_dni').value.trim(),t=$('a_tel').value.trim(),e=$('a_mail').value.trim(),p=$('a_pass').value;
+  if(n.length<3)return msg('Escribe tu nombre completo.');
+  if(!/^\d{8}$/.test(d))return msg('El DNI debe tener 8 números.');
+  if(!/^9\d{8}$/.test(t))return msg('El celular debe tener 9 números y empezar con 9.');
+  if(!/^\S+@\S+\.\S+$/.test(e))return msg('Escribe un correo válido.');
+  if(p.length<6)return msg('La contraseña debe tener al menos 6 caracteres.');
+  const r=await db.auth.signUp({email:e,password:p,options:{data:{name:n,dni:d,tel:t}}});
+  if(r.error)return msg('No se pudo crear la cuenta. El correo o el DNI podrían estar en uso.');
+  if(!r.data.session)return msg('Cuenta creada. Confirma tu correo y luego inicia sesión.');
+  await entrar();
+}
+async function salir(){clearInterval(timer);await db.auth.signOut();me=null;deals=[];modo='login';render()}
+function authView(){
+  const r=modo==='reg';
+  return `<div class="auth"><div class="marca">Gus Gus</div><p class="lema">Compra y vende entre personas sin miedo a las estafas</p>
+  ${r?'<label>Nombre completo</label><input id="a_name" autocomplete="name"><label>DNI</label><input id="a_dni" inputmode="numeric" maxlength="8"><label>Celular</label><input id="a_tel" inputmode="tel" maxlength="9">':''}
+  <label>Correo</label><input id="a_mail" type="email" autocomplete="email">
+  <label>Contraseña</label><input id="a_pass" type="password" autocomplete="${r?'new-password':'current-password'}">
+  <button class="btn" onclick="${r?'doReg()':'doLogin()'}">${r?'Crear cuenta':'Entrar'}</button>
+  <p id="a_msg" class="msg"></p>
+  <button class="link" onclick="setModo('${r?'login':'reg'}')">${r?'Ya tengo cuenta':'Crear una cuenta'}</button></div>`;
+}
+
+/* ===== Tratos ===== */
+async function act(id,a){if(await rpc('deal_action',{p_deal:id,p_action:a})){await refrescar();render()}}
+function botones(d){
+  const c=d.buyer===me.id,v=d.seller===me.id,b=[],s=d.status;
+  const B=(a,t,k)=>b.push(`<button class="mini ${k||''}" onclick="act(${d.id},'${a}')">${t}</button>`);
+  if(s==='PENDIENTE'){if(c)B('pagar','Pagar (demo)');B('cancelar','Cancelar','sec')}
+  if(s==='EN_CUSTODIA'){if(v)B('enviar','Marcar como enviado');if(c)B('disputa','Reportar problema','sec');if(v)B('devolver','Devolver el dinero','sec')}
+  if(s==='ENVIADO'){if(c){B('liberar','Confirmar recepción');B('disputa','Reportar problema','sec')}if(v)B('devolver','Devolver el dinero','sec')}
+  if(s==='DISPUTA'){if(c)B('liberar','Liberar al vendedor','sec');if(v)B('devolver','Devolver el dinero','sec')}
+  b.push(`<button class="mini sec" onclick="abrirChat(${d.id})">Chat</button>`);
+  return b.join('');
+}
+function card(d){
+  const rol=d.buyer===me.id?'Compras a '+d.seller_name:'Vendes a '+d.buyer_name;
+  return `<div class="card"><div class="fila"><b>${code(d)}</b><span class="tag e-${d.status}">${ETQ[d.status]}</span></div>
+  <div style="margin-top:4px">${esc(d.description)}</div><div class="sub">${esc(rol)}: ${money(d.amount)}</div>
+  ${d.status==='DISPUTA'?'<div class="sub">Por ahora lo resuelven ustedes dos. Más adelante decidiría la IA de resguardo o un árbitro.</div>':''}
+  <div class="acc">${botones(d)}</div></div>`;
+}
+function prev(){
+  const m=parseFloat($('t_m').value),p=$('t_prev');
+  if(!(m>0)){p.textContent='Escribe el monto para ver el desglose.';return}
+  const f=fees(m);
+  p.textContent=`Comisión total ${money(f.c+f.v)}, mitad cada uno. El comprador paga ${money(m+f.c)} y el vendedor recibe ${money(m-f.v)}.`;
+}
+async function crear(){
+  const v=$('t_v').value.trim(),m=parseFloat($('t_m').value),d=$('t_d').value.trim();
+  if(!/^\d{8}$/.test(v)||!(m>=1)||d.length<3){$('t_msg').textContent='Revisa el DNI del vendedor (8 números), el monto y la descripción.';return}
+  if(await rpc('create_deal',{p_seller_dni:v,p_amount:m,p_desc:d})){await refrescar();render()}
+}
+
+/* ===== Chat ===== */
+async function abrirChat(id){chatDeal=id;await cargarMsgs();go('chat')}
+async function selChat(v){chatDeal=Number(v);await cargarMsgs();render()}
+function pintarChat(){
+  const cb=$('chatbox');if(!cb)return;
+  cb.innerHTML=msgs.map(m=>m.is_system?`<div class="sis">${esc(m.body)}</div>`:`<div class="bur ${m.sender===me.id?'yo':'otro'}">${esc(m.body)}<small>${hora(m.created_at)}</small></div>`).join('');
+  cb.scrollTop=cb.scrollHeight;
+}
+async function enviar(){
+  const i=$('c_in'),t=i.value.trim();if(!t)return;
+  i.value='';
+  if(await rpc('send_message',{p_deal:chatDeal,p_body:t})){await cargarMsgs();pintarChat()}
+}
+
+/* ===== Perfil ===== */
+async function guardarPerfil(){
+  const n=$('p_name').value.trim(),t=$('p_tel').value.trim(),y=$('p_yape').value.trim(),pl=$('p_plin').value.trim();
+  const r=await db.from('profiles').update({name:n,tel:t,yape:y,plin:pl}).eq('id',me.id);
+  const e=$('p_msg');
+  if(r.error){e.style.color='var(--alerta)';e.textContent='Revisa tu nombre y que los números tengan 9 dígitos.';return}
+  e.style.color='var(--ok)';e.textContent='Perfil guardado.';await refrescar();
+}
+async function recargar(){if(await rpc('demo_topup')){await refrescar();render()}}
+
+/* ===== Vistas ===== */
+function vInicio(){
+  const l=deals,a=l.filter(d=>['EN_CUSTODIA','ENVIADO','DISPUTA'].includes(d.status));
+  const tot=a.reduce((s,d)=>s+Number(d.custody),0);
+  return `<div class="hero"><span>Dinero en custodia (demo)</span><b>${money(tot)}</b><span>${a.length} tratos activos</span></div>
+  <div class="blk"><h2>Últimos tratos</h2>${l.length?l.slice(0,3).map(card).join(''):'<p class="sub">Todavía no hay movimientos. Crea tu primer trato en la pestaña Tratos.</p>'}</div>
+  <div class="blk nota"><b>Esto es una demostración.</b> El saldo es de prueba y no se mueve dinero real. Para custodiar dinero real, Gus Gus debe conectarse a una entidad autorizada.</div>`;
+}
+function vTratos(){
+  return `<div class="blk"><h2>Nuevo trato</h2>
+  <label>DNI del vendedor</label><input id="t_v" inputmode="numeric" maxlength="8">
+  <label>Monto en soles</label><input id="t_m" type="number" inputmode="decimal" min="1" oninput="prev()">
+  <label>Qué se compra</label><input id="t_d" maxlength="80">
+  <p id="t_prev" class="sub">Escribe el monto para ver el desglose.</p>
+  <button class="btn" onclick="crear()">Crear trato</button><p id="t_msg" class="msg"></p></div>
+  <div class="blk"><h2>Mis tratos</h2>${deals.length?deals.map(card).join(''):'<p class="sub">Aún no tienes tratos.</p>'}</div>`;
+}
+function vChat(){
+  if(!deals.length)return '<div class="blk"><h2>Chat</h2><p class="sub">El chat se abre desde un trato. Crea uno primero.</p></div>';
+  if(!deals.find(x=>x.id===chatDeal))chatDeal=deals[0].id;
+  return `<div class="blk"><h2>Chat del trato</h2>
+  <select onchange="selChat(this.value)">${deals.map(x=>`<option value="${x.id}"${x.id===chatDeal?' selected':''}>${code(x)}: ${esc(x.description)}</option>`).join('')}</select>
+  <div class="chat" id="chatbox"></div>
+  <div class="fila"><input id="c_in" placeholder="Escribe un mensaje" maxlength="300"><button class="mini" onclick="enviar()">Enviar</button></div></div>`;
+}
+function vPerfil(){
+  return `<div class="blk"><h2>Mi perfil</h2>
+  <label>Nombre completo</label><input id="p_name" value="${esc(me.name)}">
+  <label>DNI</label><input value="${esc(me.dni)}" readonly>
+  <label>Correo</label><input value="${esc(me.email)}" readonly>
+  <label>Celular</label><input id="p_tel" inputmode="tel" maxlength="9" value="${esc(me.tel)}">
+  <label>Número de Yape</label><input id="p_yape" inputmode="tel" maxlength="9" value="${esc(me.yape)}">
+  <label>Número de Plin</label><input id="p_plin" inputmode="tel" maxlength="9" value="${esc(me.plin)}">
+  <button class="btn" onclick="guardarPerfil()">Guardar cambios</button><p id="p_msg" class="msg"></p></div>
+  <div class="blk"><h2>Herramientas de prueba</h2><p class="sub">Saldo de prueba: ${money(me.balance)}</p>
+  <button class="btn sec" onclick="recargar()">Recargar S/ 100 de prueba</button>
+  <button class="btn sec" onclick="salir()">Cerrar sesión</button></div>`;
+}
+function go(t){tab=t;render()}
+function render(){
+  if(!me){$('app').innerHTML=authView();return}
+  const body={inicio:vInicio,tratos:vTratos,chat:vChat,perfil:vPerfil}[tab]();
+  $('app').innerHTML=`<div class="demo">Modo demo: no se mueve dinero real</div>
+  <div class="top"><b>Hola, ${esc(me.name.split(' ')[0])}</b><span class="saldo">${money(me.balance)}</span></div>
+  <div class="cuerpo">${body}</div>
+  <nav>${[['inicio','Inicio'],['tratos','Tratos'],['chat','Chat'],['perfil','Perfil']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')">${l}</button>`).join('')}</nav>`;
+  if(tab==='chat')pintarChat();
+  window.scrollTo(0,0);
+}
+db.auth.getSession().then(r=>r.data.session?entrar():render());
+</script>
+</body>
+</html>
