@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#650b22">
+<meta name="theme-color" content="#450817">
 <title>Gus Gus</title>
 
 <style>
@@ -21,50 +22,67 @@
 --ok:#21845b;
 --alerta:#b34c36;
 --blanco:#fff;
---sombra:0 8px 25px rgba(101,11,34,.09);
+--sombra:0 12px 35px rgba(50,4,19,.12);
+--brillo:0 0 25px rgba(142,24,62,.13);
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Roboto,sans-serif}
 body{
-background:#eee4e3;display:flex;justify-content:center;
+background:
+radial-gradient(circle at 15% 10%,#8e183e30,transparent 35%),
+radial-gradient(circle at 90% 90%,#650b2225,transparent 35%),
+#26040e;
+display:flex;justify-content:center;
 color:var(--tinta);min-height:100vh
 }
 #app{
 width:100%;max-width:480px;min-height:100vh;
-background:var(--fondo);position:relative;
-padding-bottom:90px;overflow:hidden
+background:linear-gradient(160deg,#fffaf8,#f8eeee);
+position:relative;padding-bottom:90px;overflow:hidden;
+box-shadow:0 0 60px #0005
 }
 button{cursor:pointer}
 .demo{
-background:linear-gradient(100deg,#f8e8e8,#fff5f1);
-color:var(--vino);font-size:.7rem;text-align:center;
-padding:9px;font-weight:750;position:sticky;top:0;z-index:30;
-border-bottom:1px solid var(--linea)
+background:linear-gradient(100deg,#450817,#76102d,#450817);
+color:#fff;font-size:.68rem;text-align:center;
+padding:10px;font-weight:800;letter-spacing:1.4px;
+position:sticky;top:0;z-index:30;
+border-bottom:1px solid #ffffff25
 }
 .top{
 display:flex;justify-content:space-between;align-items:center;
-padding:17px;background:rgba(255,253,251,.92);
-border-bottom:1px solid var(--linea)
+padding:18px 17px;
+background:linear-gradient(120deg,#fffdfb,#fff5f3);
+border-bottom:1px solid var(--linea);
 }
-.top b{font-size:1rem}
+.top b{font-size:1rem;color:var(--vino)}
 .saldo{
-background:var(--rosa2);color:var(--vino);
-padding:9px 14px;border-radius:30px;
+background:linear-gradient(120deg,#650b22,#8e183e);
+color:#fff;padding:10px 14px;border-radius:30px;
 font-weight:800;font-size:.85rem;
-box-shadow:0 3px 10px #650b2210
+box-shadow:0 5px 15px #650b2235;
+border:1px solid #ffffff35
 }
 .cuerpo{padding:17px 15px}
 .blk{
-background:rgba(255,255,255,.9);
-border:1px solid var(--linea);border-radius:23px;
-padding:17px;margin-bottom:16px;box-shadow:var(--sombra)
+background:rgba(255,255,255,.86);
+border:1px solid #eadcda;border-radius:23px;
+padding:18px;margin-bottom:16px;
+box-shadow:var(--sombra);
+backdrop-filter:blur(12px);
 }
-.nota{background:#f9eeee;border-color:var(--rosa);font-size:.85rem;line-height:1.5}
+.nota{
+background:linear-gradient(135deg,#fff1f1,#fff9f6);
+border-color:#e9c7cf;font-size:.85rem;line-height:1.5
+}
 h2{font-size:1.08rem;margin-bottom:14px;color:var(--vino)}
-label{display:block;font-size:.82rem;font-weight:750;color:var(--gris);margin:12px 0 6px}
+label{
+display:block;font-size:.82rem;font-weight:750;
+color:var(--gris);margin:12px 0 6px
+}
 input,select{
 width:100%;padding:14px;border:1px solid var(--linea);
-border-radius:16px;font-size:.92rem;background:#fffdfc;
-color:var(--tinta);transition:.2s
+border-radius:16px;font-size:.92rem;
+background:#fffdfc;color:var(--tinta);transition:.2s
 }
 input:focus,select:focus{
 outline:none;border-color:var(--vino3);
@@ -72,28 +90,32 @@ box-shadow:0 0 0 4px #ebcfcf66
 }
 input[readonly]{background:#f4eeee;color:var(--gris)}
 .btn{
-width:100%;margin-top:14px;padding:14px;border:0;
-border-radius:30px;background:linear-gradient(110deg,var(--vino),var(--vino3));
-color:#fff;font-weight:750;font-size:.96rem;
-box-shadow:0 6px 16px #650b2225;transition:.2s
+width:100%;margin-top:14px;padding:15px;border:0;
+border-radius:30px;
+background:linear-gradient(110deg,var(--vino2),var(--vino3));
+color:#fff;font-weight:800;font-size:.96rem;
+box-shadow:0 7px 20px #650b2235;
+transition:.2s;letter-spacing:.2px
 }
-.btn:active,.mini:active{transform:scale(.98)}
+.btn:active,.mini:active,.quick:active{transform:scale(.97)}
 .btn.sec{
-background:#fff;color:var(--vino);
-border:1px solid var(--vino);box-shadow:none
+background:linear-gradient(120deg,#fff,#f8eeee);
+color:var(--vino);border:1px solid #dcbac4;box-shadow:none
 }
 .mini{
 padding:9px 12px;border:0;border-radius:22px;
-background:var(--vino);color:#fff;font-weight:750;font-size:.76rem
+background:linear-gradient(110deg,var(--vino),var(--vino3));
+color:#fff;font-weight:750;font-size:.76rem
 }
 .mini.sec{background:var(--rosa2);color:var(--vino)}
 .sub{font-size:.82rem;color:var(--gris);margin-top:6px;line-height:1.5}
 .msg{font-size:.85rem;margin-top:9px;color:var(--alerta);font-weight:650;min-height:1.1em}
 .fila{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .card{
-border:1px solid var(--linea);border-radius:19px;
-padding:14px;margin-bottom:12px;background:#fff;
-box-shadow:0 4px 13px #650b2208
+border:1px solid #eadcda;border-radius:19px;
+padding:14px;margin-bottom:12px;
+background:linear-gradient(145deg,#fff,#fff9f7);
+box-shadow:0 5px 18px #650b2210
 }
 .acc{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
 .tag{font-size:.7rem;font-weight:800;padding:6px 10px;border-radius:20px;background:#eee;color:#444}
@@ -102,20 +124,35 @@ box-shadow:0 4px 13px #650b2208
 .e-PENDIENTE{background:#fff0d9;color:#956018}
 .e-CANCELADO,.e-DEVUELTO{background:#eee;color:#666}
 .hero{
-background:linear-gradient(135deg,#650b22,#8e183e 75%,#450817);
-color:#fff;border-radius:25px;padding:23px;margin-bottom:17px;
-display:flex;flex-direction:column;gap:8px;
-font-size:.88rem;box-shadow:0 10px 25px #650b2230;
-position:relative;overflow:hidden
+background:
+radial-gradient(circle at 90% 10%,#ffffff30,transparent 35%),
+linear-gradient(135deg,#350510,#650b22 55%,#941b46);
+color:#fff;border-radius:25px;padding:23px;
+margin-bottom:17px;display:flex;flex-direction:column;gap:8px;
+font-size:.88rem;box-shadow:0 12px 30px #45081740;
+position:relative;overflow:hidden;
+border:1px solid #ffffff30
 }
 .hero:after{
 content:"";position:absolute;width:170px;height:170px;
-border:1px solid #ffffff30;border-radius:50%;
-right:-55px;top:-65px;box-shadow:0 0 0 20px #ffffff08,0 0 0 40px #ffffff08
+border:1px solid #ffffff35;border-radius:50%;
+right:-55px;top:-65px;
+box-shadow:0 0 0 20px #ffffff08,0 0 0 40px #ffffff08,
+0 0 35px #ffffff20
 }
-.hero b{font-size:2.25rem;letter-spacing:-1px}
+.hero b{font-size:2.25rem;letter-spacing:-1px;position:relative;z-index:1}
 .hero span{position:relative;z-index:1}
-.hero b{position:relative;z-index:1}
+.grid-quick{
+display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px
+}
+.quick{
+border:1px solid #ead4d9;border-radius:18px;
+padding:17px 10px;background:linear-gradient(145deg,#fff,#fff3f3);
+color:var(--vino);font-size:.82rem;font-weight:800;
+display:flex;flex-direction:column;align-items:center;gap:8px;
+box-shadow:0 5px 15px #650b2210;transition:.2s
+}
+.quick span{font-size:1.7rem;filter:drop-shadow(0 3px 5px #650b2220)}
 .chat{
 background:linear-gradient(145deg,#f9eeee,#fff8f5);
 border:1px solid var(--linea);border-radius:20px;
@@ -127,488 +164,1010 @@ max-width:82%;padding:11px 14px;border-radius:18px;
 font-size:.86rem;line-height:1.45;word-break:break-word;
 box-shadow:0 3px 10px #650b2209
 }
-.bur small{display:block;font-size:.65rem;color:var(--gris);text-align:right;margin-top:4px}
-.yo{align-self:flex-end;background:linear-gradient(130deg,var(--vino),var(--vino3));color:#fff;border-bottom-right-radius:5px}
+.bur small{
+display:block;font-size:.65rem;color:var(--gris);
+text-align:right;margin-top:4px
+}
+.yo{
+align-self:flex-end;
+background:linear-gradient(130deg,var(--vino),var(--vino3));
+color:#fff;border-bottom-right-radius:5px
+}
 .yo small{color:#f5dfe6}
-.otro{align-self:flex-start;background:#fff;border:1px solid var(--linea);border-bottom-left-radius:5px}
+.otro{
+align-self:flex-start;background:#fff;
+border:1px solid var(--linea);border-bottom-left-radius:5px
+}
 .sis{
 align-self:center;background:var(--rosa2);color:var(--vino);
 font-size:.74rem;padding:7px 12px;border-radius:15px;text-align:center
 }
 nav{
 position:fixed;bottom:0;width:100%;max-width:480px;
-background:rgba(255,253,251,.97);backdrop-filter:blur(15px);
+background:rgba(255,253,251,.96);backdrop-filter:blur(18px);
 display:flex;border-top:1px solid var(--linea);
 z-index:20;padding-bottom:env(safe-area-inset-bottom);
-box-shadow:0 -5px 20px #650b2209
+box-shadow:0 -7px 25px #45081712
 }
 nav button{
 flex:1;padding:12px 0;border:0;background:none;
-font-size:.73rem;font-weight:700;color:var(--gris)
+font-size:.73rem;font-weight:750;color:var(--gris)
 }
 nav button span{display:block;font-size:1.35rem;margin-bottom:3px}
 nav button.on{color:var(--vino)}
-nav button.on span{transform:translateY(-2px)}
-/* LOGO */
-.logo{
-width:110px;height:95px;margin:0 auto 12px;
-display:flex;align-items:center;justify-content:center;
-color:var(--vino)
-}
-.logo svg{width:100%;height:100%;overflow:visible}
-.marca{
-font-size:2.6rem;font-weight:900;letter-spacing:-1.7px;
-text-align:center;margin-bottom:7px;color:var(--vino)
-}
-.lema{
-color:var(--gris);margin:5px 0 24px;
-font-size:.94rem;text-align:center;line-height:1.5
-}
-/* ACCESO */
-.auth{
-background:radial-gradient(ellipse at 50% 35%,#fffdfb 0%,#fff8f5 65%,#f8e9e8 100%);
-color:var(--tinta);min-height:100vh;padding:35px 23px;
-display:flex;flex-direction:column;justify-content:center;
-position:relative;overflow:hidden
-}
-.auth:before,.auth:after{
-content:"";position:absolute;border-radius:50%;
-pointer-events:none
-}
-.auth:before{
-width:230px;height:230px;background:#ebcfcf55;
-top:-155px;left:-110px
-}
-.auth:after{
-width:220px;height:220px;background:#650b2210;
-bottom:-160px;right:-110px
-}
-.auth>*{position:relative;z-index:1}
-.auth label{color:var(--tinta)}
-.auth input{
-background:#fff;border-color:var(--linea);
-color:var(--tinta);border-radius:16px
-}
-.auth input::placeholder{color:#aa9da1}
-.auth .btn{margin-top:17px}
-.auth .msg{color:var(--alerta)}
-.link{
-background:none;border:0;color:var(--vino);
-margin-top:13px;font-size:.86rem;padding:7px;font-weight:650
-}
-.bienvenida{text-align:center}
-.bienvenida .logo{width:135px;height:115px;margin-bottom:8px}
-.bienvenida .marca{font-size:3rem}
-.bienvenida .lema{margin:8px auto 23px}
-.decoracion{
-width:110px;height:4px;background:var(--rosa);
-border-radius:10px;margin:15px auto 22px
-}
-.pie-auth{text-align:center;font-size:.78rem;color:var(--gris);margin-top:27px;font-style:italic}
-.auth .btn.sec{background:transparent;color:var(--vino);border:1px solid var(--vino);box-shadow:none}
-.perfil-cabeza{text-align:center;padding:10px 0 18px}
-.avatar{
-width:76px;height:76px;border-radius:50%;margin:0 auto 10px;
-background:linear-gradient(135deg,#f4cbd5,#e9aebe);
-display:flex;align-items:center;justify-content:center;
-color:var(--vino);font-size:2.4rem;border:4px solid #fff;
-box-shadow:var(--sombra)
-}
-@media(min-width:481px){
-body{padding:15px 0}
-#app{border-radius:25px;min-height:95vh}
-nav{bottom:15px;border-radius:0 0 25px 25px}
-}
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+nav button.on span{transform:translateY(-2px);filter:drop-shadow(0 3px 5px #650b2230)}
+   </style>
 </head>
-<body>
+</html>
+
+.logo{
+  width:58px;height:58px;border-radius:19px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#8e183e,#450817);
+  box-shadow:0 10px 30px #650b2240;
+  border:1px solid #ffffff30;
+}
+.logo svg{width:38px;height:38px}
+.marca{font-size:27px;font-weight:900;letter-spacing:-1.3px}
+.lema{color:var(--muted);font-size:12px;margin-top:4px}
+.auth{width:min(100%,430px);margin:auto;padding:24px 20px 34px}
+.auth-cabeza{text-align:center;margin-bottom:25px}
+.auth-cabeza .logo{margin:0 auto 14px}
+.auth-cabeza h1{font-size:32px;margin:0}
+.auth-cabeza p{color:var(--muted);font-size:13px}
+.auth h2{font-size:22px;margin:0 0 7px}
+.auth .sub{margin-bottom:22px}
+.link{
+  border:0;background:none;color:var(--vino);
+  font-weight:800;cursor:pointer;padding:8px 0
+}
+.bienvenida{
+  padding:23px;border-radius:25px;
+  background:linear-gradient(135deg,#650b22,#350711);
+  color:white;position:relative;overflow:hidden;
+  box-shadow:0 15px 35px #45081735;
+}
+.bienvenida h2{font-size:25px;margin:0 0 7px}
+.bienvenida p{font-size:13px;color:#f3dce3;margin:0}
+.decoracion{
+  position:absolute;right:-20px;top:-24px;
+  width:130px;height:130px;border-radius:50%;
+  border:1px solid #ffffff25;
+  box-shadow:0 0 0 18px #ffffff08,0 0 0 38px #ffffff06;
+}
+.pie-auth{text-align:center;color:var(--muted);font-size:11px;margin-top:25px}
+.perfil-cabeza{text-align:center;padding:15px 0 22px}
+.avatar{
+  width:92px;height:92px;border-radius:50%;
+  margin:0 auto 13px;display:grid;place-items:center;
+  overflow:hidden;background:linear-gradient(145deg,#8e183e,#450817);
+  color:white;font-size:34px;border:3px solid white;
+  box-shadow:0 5px 25px #650b2230;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.foto-ayuda{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 18px}
+.foto-input{display:none}
+.grid-quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.quick{
+  border:1px solid var(--line);border-radius:16px;
+  background:white;padding:14px;text-align:left;
+  color:var(--ink);font-weight:800;cursor:pointer
+}
+.quick span{display:block;font-size:22px;margin-bottom:7px}
+@media(max-width:380px){
+  .marca{font-size:24px}
+  .contenido{padding:14px}
+  .bienvenida{padding:19px}
+  .grid-quick{grid-template-columns:1fr}
+}
 <div id="app"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script>
-const SB_URL='https://zbeidmuunsmgzeuovcko.supabase.co';
-const SB_KEY='sb_publishable_T54DQZRoqNG44DhoEjpDCw_ox7m7LgG';
-const db=supabase.createClient(SB_URL,SB_KEY);
+const SUPABASE_URL='https://zbeidmuunsmgzeuovcko.supabase.co';
+const SUPABASE_KEY='sb_publishable_T54DQZRoqNG44DhoEjpDCw_ox7m7LgG';
 
-let me=null,deals=[],msgs=[],tab='inicio',chatDeal=null,modo='welcome',timer=null;
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let me=null;
+let deals=[];
+let msgs=[];
+let tab='inicio';
+let chatDeal=null;
+let modo='login';
+let timer=null;
+let avatarFile=null;
+let avatarPreview=null;
+
+const COMISION=0.07;
+const COMISION_MIN=3;
 
 const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const r2=n=>Math.round(Number(n)*100)/100;
-const money=n=>'S/ '+r2(n).toFixed(2);
-const hora=t=>new Date(t).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
-const code=d=>'GG-'+(1000+d.id);
 
-const ETQ={
-PENDIENTE:'Esperando pago',
-EN_CUSTODIA:'Dinero en custodia',
-ENVIADO:'Enviado',
-LIBERADO:'Pago liberado',
-DISPUTA:'En disputa',
-DEVUELTO:'Devuelto',
-CANCELADO:'Cancelado'
-};
-
-/* Comisión provisional de demostración.
-   Se debe configurar y validar en el servidor antes de cobrar dinero real. */
-const fees=m=>{
-const h=r2(Math.max(m*0.07,3)/2);
-return{c:h,v:h}
-};
-
-function logo(){
-return `<div class="logo" aria-label="Logo Gus Gus">
-<svg viewBox="0 0 160 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15 48 L38 20 L62 33 L80 27 L98 33 L122 20 L145 48 L124 67 L111 57" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M37 35 L57 46 Q67 51 77 43 L87 36 Q96 30 105 38 L126 55 Q134 63 127 71 Q120 78 112 71 L91 55" fill="#EBCFCF" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M54 46 L39 65 Q32 74 40 81 Q47 87 55 79 L67 66" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-<path d="M68 64 L57 79 Q51 88 60 94 Q68 99 75 90 L86 76" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-<path d="M84 73 L75 87 Q69 98 79 103 Q88 108 95 97 L103 84" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-<path d="M100 84 L94 96 Q90 106 100 110 Q109 114 115 103 L122 89" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-<path d="M15 48 L37 35 L53 49 L39 76 Z" fill="#650B22" stroke="currentColor" stroke-width="4"/>
-<path d="M145 48 L123 35 L107 49 L121 76 Z" fill="#650B22" stroke="currentColor" stroke-width="4"/>
-<path d="M80 9 V1 M58 15 L52 7 M102 15 L108 7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-</svg></div>`;
+function esc(v=''){
+  return String(v).replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;',
+    '"':'&quot;',"'":'&#39;'
+  }[c]));
 }
 
-async function rpc(fn,args){
-const r=await db.rpc(fn,args);
-if(r.error){alert(r.error.message);return null}
-return r.data==null?true:r.data
+function dinero(n){
+  return 'S/ '+Number(n||0).toFixed(2);
+}
+
+function fecha(v){
+  if(!v)return '';
+  return new Date(v).toLocaleString('es-PE',{
+    day:'2-digit',month:'short',
+    hour:'2-digit',minute:'2-digit'
+  });
+}
+
+function logo(){
+  return `<div class="logo">
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 38L29 25L43 34L55 29L70 36L87 29" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 38L29 54L43 43L55 50L70 36" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29 54L43 68L55 58L70 65L87 49" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M43 43L55 58" stroke="white" stroke-width="7" stroke-linecap="round"/>
+  </svg>
+  </div>`;
+}
+
+async function rpc(nombre,parametros={}){
+  const {data,error}=await db.rpc(nombre,parametros);
+  if(error)throw error;
+  return data;
 }
 
 async function entrar(){
-const u=(await db.auth.getUser()).data.user;
-if(!u){me=null;return render()}
-const p=await db.from('profiles').select('*').eq('id',u.id).single();
-if(p.error){
-alert('No se encontró tu perfil.');
-await db.auth.signOut();
-me=null;
-return render()
-}
-me=p.data;me.email=u.email;
-await refrescar();
-tab='inicio';render();
-clearInterval(timer);timer=setInterval(poll,5000);
+  const {data,error}=await db.auth.getSession();
+  if(error)console.error(error);
+  if(data.session){
+    await cargarUsuario(data.session.user);
+  }else{
+    me=null;
+    render();
+  }
 }
 
-async function refrescar(){
-const [p,d]=await Promise.all([
-db.from('profiles').select('*').eq('id',me.id).single(),
-db.from('deals').select('*').order('id',{ascending:false})
-]);
-if(p.data){const e=me.email;me=p.data;me.email=e}
-deals=d.data||[];
+async function cargarUsuario(user){
+  const {data,error}=await db
+    .from('profiles')
+    .select('*')
+    .eq('id',user.id)
+    .single();
+
+  if(error){
+    console.error(error);
+    alert('No se pudo cargar tu perfil.');
+    return;
+  }
+
+  me={...data,email:user.email,id:user.id};
+  await cargarTratos();
+  render();
 }
 
-async function cargarMsgs(){
-if(!chatDeal)return;
-const r=await db.from('messages').select('*').eq('deal_id',chatDeal).order('id');
-msgs=r.data||[];
+async function cargarTratos(){
+  if(!me)return;
+
+  const {data,error}=await db
+    .from('deals')
+    .select('*')
+    .or(`buyer_id.eq.${me.id},seller_id.eq.${me.id}`)
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error(error);
+    deals=[];
+    return;
+  }
+
+  deals=data||[];
 }
 
-async function poll(){
-if(!me)return;
-await refrescar();
-if(tab==='chat'){await cargarMsgs();pintarChat()}
-else if(!['INPUT','SELECT','TEXTAREA'].includes((document.activeElement||{}).tagName))render();
+async function cargarMsgs(id){
+  if(!id)return;
+
+  const {data,error}=await db
+    .from('messages')
+    .select('*')
+    .eq('deal_id',id)
+    .order('created_at',{ascending:true});
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  msgs=data||[];
+  pintarChat();
 }
 
-function setModo(m){modo=m;render()}
-function msg(t){$('a_msg').textContent=t}
+async function actualizar(){
+  if(!me)return;
+  await cargarTratos();
+  render();
+
+  if(chatDeal){
+    await cargarMsgs(chatDeal);
+  }
+}
+
+function iniciarActualizacion(){
+  if(timer)clearInterval(timer);
+  timer=setInterval(async()=>{
+    if(me){
+      await cargarTratos();
+      if(chatDeal)await cargarMsgs(chatDeal);
+    }
+  },8000);
+}
 
 async function doLogin(){
-const r=await db.auth.signInWithPassword({
-email:$('a_mail').value.trim(),
-password:$('a_pass').value
-});
-if(r.error)return msg('Correo o contraseña incorrectos.');
-await entrar();
+  const email=$('email')?.value.trim();
+  const pass=$('password')?.value;
+
+  if(!email||!pass){
+    alert('Escribe tu correo y contraseña.');
+    return;
+  }
+
+  const btn=$('btnAuth');
+  if(btn){btn.disabled=true;btn.textContent='Ingresando...';}
+
+  const {data,error}=await db.auth.signInWithPassword({
+    email,password:pass
+  });
+
+  if(error){
+    alert('No se pudo ingresar: '+error.message);
+    if(btn){btn.disabled=false;btn.textContent='Ingresar';}
+    return;
+  }
+
+  await cargarUsuario(data.user);
+  iniciarActualizacion();
 }
 
 async function doReg(){
-const n=$('a_name').value.trim();
-const d=$('a_dni').value.trim();
-const t=$('a_tel').value.trim();
-const e=$('a_mail').value.trim();
-const p=$('a_pass').value;
-if(n.length<3)return msg('Escribe tu nombre completo.');
-if(!/^\d{8}$/.test(d))return msg('El DNI debe tener 8 números.');
-if(!/^9\d{8}$/.test(t))return msg('El celular debe tener 9 números y empezar con 9.');
-if(!/^\S+@\S+\.\S+$/.test(e))return msg('Escribe un correo válido.');
-if(p.length<6)return msg('La contraseña debe tener al menos 6 caracteres.');
+  const nombre=$('nombre')?.value.trim();
+  const email=$('email')?.value.trim();
+  const pass=$('password')?.value;
 
-const r=await db.auth.signUp({
-email:e,password:p,
-options:{data:{name:n,dni:d,tel:t}}
-});
-if(r.error)return msg('No se pudo crear la cuenta. El correo o el DNI podrían estar en uso.');
-if(!r.data.session)return msg('Cuenta creada. Confirma tu correo y luego inicia sesión.');
-await entrar();
+  if(!nombre||!email||!pass){
+    alert('Completa todos los campos.');
+    return;
+  }
+
+  if(pass.length<6){
+    alert('La contraseña debe tener al menos 6 caracteres.');
+    return;
+  }
+
+  const btn=$('btnAuth');
+  if(btn){btn.disabled=true;btn.textContent='Creando cuenta...';}
+
+  const {data,error}=await db.auth.signUp({
+    email,password:pass,
+    options:{data:{name:nombre}}
+  });
+
+  if(error){
+    alert('No se pudo crear la cuenta: '+error.message);
+    if(btn){btn.disabled=false;btn.textContent='Crear cuenta';}
+    return;
+  }
+
+  if(data.session&&data.user){
+    await cargarUsuario(data.user);
+    iniciarActualizacion();
+  }else{
+    alert('Cuenta creada. Revisa tu correo para confirmar el registro.');
+    modo='login';
+    render();
+  }
 }
 
 async function salir(){
-clearInterval(timer);
-await db.auth.signOut();
-me=null;deals=[];modo='welcome';render();
+  if(timer)clearInterval(timer);
+  timer=null;
+  chatDeal=null;
+  me=null;
+  deals=[];
+  msgs=[];
+  await db.auth.signOut();
+  render();
+}
+// ==========================================
+// FOTO DE PERFIL
+// ==========================================
+
+function previsualizarAvatar(input){
+  const archivo=input.files?.[0];
+  if(!archivo)return;
+
+  if(!['image/jpeg','image/png','image/webp'].includes(archivo.type)){
+    alert('Usa una imagen JPG, PNG o WEBP.');
+    input.value='';
+    return;
+  }
+
+  if(archivo.size>2*1024*1024){
+    alert('La imagen no puede superar los 2 MB.');
+    input.value='';
+    return;
+  }
+
+  avatarFile=archivo;
+
+  if(avatarPreview){
+    URL.revokeObjectURL(avatarPreview);
+  }
+
+  avatarPreview=URL.createObjectURL(archivo);
+
+  const img=$('avatar_img');
+  const placeholder=$('avatar_placeholder');
+
+  if(img){
+    img.src=avatarPreview;
+    img.style.display='block';
+  }
+
+  if(placeholder){
+    placeholder.style.display='none';
+  }
 }
 
-function authView(){
-if(modo==='welcome'){
-return `<div class="auth bienvenida">
-${logo()}
-<div class="marca">Gus Gus</div>
-<p class="lema">Compra y vende con confianza</p>
-<div class="decoracion"></div>
-<button class="btn" onclick="setModo('reg')">Crear cuenta　→</button>
-<button class="btn sec" onclick="setModo('login')">Iniciar sesión</button>
-<p class="pie-auth">Tratos más seguros, personas más tranquilas.</p>
-</div>`;
-}
-const r=modo==='reg';
-return `<div class="auth">
-${logo()}
-<div class="marca">Gus Gus</div>
-<p class="lema">${r?'Únete a nuestra comunidad':'Bienvenido de nuevo. Ingresa a tu cuenta.'}</p>
-${r?`
-<label>Nombre completo</label>
-<input id="a_name" autocomplete="name" placeholder="Tu nombre completo">
-<label>DNI</label>
-<input id="a_dni" inputmode="numeric" maxlength="8" placeholder="DNI (8 números)">
-<label>Celular</label>
-<input id="a_tel" inputmode="tel" maxlength="9" placeholder="Celular (9 números)">
-`:''}
-<label>Correo electrónico</label>
-<input id="a_mail" type="email" autocomplete="email" placeholder="correo@ejemplo.com">
-<label>Contraseña</label>
-<input id="a_pass" type="password" autocomplete="${r?'new-password':'current-password'}" placeholder="Tu contraseña">
-<button class="btn" onclick="${r?'doReg()':'doLogin()'}">${r?'Crear mi cuenta　→':'Ingresar　→'}</button>
-<p id="a_msg" class="msg"></p>
-<button class="link" onclick="setModo('${r?'login':'reg'}')">${r?'¿Ya tienes cuenta? Inicia sesión':'¿No tienes cuenta? Crear cuenta'}</button>
-<button class="link" onclick="setModo('welcome')">Volver al inicio</button>
-</div>`;
+async function mostrarAvatar(){
+  if(!me)return;
+
+  const img=$('avatar_img');
+  const placeholder=$('avatar_placeholder');
+
+  if(!img)return;
+
+  if(avatarPreview){
+    img.src=avatarPreview;
+    img.style.display='block';
+    if(placeholder)placeholder.style.display='none';
+    return;
+  }
+
+  const ruta=me.avatar_url;
+
+  if(!ruta){
+    img.style.display='none';
+    if(placeholder)placeholder.style.display='block';
+    return;
+  }
+
+  const {data,error}=await db.storage
+    .from('avatars')
+    .createSignedUrl(ruta,3600);
+
+  if(error||!data?.signedUrl){
+    img.style.display='none';
+    if(placeholder)placeholder.style.display='block';
+    return;
+  }
+
+  img.src=data.signedUrl;
+  img.style.display='block';
+
+  if(placeholder){
+    placeholder.style.display='none';
+  }
 }
 
-/* TRATOS */
-async function act(id,a){
-if(await rpc('deal_action',{p_deal:id,p_action:a})){
-await refrescar();render()
+async function subirAvatar(){
+  if(!avatarFile||!me)return me?.avatar_url||null;
+
+  const extension=avatarFile.type==='image/png'
+    ?'png'
+    :avatarFile.type==='image/webp'
+      ?'webp'
+      :'jpg';
+
+  const ruta=`${me.id}/foto.${extension}`;
+
+  const {error:uploadError}=await db.storage
+    .from('avatars')
+    .upload(ruta,avatarFile,{
+      upsert:true,
+      contentType:avatarFile.type
+    });
+
+  if(uploadError){
+    throw uploadError;
+  }
+
+  return ruta;
 }
+
+async function guardarPerfil(){
+  if(!me)return;
+
+  const nombre=$('perfil_nombre')?.value.trim();
+  const telefono=$('perfil_tel')?.value.trim();
+
+  if(!nombre){
+    alert('Escribe tu nombre.');
+    return;
+  }
+
+  const btn=$('btnGuardarPerfil');
+
+  if(btn){
+    btn.disabled=true;
+    btn.textContent='Guardando...';
+  }
+
+  try{
+    const avatarPath=await subirAvatar();
+
+    const cambios={
+      name:nombre,
+      tel:telefono,
+      avatar_url:avatarPath
+    };
+
+    const {data,error}=await db
+      .from('profiles')
+      .update(cambios)
+      .eq('id',me.id)
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    me={...me,...data};
+
+    avatarFile=null;
+
+    if(avatarPreview){
+      URL.revokeObjectURL(avatarPreview);
+      avatarPreview=null;
+    }
+
+    alert('Perfil actualizado correctamente.');
+    render();
+
+  }catch(error){
+    console.error(error);
+    alert('No se pudo guardar el perfil: '+error.message);
+
+  }finally{
+    if(btn){
+      btn.disabled=false;
+      btn.textContent='Guardar cambios';
+    }
+  }
+}
+
+// ==========================================
+// RECARGA DE SALDO DEMOSTRATIVA
+// ==========================================
+
+async function recargar(){
+  const cantidad=Number($('cantidad_recarga')?.value);
+
+  if(!Number.isFinite(cantidad)||cantidad<=0){
+    alert('Escribe una cantidad válida.');
+    return;
+  }
+
+  if(!confirm(
+    'Esta recarga es solamente demostrativa. No se moverá dinero real. ¿Continuar?'
+  )){
+    return;
+  }
+
+  try{
+    await rpc('demo_topup',{p_amount:cantidad});
+    await cargarUsuario({id:me.id,email:me.email});
+    alert('Recarga demostrativa realizada.');
+
+  }catch(error){
+    console.error(error);
+    alert('No se pudo realizar la recarga: '+error.message);
+  }
+}
+     
+// ==========================================
+// TRATOS
+// ==========================================
+
+async function crear(){
+  const dni=$('seller_dni')?.value.trim();
+  const amount=Number($('deal_amount')?.value);
+  const desc=$('deal_desc')?.value.trim();
+
+  if(!dni||!amount||amount<=0||!desc){
+    alert('Completa los datos del trato.');
+    return;
+  }
+
+  try{
+    const resultado=await rpc('create_deal',{
+      p_seller_dni:dni,
+      p_amount:amount,
+      p_desc:desc
+    });
+
+    alert('Solicitud de trato creada.');
+    await actualizar();
+
+    if($('seller_dni'))$('seller_dni').value='';
+    if($('deal_amount'))$('deal_amount').value='';
+    if($('deal_desc'))$('deal_desc').value='';
+
+  }catch(error){
+    console.error(error);
+    alert('No se pudo crear el trato: '+error.message);
+  }
+}
+
+async function act(id,accion){
+  if(!confirm('¿Confirmas esta acción?'))return;
+
+  try{
+    await rpc('deal_action',{
+      p_deal:id,
+      p_action:accion
+    });
+
+    await actualizar();
+
+  }catch(error){
+    console.error(error);
+    alert('No se pudo realizar la acción: '+error.message);
+  }
 }
 
 function botones(d){
-const c=d.buyer===me.id,v=d.seller===me.id,b=[],s=d.status;
-const B=(a,t,k)=>b.push(`<button class="mini ${k||''}" onclick="act(${d.id},'${a}')">${t}</button>`);
-if(s==='PENDIENTE'){
-if(c)B('pagar','Pagar (demo)');
-B('cancelar','Cancelar','sec')
-}
-if(s==='EN_CUSTODIA'){
-if(v)B('enviar','Marcar como enviado');
-if(c)B('disputa','Reportar problema','sec');
-if(v)B('devolver','Devolver el dinero','sec')
-}
-if(s==='ENVIADO'){
-if(c){B('liberar','Confirmar recepción');B('disputa','Reportar problema','sec')}
-if(v)B('devolver','Devolver el dinero','sec')
-}
-if(s==='DISPUTA'){
-if(c)B('liberar','Liberar al vendedor','sec');
-if(v)B('devolver','Devolver el dinero','sec')
-}
-b.push(`<button class="mini sec" onclick="abrirChat(${d.id})">Abrir chat</button>`);
-return b.join('');
+  const soyComprador=d.buyer===me.id;
+  const estado=d.status;
+
+  let html='';
+
+  if(estado==='PENDIENTE'){
+    if(soyComprador){
+      html+=`<button class="btn secundario" onclick="act('${d.id}','cancel')">Cancelar</button>`;
+    }else{
+      html+=`<button class="btn principal" onclick="act('${d.id}','accept')">Aceptar trato</button>`;
+      html+=`<button class="btn secundario" onclick="act('${d.id}','cancel')">Rechazar</button>`;
+    }
+  }
+
+  if(estado==='EN_CUSTODIA'&&soyComprador){
+    html+=`<button class="btn principal" onclick="act('${d.id}','sent')">Confirmar envío</button>`;
+  }
+
+  if(estado==='ENVIADO'&&soyComprador){
+    html+=`<button class="btn principal" onclick="act('${d.id}','release')">Confirmar recepción</button>`;
+    html+=`<button class="btn secundario" onclick="act('${d.id}','dispute')">Abrir disputa</button>`;
+  }
+
+  if(estado==='ENVIADO'&&!soyComprador){
+    html+=`<button class="btn secundario" onclick="act('${d.id}','dispute')">Abrir disputa</button>`;
+  }
+
+  if(estado==='DISPUTA'){
+    html+=`<p class="sub">El trato está en revisión.</p>`;
+  }
+
+  return html;
 }
 
 function card(d){
-const rol=d.buyer===me.id?'Compras a '+d.seller_name:'Vendes a '+d.buyer_name;
-return `<div class="card">
-<div class="fila"><b>${code(d)}</b><span class="tag e-${d.status}">${ETQ[d.status]}</span></div>
-<div style="margin-top:9px;font-weight:650">${esc(d.description)}</div>
-<div class="sub">${esc(rol)} · ${money(d.amount)}</div>
-${d.status==='DISPUTA'?'<div class="sub">Este trato está en disputa.</div>':''}
-<div class="acc">${botones(d)}</div>
-</div>`;
+  const soyComprador=d.buyer===me.id;
+  const contraparte=soyComprador
+    ?(d.seller_name||'Vendedor')
+    :(d.buyer_name||'Comprador');
+
+  return `
+  <div class="blk">
+    <div class="fila">
+      <strong>${esc(d.description||'Trato Gus Gus')}</strong>
+      <span class="estado">${esc(d.status||'')}</span>
+    </div>
+
+    <p class="sub">${soyComprador?'Vendedor':'Comprador'}: ${esc(contraparte)}</p>
+
+    <div class="fila">
+      <strong class="monto">${dinero(d.amount)}</strong>
+      <span class="sub">${fecha(d.created_at)}</span>
+    </div>
+
+    <div class="acciones">
+      ${botones(d)}
+      <button class="btn secundario" onclick="abrirChat('${d.id}')">Abrir chat</button>
+    </div>
+  </div>`;
 }
 
-function prev(){
-const m=parseFloat($('t_m').value),p=$('t_prev');
-if(!(m>0)){p.textContent='Escribe el monto para ver el desglose.';return}
-const f=fees(m);
-p.textContent=`Comisión total ${money(f.c+f.v)}, mitad cada uno. El comprador paga ${money(m+f.c)} y el vendedor recibe ${money(m-f.v)}.`;
-}
+// ==========================================
+// CHAT
+// ==========================================
 
-async function crear(){
-const v=$('t_v').value.trim(),m=parseFloat($('t_m').value),d=$('t_d').value.trim();
-if(!/^\d{8}$/.test(v)||!(m>=1)||d.length<3){
-$('t_msg').textContent='Revisa el DNI del vendedor, el monto y la descripción.';return
-}
-if(await rpc('create_deal',{p_seller_dni:v,p_amount:m,p_desc:d})){
-await refrescar();render()
-}
-}
-
-/* CHAT */
 async function abrirChat(id){
-chatDeal=id;await cargarMsgs();go('chat');
+  chatDeal=id;
+  tab='chat';
+  await cargarMsgs(id);
+  render();
+  await cargarMsgs(id);
 }
-async function selChat(v){
-chatDeal=Number(v);await cargarMsgs();render();
+
+async function selChat(id){
+  chatDeal=id;
+  await cargarMsgs(id);
+  render();
 }
+
 function pintarChat(){
-const cb=$('chatbox');if(!cb)return;
-cb.innerHTML=msgs.map(m=>m.is_system
-?`<div class="sis">${esc(m.body)}</div>`
-:`<div class="bur ${m.sender===me.id?'yo':'otro'}">${esc(m.body)}<small>${hora(m.created_at)}</small></div>`
-).join('');
-cb.scrollTop=cb.scrollHeight;
+  const zona=$('mensajes');
+  if(!zona)return;
+
+  zona.innerHTML=msgs.map(m=>{
+    const mio=m.sender===me.id;
+
+    return `
+    <div class="mensaje ${mio?'mio':'otro'}">
+      <div>${esc(m.body||'')}</div>
+      <small>${fecha(m.created_at)}</small>
+    </div>`;
+  }).join('');
+
+  zona.scrollTop=zona.scrollHeight;
 }
+
 async function enviar(){
-const i=$('c_in'),t=i.value.trim();if(!t)return;
-i.value='';
-if(await rpc('send_message',{p_deal:chatDeal,p_body:t})){
-await cargarMsgs();pintarChat()
-}
+  const campo=$('mensaje_texto');
+  const texto=campo?.value.trim();
+
+  if(!texto||!chatDeal)return;
+
+  campo.value='';
+
+  try{
+    await rpc('send_message',{
+      p_deal:chatDeal,
+      p_body:texto
+    });
+
+    await cargarMsgs(chatDeal);
+
+  }catch(error){
+    console.error(error);
+    alert('No se pudo enviar el mensaje: '+error.message);
+  }
 }
 
-/* PERFIL */
-async function guardarPerfil(){
-const n=$('p_name').value.trim(),t=$('p_tel').value.trim();
-const y=$('p_yape').value.trim(),pl=$('p_plin').value.trim();
-const r=await db.from('profiles').update({name:n,tel:t,yape:y,plin:pl}).eq('id',me.id);
-const e=$('p_msg');
-if(r.error){e.style.color='var(--alerta)';e.textContent='No se pudo guardar el perfil.';return}
-e.style.color='var(--ok)';e.textContent='Perfil guardado.';
-await refrescar();
-}
-async function recargar(){
-if(await rpc('demo_topup')){await refrescar();render()}
-}
+// ==========================================
+// PANTALLA PRINCIPAL
+// ==========================================
 
-/* PANTALLAS */
 function vInicio(){
-const a=deals.filter(d=>['EN_CUSTODIA','ENVIADO','DISPUTA'].includes(d.status));
-const tot=a.reduce((s,d)=>s+Number(d.custody||0),0);
-return `<div class="hero">
-<span>Tu saldo disponible</span>
-<b>${money(me.balance)}</b>
-<span>${a.length} tratos activos · Dinero en custodia (demo)</span>
-</div>
-<div class="blk">
-<h2>Accesos rápidos</h2>
-<div class="grid-quick">
-<button class="quick" onclick="go('tratos')"><span>🤝</span>Crear trato</button>
-<button class="quick" onclick="go('chat')"><span>💬</span>Mis chats</button>
-<button class="quick" onclick="go('perfil')"><span>👤</span>Mi perfil</button>
-<button class="quick" onclick="go('tratos')"><span>📋</span>Mis tratos</button>
-</div>
-</div>
-<div class="blk">
-<div class="fila"><h2>Tratos recientes</h2><button class="mini sec" onclick="go('tratos')">Ver todos</button></div>
-${deals.length?deals.slice(0,3).map(card).join(''):'<p class="sub">Todavía no tienes movimientos. Crea tu primer trato.</p>'}
-</div>
-<div class="blk nota">
-<b>Protección Gus Gus</b>
-<p>Esta es una demostración. El saldo es de prueba y no se mueve dinero real. Para custodiar dinero real, Gus Gus deberá conectarse a una entidad autorizada.</p>
-</div>`;
+  return `
+  <div class="bienvenida">
+    <div class="decoracion"></div>
+    <p>BIENVENIDO A GUS GUS</p>
+    <h2>Tratos seguros, sin complicaciones.</h2>
+    <p>Compra y vende con acompañamiento durante tu trato.</p>
+  </div>
+
+  <div class="grid-quick">
+    <button class="quick" onclick="go('tratos')">
+      <span>🤝</span>
+      Mis tratos
+    </button>
+    <button class="quick" onclick="go('chat')">
+      <span>💬</span>
+      Mis chats
+    </button>
+    <button class="quick" onclick="go('perfil')">
+      <span>👤</span>
+      Mi perfil
+    </button>
+    <button class="quick" onclick="go('tratos')">
+      <span>＋</span>
+      Crear un trato
+    </button>
+  </div>
+
+  <div class="blk">
+    <h2>Tu saldo</h2>
+    <div class="monto">${dinero(me.balance)}</div>
+    <p class="sub">Saldo de demostración. No representa dinero real.</p>
+  </div>
+
+  <div class="blk">
+    <h2>Actividad reciente</h2>
+    ${deals.length
+      ?deals.slice(0,3).map(card).join('')
+      :'<p class="sub">Todavía no tienes tratos.</p>'}
+  </div>`;
 }
+
+// ==========================================
+// MIS TRATOS
+// ==========================================
 
 function vTratos(){
-return `<div class="blk">
-<h2>Crear nuevo trato</h2>
-<p class="sub">Completa los datos para iniciar un trato protegido.</p>
-<label>DNI del vendedor</label>
-<input id="t_v" inputmode="numeric" maxlength="8" placeholder="DNI de 8 números">
-<label>Monto del trato en soles</label>
-<input id="t_m" type="number" inputmode="decimal" min="1" placeholder="S/ 0.00" oninput="prev()">
-<label>¿Qué deseas comprar?</label>
-<input id="t_d" maxlength="80" placeholder="Describe el producto o servicio">
-<div class="nota blk" style="margin-top:15px;margin-bottom:0">
-<b>Desglose de comisión</b>
-<p id="t_prev" class="sub">Escribe el monto para ver el desglose.</p>
-</div>
-<button class="btn" onclick="crear()">Continuar　→</button>
-<p id="t_msg" class="msg"></p>
-</div>
-<div class="blk">
-<h2>Mis tratos</h2>
-${deals.length?deals.map(card).join(''):'<p class="sub">Aún no tienes tratos.</p>'}
-</div>`;
+  return `
+  <div class="blk">
+    <h2>Crear un trato</h2>
+    <p class="sub">Ingresa los datos de la persona que recibirá la solicitud.</p>
+
+    <label>DNI del vendedor</label>
+    <input id="seller_dni" inputmode="numeric" maxlength="8" placeholder="DNI del vendedor">
+
+    <label>Monto del trato (S/)</label>
+    <input id="deal_amount" type="number" min="0.01" step="0.01" placeholder="Ej. 150">
+
+    <label>Descripción</label>
+    <textarea id="deal_desc" rows="3" placeholder="Describe el producto o servicio"></textarea>
+
+    <button class="btn principal" onclick="crear()">Crear solicitud</button>
+  </div>
+
+  <div class="blk">
+    <h2>Mis tratos</h2>
+    ${deals.length
+      ?deals.map(card).join('')
+      :'<p class="sub">Aún no tienes tratos.</p>'}
+  </div>`;
 }
+
+// ==========================================
+// MIS CHATS
+// ==========================================
 
 function vChat(){
-if(!deals.length)return '<div class="blk"><h2>Mis chats</h2><p class="sub">El chat se abre desde un trato. Crea uno primero.</p></div>';
-if(!deals.find(x=>x.id===chatDeal))chatDeal=deals[0].id;
-return `<div class="blk">
-<h2>Mis conversaciones</h2>
-<select onchange="selChat(this.value)">
-${deals.map(x=>`<option value="${x.id}"${x.id===chatDeal?' selected':''}>${code(x)} · ${esc(x.description)}</option>`).join('')}
-</select>
-<div class="chat" id="chatbox"></div>
-<div class="fila">
-<input id="c_in" placeholder="Escribe un mensaje..." maxlength="300">
-<button class="mini" onclick="enviar()">➤</button>
-</div>
-</div>`;
+  if(!deals.length){
+    return `
+    <div class="blk">
+      <h2>Mis chats</h2>
+      <p class="sub">El chat se abre desde un trato. Crea uno primero.</p>
+    </div>`;
+  }
+
+  if(!chatDeal){
+    return `
+    <div class="blk">
+      <h2>Mis chats</h2>
+      <p class="sub">Selecciona un trato para abrir su conversación.</p>
+      ${deals.map(d=>`
+        <button class="quick" onclick="selChat('${d.id}')">
+          <span>💬</span>
+          ${esc(d.description||'Trato')}
+          <small>${esc(d.status||'')}</small>
+        </button>
+      `).join('')}
+    </div>`;
+  }
+
+  const d=deals.find(x=>x.id===chatDeal);
+
+  return `
+  <div class="blk">
+    <div class="fila">
+      <h2>Chat del trato</h2>
+      <button class="btn secundario" onclick="chatDeal=null;render()">Volver</button>
+    </div>
+    <p class="sub">${esc(d?.description||'Conversación')}</p>
+
+    <div id="mensajes" class="mensajes">
+      ${msgs.map(m=>`
+        <div class="mensaje ${m.sender===me.id?'mio':'otro'}">
+          <div>${esc(m.body||'')}</div>
+          <small>${fecha(m.created_at)}</small>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="chat-escribir">
+      <input id="mensaje_texto" placeholder="Escribe un mensaje..." onkeydown="if(event.key==='Enter')enviar()">
+      <button class="btn principal" onclick="enviar()">➤</button>
+    </div>
+  </div>`;
 }
+// ==========================================
+// MI PERFIL
+// ==========================================
 
 function vPerfil(){
-return `<div class="blk">
-<div class="perfil-cabeza">
-<div class="avatar">👤</div>
-<h2>${esc(me.name)}</h2>
-<p class="sub">${esc(me.email)}</p>
-</div>
-<label>Nombre completo</label>
-<input id="p_name" value="${esc(me.name)}">
-<label>DNI</label>
-<input value="${esc(me.dni)}" readonly>
-<label>Correo electrónico</label>
-<input value="${esc(me.email)}" readonly>
-<label>Celular</label>
-<input id="p_tel" inputmode="tel" maxlength="9" value="${esc(me.tel)}">
-<label>Número de Yape</label>
-<input id="p_yape" inputmode="tel" maxlength="9" value="${esc(me.yape)}">
-<label>Número de Plin</label>
-<input id="p_plin" inputmode="tel" maxlength="9" value="${esc(me.plin)}">
-<button class="btn" onclick="guardarPerfil()">Guardar cambios</button>
-<p id="p_msg" class="msg"></p>
-</div>
-<div class="blk">
-<h2>Herramientas de prueba</h2>
-<p class="sub">Saldo de prueba: ${money(me.balance)}</p>
-<button class="btn sec" onclick="recargar()">Recargar S/ 100 de prueba</button>
-<button class="btn sec" onclick="salir()">Cerrar sesión</button>
-</div>`;
+  return `
+  <div class="blk">
+    <div class="perfil-cabeza">
+      <div class="avatar">
+        <img id="avatar_img" alt="Foto de perfil" style="display:none">
+        <span id="avatar_placeholder">👤</span>
+      </div>
+
+      <h2>${esc(me.name||'Usuario')}</h2>
+      <p class="sub">${esc(me.email||'')}</p>
+    </div>
+
+    <label>Foto de perfil</label>
+    <input class="foto-input" id="foto_archivo" type="file"
+      accept="image/png,image/jpeg,image/webp"
+      onchange="previsualizarAvatar(this)">
+
+    <button class="btn secundario" onclick="$('foto_archivo').click()">
+      Cambiar foto
+    </button>
+
+    <p class="foto-ayuda">JPG, PNG o WEBP. Máximo 2 MB.</p>
+
+    <label>Nombre completo</label>
+    <input id="perfil_nombre" value="${esc(me.name||'')}" placeholder="Tu nombre">
+
+    <label>Teléfono</label>
+    <input id="perfil_tel" value="${esc(me.tel||'')}" placeholder="Tu teléfono">
+
+    <label>Correo electrónico</label>
+    <input value="${esc(me.email||'')}" disabled>
+
+    <button id="btnGuardarPerfil" class="btn principal" onclick="guardarPerfil()">
+      Guardar cambios
+    </button>
+  </div>
+
+  <div class="blk">
+    <h2>Mi saldo</h2>
+    <div class="monto">${dinero(me.balance)}</div>
+    <p class="sub">Saldo de demostración. No es dinero real.</p>
+
+    <label>Cantidad de recarga (S/)</label>
+    <input id="cantidad_recarga" type="number" min="1" step="0.01" placeholder="Ej. 50">
+
+    <button class="btn secundario" onclick="recargar()">
+      Recarga demostrativa
+    </button>
+  </div>
+
+  <div class="blk">
+    <button class="btn peligro" onclick="salir()">Cerrar sesión</button>
+  </div>`;
 }
 
-function go(t){tab=t;render()}
+// ==========================================
+// NAVEGACIÓN Y RENDERIZADO
+// ==========================================
+
+function go(t){
+  tab=t;
+  chatDeal=null;
+
+  if(avatarPreview){
+    URL.revokeObjectURL(avatarPreview);
+    avatarPreview=null;
+  }
+
+  avatarFile=null;
+  render();
+}
 
 function render(){
-if(!me){$('app').innerHTML=authView();return}
-const body={inicio:vInicio,tratos:vTratos,chat:vChat,perfil:vPerfil}[tab]();
-$('app').innerHTML=`
-<div class="demo">GUS GUS · MODO DEMOSTRACIÓN · SIN DINERO REAL</div>
-<div class="top">
-<b>Hola, ${esc((me.name||'').split(' ')[0])} 👋</b>
-<span class="saldo">${money(me.balance)}</span>
-</div>
-<div class="cuerpo">${body}</div>
-<nav>
-${[['inicio','⌂','Inicio'],['tratos','＋','Tratos'],['chat','▤','Chats'],['perfil','♙','Perfil']].map(([k,i,l])=>
-`<button class="${tab===k?'on':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`
-).join('')}
-</nav>`;
-if(tab==='chat')pintarChat();
-window.scrollTo(0,0);
+  const app=$('app');
+
+  if(!app)return;
+
+  if(!me){
+    app.innerHTML=`
+    <div class="auth">
+      <div class="auth-cabeza">
+        ${logo()}
+        <h1>Gus Gus</h1>
+        <p>Tratos seguros, de principio a fin.</p>
+      </div>
+
+      <div class="blk">
+        <h2>${modo==='login'?'Bienvenido de nuevo':'Crear cuenta'}</h2>
+        <p class="sub">${modo==='login'?'Ingresa a tu cuenta':'Regístrate para comenzar'}</p>
+
+        ${modo==='registro'?`
+          <label>Nombre completo</label>
+          <input id="nombre" placeholder="Tu nombre">
+        `:''}
+
+        <label>Correo electrónico</label>
+        <input id="email" type="email" placeholder="correo@ejemplo.com">
+
+        <label>Contraseña</label>
+        <input id="password" type="password" placeholder="Tu contraseña">
+
+        <button id="btnAuth" class="btn principal" onclick="${modo==='login'?'doLogin()':'doReg()'}">
+          ${modo==='login'?'Ingresar':'Crear cuenta'}
+        </button>
+
+        <p class="sub">
+          ${modo==='login'?'¿No tienes cuenta?':'¿Ya tienes cuenta?'}
+          <button class="link" onclick="modo='${modo==='login'?'registro':'login'}';render()">
+            ${modo==='login'?'Regístrate':'Inicia sesión'}
+          </button>
+        </p>
+      </div>
+
+      <p class="pie-auth">Gus Gus · Plataforma de tratos</p>
+    </div>`;
+    return;
+  }
+
+  const vistas={
+    inicio:vInicio,
+    tratos:vTratos,
+    chat:vChat,
+    perfil:vPerfil
+  };
+
+  app.innerHTML=`
+  <header class="topbar">
+    <div class="marca-cabecera">
+      ${logo()}
+      <div>
+        <div class="marca">Gus Gus</div>
+        <div class="lema">Tratos seguros</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenido">
+    ${vistas[tab]?vistas[tab]():vInicio()}
+
+    <p class="aviso-demo">
+      Gus Gus está en etapa de desarrollo. El saldo y las recargas son demostrativos.
+      No se realizan pagos ni transferencias reales.
+    </p>
+  </main>
+
+  <nav class="nav">
+    <button class="${tab==='inicio'?'on':''}" onclick="go('inicio')">
+      <span>⌂</span>Inicio
+    </button>
+    <button class="${tab==='tratos'?'on':''}" onclick="go('tratos')">
+      <span>🤝</span>Tratos
+    </button>
+    <button class="${tab==='chat'?'on':''}" onclick="go('chat')">
+      <span>▤</span>Chats
+    </button>
+    <button class="${tab==='perfil'?'on':''}" onclick="go('perfil')">
+      <span>♙</span>Perfil
+    </button>
+  </nav>`;
+
+  if(tab==='perfil'){
+    mostrarAvatar();
+  }
 }
 
-db.auth.getSession().then(r=>{
-if(r.data.session)entrar();
-else render();
+// ==========================================
+// INICIO DE SESIÓN AUTOMÁTICO
+// ==========================================
+
+db.auth.onAuthStateChange(async(event,session)=>{
+  if(session?.user){
+    if(!me||me.id!==session.user.id){
+      await cargarUsuario(session.user);
+      iniciarActualizacion();
+    }
+  }else{
+    me=null;
+    deals=[];
+    msgs=[];
+    if(timer)clearInterval(timer);
+    timer=null;
+    render();
+  }
 });
+
+entrar();
 </script>
 </body>
 </html>
+
+
