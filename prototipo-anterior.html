@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gus Gus – Compra y vende con confianza</title>
+<style>
+:root{--bg:#f6e9e6;--cream:#fdf5f2;--card:#fff;--wine:#6e0f2b;--wine2:#8b1a3c;--red:#b0153f;--ink:#2a0d16;--mut:#7d6068;--ok:#1f9d55;--line:#e8d3cf;--chip:#f1dcd6;--bub:#ece3e1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c0a10}}
+:root[data-theme="dark"]{--bg:#1c0a10}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);font-family:"Poppins","Segoe UI",system-ui,sans-serif;color:var(--ink);padding:24px 12px}
+h1{text-align:center;font-size:20px;color:var(--wine);margin-bottom:18px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) h1{color:#f3c9d4}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;justify-items:center;max-width:1300px;margin:auto}
+.ph{width:300px;height:640px;border-radius:38px;border:4px solid var(--wine);background:var(--cream);overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 14px 30px rgba(80,10,30,.28)}
+.sb{display:flex;justify-content:space-between;padding:12px 24px 4px;font-size:12px;font-weight:600;color:#fff;z-index:2}
+.dk .sb,.lt .sb{color:var(--ink)}
+.hd{background:linear-gradient(160deg,#8b1a3c,#5a0a22);color:#fff;padding:0 0 14px}
+.hd .t{display:flex;align-items:center;gap:12px;padding:6px 18px;font-weight:600;font-size:17px}
+.hd .t span:first-child{font-size:20px}
+.hd .t.c{justify-content:center;position:relative}
+.hd .t.c span:first-child{position:absolute;left:18px}
+.bd{flex:1;background:var(--cream);border-radius:26px 26px 0 0;margin-top:-4px;padding:14px;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:44px;border-radius:22px;background:linear-gradient(180deg,#86183a,#5e0b24);color:#fff;font-weight:600;font-size:14px;border:0;width:100%}
+.btn.o{background:transparent;color:var(--wine);border:2px solid var(--wine)}
+.in{display:flex;align-items:center;gap:10px;height:44px;border:1.5px solid var(--line);border-radius:14px;padding:0 14px;font-size:13px;color:var(--mut);background:#fff8}
+.fld{background:#f5e8e4;border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--mut);border:1px solid var(--line)}
+.lb{font-weight:600;font-size:13px}.lb i{color:var(--red);font-style:normal}
+.sp{background:linear-gradient(170deg,#7a0f2e,#4a0719);color:#fff;align-items:center;justify-content:center;text-align:center;position:relative}
+.sp .sb{position:absolute;top:0;left:0;right:0}
+.sp h2{font-size:44px;font-weight:800;line-height:1}
+.sp p{font-size:19px;opacity:.9;margin-top:12px;line-height:1.3}
+.bag{font-size:84px;filter:saturate(1.3) drop-shadow(0 6px 10px #0006);margin-bottom:6px}
+.spin{width:36px;height:36px;border:3px solid #fff4;border-top-color:#fff;border-radius:50%;animation:s 1.2s linear infinite;margin:0 auto 8px}
+@keyframes s{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+.logo{font-size:40px;font-weight:800;color:var(--wine);line-height:1}
+.hs{position:absolute;top:44px;right:16px;font-size:44px}
+.ctr{text-align:center}
+.or{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12px}.or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
+.soc{display:flex;gap:10px;justify-content:center}.soc div{flex:1;height:40px;border:1.5px solid var(--line);border-radius:20px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;background:#fff8;gap:6px}
+.lk{color:var(--wine);text-decoration:underline;font-size:12.5px}
+.card{background:var(--card);border-radius:16px;padding:12px;box-shadow:0 3px 10px rgba(110,15,43,.1)}
+.bal{background:linear-gradient(120deg,#7a0f2e,#4d0a1e);color:#fff;border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:flex-end}
+.bal small{font-size:12px}.bal b{font-size:30px;display:block}
+.bal em{background:#f6dcd2;color:var(--wine);font-style:normal;font-weight:600;font-size:12px;padding:6px 12px;border-radius:10px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.acts div{background:var(--card);border-radius:14px;padding:10px 2px;text-align:center;font-size:10.5px;font-weight:500;box-shadow:0 3px 8px rgba(110,15,43,.1)}
+.acts span{display:block;font-size:22px;margin-bottom:2px}
+.row{display:flex;justify-content:space-between;align-items:center}
+.sec{font-weight:600;font-size:14px}.sec+a,.see{color:var(--red);font-size:12px;font-weight:600}
+.av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#f1c7b8,#c98b78);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none}
+.tag{background:#cdebd6;color:#17743f;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:9px}
+.nav{display:flex;justify-content:space-around;align-items:center;background:var(--card);padding:8px 4px 14px;font-size:9.5px;color:var(--mut);box-shadow:0 -4px 12px rgba(110,15,43,.08)}
+.nav div{text-align:center;position:relative}.nav span{display:block;font-size:19px}
+.nav .on{color:var(--wine);font-weight:600}
+.nav .plus{width:40px;height:40px;border-radius:50%;background:var(--wine);color:#fff;font-size:26px;line-height:38px}
+.nav b{position:absolute;top:-2px;right:4px;background:#d11;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;line-height:14px}
+.home{height:4px;width:110px;border-radius:2px;background:var(--wine);margin:8px auto 8px;flex:none}
+.up{background:#f0e0db;border-radius:14px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;gap:4px}
+.up span{font-size:44px;opacity:.55}
+.up em{background:#e3cdc8;border-radius:12px;padding:6px 16px;font-style:normal}
+.lap{font-size:92px;text-align:center;line-height:1;margin-top:6px;position:relative}
+.lap .tag{position:absolute;right:0;top:0;background:var(--ok);color:#fff;font-size:11px;padding:3px 10px;font-family:inherit}
+.tl{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.st{display:flex;gap:12px;align-items:center;font-size:13px}.st small{display:block;color:var(--mut);font-size:11px}
+.dot{width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.dot.w{background:#fff;border:2px solid var(--red);font-size:12px}.dot.g{background:#d9d0ce}
+.msg{max-width:78%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.3}
+.msg small{display:block;font-size:10px;opacity:.6;margin-top:2px}
+.me{background:linear-gradient(180deg,#86183a,#5e0b24);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ot{background:var(--bub);align-self:flex-start;border-bottom-left-radius:4px}
+.sendr{display:flex;gap:8px;align-items:center;padding:8px 12px}
+.sendr .in{flex:1;height:40px;border-radius:20px}
+.sendr i{width:40px;height:40px;border-radius:50%;background:var(--wine);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal}
+.big{font-size:28px;font-weight:700;color:var(--wine)}
+.split{display:grid;grid-template-columns:1fr 1fr;text-align:center;gap:0}
+.split div:first-child{border-right:1px solid var(--line)}
+.split small{color:var(--red);font-weight:600;font-size:12px}.split b{display:block;font-size:20px;color:var(--wine)}
+.ci{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px}
+.ci .av{width:34px;height:34px;font-size:16px;background:#e8e0f5}
+.ci b{color:var(--ok);margin-left:auto}
+.note{background:#f4dfcf;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;font-size:12px}
+.note span{font-size:30px}
+</style>
+</head>
+<body>
+<h1>Gus Gus · Prototipo de pantallas</h1>
+<div class="grid">
+
+<!-- 1 Splash -->
+<div class="ph sp">
+ <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="bag">🛍️</div>
+ <h2>Gus Gus</h2><p>Compra y vende<br>con confianza</p>
+ <div style="position:absolute;bottom:34px;left:0;right:0"><div class="spin"></div><div style="font-size:13px">Cargando...</div></div>
+</div>
+
+<!-- 2 Bienvenida -->
+<div class="ph lt">
+ <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="hs">🤝</div>
+ <div class="bd" style="background:none;padding-top:52px;gap:12px">
+  <div class="ctr"><div class="logo">Gus Gus</div><p style="font-size:16px;margin-top:6px;line-height:1.25">Compra y vende<br>con confianza</p></div>
+  <div class="ctr" style="font-size:96px;line-height:1.1;margin:6px 0">🛍️<span style="font-size:110px">📱</span></div>
+  <div class="btn">👤 Crear cuenta</div>
+  <div class="btn o">⇥ Iniciar sesión</div>
+  <div class="or">o</div>
+  <div class="soc"><div>G Google</div><div></div></div>
+  <div class="ctr"><span class="lk">Entrar como invitado</span></div>
+ </div>
+</div>
+
+<!-- 3 Login -->
+<div class="ph lt">
+ <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="hs">🤝</div>
+ <div class="bd" style="background:none;padding-top:60px;gap:12px">
+  <div class="ctr"><p style="font-size:17px">Bienvenido a</p><div class="logo" style="font-size:34px">Gus Gus</div><p style="font-size:13.5px;margin-top:12px">Inicia sesión en tu cuenta</p></div>
+  <div class="in">👤 Correo electrónico</div>
+  <div class="in">🔒 Contraseña<span style="margin-left:auto">🙈</span></div>
+  <div class="btn">Ingresar</div>
+  <div class="ctr"><span class="lk">¿Olvidaste tu contraseña?</span></div>
+  <div class="or">o</div>
+  <div class="soc"><div style="color:#d33;font-size:18px">G</div><div style="font-size:18px"></div><div style="color:#1877f2;font-size:18px">f</div></div>
+  <div class="ctr" style="font-size:12.5px;margin-top:6px">¿No tienes cuenta? <span class="lk" style="font-weight:600">Crear cuenta</span></div>
+ </div>
+</div>
+
+<!-- 4 Inicio -->
+<div class="ph">
+ <div class="hd"><div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+  <div class="t c"><span>☰</span><span>Gus Gus</span><span style="position:absolute;right:16px;left:auto;font-size:28px">🤝</span></div></div>
+ <div class="bd" style="gap:9px;padding-top:12px">
+  <div class="card row" style="padding:10px 14px"><div><b style="font-size:17px">Hola, Carlos 👋</b><div style="font-size:11.5px;color:var(--mut)">¡Que tengas un gran día!</div></div><span style="font-size:38px">🛡️</span></div>
+  <div class="bal"><div><small>Tu saldo disponible</small><b>S/ 0.00</b></div><em>Recargar</em></div>
+  <div class="acts"><div><span>➕</span>Crear Trato</div><div><span>📋</span>Mis Tratos</div><div><span>💬</span>Chat</div><div><span>👤</span>Mi Perfil</div></div>
+  <div class="row"><span class="sec">Tratos recientes</span><span class="see">Ver todos ›</span></div>
+  <div class="card row" style="gap:10px"><div class="av">👩</div><div style="flex:1"><b style="font-size:13px">María López</b><div style="font-size:11.5px;color:var(--mut)">Laptop gamer</div><b style="font-size:15px">S/ 2,500.00</b><div class="row" style="margin-top:2px"><span class="tag">En proceso</span><small style="color:var(--mut);font-size:10px">Hace 1 h</small></div></div></div>
+ </div>
+ <div class="nav"><div class="on"><span>🏠</span>Inicio</div><div><span>💬</span>Chat</div><div class="plus">+</div><div><span>🔔</span><b>2</b>Notificaciones</div><div><span>👤</span>Perfil</div></div>
+</div>
+
+<!-- 5 Nuevo trato -->
+<div class="ph">
+ <div class="hd"><div class="sb"><span>9:41</span><span>●●● ▮</span></div><div class="t c"><span>←</span><span>Nuevo Trato</span></div></div>
+ <div class="bd" style="gap:7px;padding-top:12px">
+  <div class="up"><span>🖼️</span><em>Agregar fotos<br><small>(opcional)</small></em></div>
+  <div class="lb" style="margin-top:6px">Título del producto <i>*</i></div><div class="fld">Ej. Laptop gamer</div>
+  <div class="lb">Descripción <i>*</i></div><div class="fld" style="padding:10px 12px 14px">Describe el producto o servicio...</div>
+  <div class="lb">Precio (S/) <i>*</i></div><div class="fld">0.00</div>
+  <div class="lb">Categoría</div><div class="fld row">Selecciona una categoría <span>⌄</span></div>
+  <div class="btn" style="margin-top:auto">Crear Trato</div><div class="home" style="margin:0 auto"></div>
+ </div>
+</div>
+
+<!-- 6 Detalle -->
+<div class="ph">
+ <div class="hd"><div class="sb"><span>9:41</span><span>●●● ▮</span></div><div class="t c"><span>←</span><span>Detalle del Trato</span></div></div>
+ <div class="bd" style="gap:6px;padding-top:6px">
+  <div class="lap">💻<span class="tag">En proceso</span></div>
+  <div class="ctr"><b style="font-size:19px">Laptop gamer</b><div class="big" style="color:var(--red);font-size:25px">S/ 2,500.00</div></div>
+  <div class="tl">
+   <div class="st"><div class="dot">✓</div><div>Trato creado<small>10 Nov. 2026 - 10:30 a. m.</small></div></div>
+   <div class="st"><div class="dot">✓</div><div>Pago recibido<small>10 Nov. 2026 - 10:45 a. m.</small></div></div>
+   <div class="st"><div class="dot w">🔒</div><div>Dinero en custodia<small>Esperando confirmación...</small></div></div>
+   <div class="st"><div class="dot g"></div><div>Pago al vendedor</div></div>
+   <div class="st"><div class="dot g"></div><div>Trato completado</div></div>
+  </div>
+  <div class="btn" style="margin-top:auto">Ver detalles</div><div class="home" style="margin:0 auto"></div>
+ </div>
+</div>
+
+<!-- 7 Chat -->
+<div class="ph">
+ <div class="hd"><div class="sb"><span>9:41</span><span>●●● ▮</span></div><div class="t c"><span>←</span><span>Chat del Trato</span></div></div>
+ <div class="bd" style="gap:12px;padding:0 0 0;background:var(--cream)">
+  <div class="row" style="padding:10px 14px;background:#fff"><div class="row" style="gap:10px"><div class="av" style="width:42px;height:42px">👩</div><div><b style="font-size:14px">María López</b><div style="font-size:11px;color:var(--ok)">En línea</div></div></div><span style="color:var(--wine);font-size:20px">📞 🎥</span></div>
+  <div style="display:flex;flex-direction:column;gap:12px;padding:6px 14px;flex:1">
+   <div class="msg ot">¿Está disponible?<small>10:15 a. m.</small></div>
+   <div class="msg me">Sí, claro. ¿Te interesa?<small>10:16 a. m.</small></div>
+   <div class="msg ot">Perfecto, lo compro 👍<small>10:17 a. m.</small></div>
+   <div class="msg me">Genial. Te envío el detalle del pago.<small>10:18 a. m.</small></div>
+  </div>
+  <div class="sendr"><div class="in">😊 Escribe un mensaje...</div><i>➤</i></div><div class="home" style="margin:0 auto 8px"></div>
+ </div>
+</div>
+
+<!-- 8 Comisiones -->
+<div class="ph">
+ <div class="hd"><div class="sb"><span>9:41</span><span>●●● ▮</span></div><div class="t c"><span>←</span><span>Mis Comisiones</span></div></div>
+ <div class="bd" style="gap:9px;padding-top:12px">
+  <div class="card row" style="justify-content:center;gap:12px"><span style="font-size:44px">⭐</span><div><div style="font-size:13px;font-weight:600">Comisión Total</div><div class="big" style="color:var(--ink)">S/ 125.00</div></div></div>
+  <div class="card split"><div><small>Comprador</small><b>S/ 62.50</b><span style="font-size:11px">(50%)</span></div><div><small>Vendedor</small><b>S/ 62.50</b><span style="font-size:11px">(50%)</span></div></div>
+  <div class="row"><span class="sec">Historial de Comisiones</span><span class="see">Ver todos ›</span></div>
+  <div><div class="ci"><div class="av">👑</div><div><b style="color:var(--ink);margin:0">Trato #1048</b><div style="font-size:11px;color:var(--mut)">10/11/2026</div></div><b>S/ 62.50</b></div>
+  <div class="ci"><div class="av">👑</div><div><b style="color:var(--ink);margin:0">Trato #1047</b><div style="font-size:11px;color:var(--mut)">09/11/2026</div></div><b>S/ 87.50</b></div></div>
+  <div class="note"><span>🛡️</span>Tus comisiones se depositan en tu cuenta Interbank</div>
+ </div>
+ <div class="nav"><div><span>🏠</span>Inicio</div><div><span>💬</span>Chat</div><div class="plus">+</div><div><span>🔔</span><b>2</b>Notificaciones</div><div><span>👤</span>Perfil</div></div>
+</div>
+
+</div>
+</body>
+</html>
