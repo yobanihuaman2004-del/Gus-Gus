@@ -1,6 +1,6 @@
 window.GUSGUS_CONFIG = {
   supabaseUrl: "https://zbeidmuunsmgzeuovcko.supabase.co",
-  supabaseAnonKey: "TU_CLAVE_PUBLICABLE_DE_SUPABASE",
+  supabaseAnonKey: "sb_publishable_T54DQZRoqNG44DhoEjpDCw_ox7m7LgG",
   appName: "GusGus",
   easypayEnabled: false
 };
