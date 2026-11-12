@@ -32,3 +32,348 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .card{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 6px 22px rgba(121,5,47,.1)}
 h2{font-size:20px;margin-bottom:8px}h3{font-size:16px;margin:14px 0 8px}
+.pi{display:inline-block;mix-blend-mode:multiply}
+.muted{color:var(--mut);font-size:13px;line-height:1.5}
+.bal{display:flex;justify-content:space-between;align-items:center}.bal small{color:var(--mut);font-size:12.5px;display:block}.bal .n{font-size:32px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:14px;background:linear-gradient(135deg,#8f0b3f,var(--wine2));color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(121,5,47,.35);transition:transform .15s;margin-top:10px}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.55}
+.btn.sm{width:auto;height:38px;padding:0 18px;font-size:14px;border-radius:11px;margin:0}
+.btn.o{background:#fff;color:var(--wine);border:1.5px solid #e6ccd6;box-shadow:none}
+.q{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.qt{background:#fff;border-radius:16px;padding:12px 2px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:6px;font-size:12px;font-weight:600;min-height:84px;box-shadow:0 4px 14px rgba(121,5,47,.08);transition:transform .15s;color:var(--ink)}.qt:active{transform:scale(.96)}.qt .i{height:40px;display:grid;place-items:center;color:var(--wine)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.tg .qt{background:#fbf1f5;padding:16px 6px;min-height:100px;box-shadow:none;font-size:13.5px}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:16px 2px 10px}.sec b{font-size:17px}.sec a{color:var(--wine);font-size:13px;font-weight:600;cursor:pointer}
+.listitem,.dr{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.listitem:last-child,.dr:last-child{border:0}
+.dr .m{flex:1}.dr b,.listitem b{font-size:14.5px}.dr small,.listitem small{color:var(--mut);font-size:12px}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#fff;border-radius:14px;padding:12px 6px;text-align:center;box-shadow:0 4px 14px rgba(121,5,47,.08)}.stat small{display:block;font-size:11px;font-weight:700;color:var(--wine)}.stat strong{font-size:18px;letter-spacing:-.02em}
+label{display:block;font-size:13px;font-weight:700;color:var(--mut);margin:12px 0 6px}
+input,textarea{width:100%;border:1.5px solid #ead3dc;border-radius:14px;background:#fff;padding:0 14px;height:50px;font:inherit;color:var(--ink);outline:none}
+textarea{height:auto;padding:12px 14px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(255,61,129,.18)}
+input[type=file]{padding:12px 14px;height:auto}
+.inp{position:relative;margin-bottom:12px}.inp input{padding:0 46px 0 46px}.inp .l,.inp .r{position:absolute;top:0;height:50px;width:44px;display:grid;place-items:center;color:var(--wine)}.inp .l{left:0}.inp .r{right:0}.inp.s input{padding:0 46px 0 16px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;height:38px;border-radius:12px;background:#fff;color:var(--wine);font-weight:600;font-size:14px}.tabs button.active{background:var(--wine);color:#fff;box-shadow:0 4px 12px rgba(121,5,47,.3)}
+.pill{display:inline-block;border-radius:30px;background:#fbe6ee;color:var(--wine);font-size:11px;font-weight:700;padding:5px 10px}.pill.ok{background:#dff5ea;color:var(--ok)}.pill.w{background:#fff1d9;color:#b87400}
+.tcard{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 4px 14px rgba(121,5,47,.07)}.tcard .m{flex:1}.tcard b{font-size:15px;display:block}.tcard .st{font-size:12.5px;font-weight:600}
+.notice{padding:12px;border-radius:12px;background:#fff4e8;color:#79502e;font-size:12.5px;line-height:1.5;margin-top:10px}.notice.info{background:#e8f0ff;color:#2a4d9b}
+.empty{text-align:center;padding:22px;color:var(--mut)}
+.lst{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid var(--line);width:100%;text-align:left;font-size:15px}.lst:last-child{border:0}.lst .t{flex:1}.lst svg{color:var(--wine)}.lst .c{color:#c9a8b6}
+.profile-top{text-align:center;margin-bottom:6px}.profile-top .av{width:92px;height:92px;margin:-4px auto 10px}
+nav{display:flex;background:#fff;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 28px rgba(121,5,47,.15);flex:none;position:relative;z-index:3}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--mut);padding:4px;position:relative}nav button.active{color:var(--wine)}
+nav button.active::before{content:"";position:absolute;top:-8px;width:28px;height:3px;border-radius:3px;background:var(--neon);box-shadow:0 0 10px var(--neon)}
+.chatlog{height:min(52vh,420px);overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 0 10px}
+.mr{display:flex;gap:10px;align-items:flex-end}.mr.u{justify-content:flex-end}.botav{width:36px;height:36px;border-radius:50%;background:#e4ebff;color:#3b5bdb;display:grid;place-items:center;flex:none}
+.bb{max-width:80%;padding:12px 14px;border-radius:16px;font-size:14px;line-height:1.5;background:#f8eff3;white-space:pre-wrap;overflow-wrap:anywhere}.mr.u .bb{background:var(--wine);color:#fff;border-radius:16px 16px 4px 16px}.mr:not(.u) .bb{border-radius:16px 16px 16px 4px}
+.chatform{display:flex;gap:10px;align-items:flex-end}.chatform textarea{flex:1;height:50px}.chatform .btn{width:50px;height:50px;padding:0;margin:0}
+.lg{text-align:center;margin:18px 0}.lg h1{font-size:40px;font-weight:800;color:var(--wine);letter-spacing:-.03em}.lg p{font-family:Georgia,serif;font-style:italic;color:var(--wine)}
+.auth .top,.auth nav{display:none}.auth .sheet{margin:0;border-radius:0;background:#fff;padding:26px 24px}
+</style>
+</head>
+<body>
+<div id="app" class="auth">
+<header class="top" id="top">
+<div class="bar">
+<button class="ib" id="backBtn" data-ic="back" data-s="24" onclick="go('home')"></button>
+<b id="pageTitle"></b>
+<span class="pill" id="headerStatus">Bienvenido</span>
+</div>
+<div class="who" id="who">
+<div class="av" id="hdrAv"><img id="hdrAvatar" alt=""></div>
+<div><b id="greeting">Bienvenido</b><small id="roleText">Usuario</small></div>
+</div>
+</header>
+<main class="sheet">
+<section id="authScreen">
+<div class="lg"><span style="color:var(--wine);display:inline-block" data-ic="hand" data-s="84"></span><h1>GusGus</h1><p>Compra · Vende · Confía</p></div>
+<div style="text-align:center;margin-bottom:16px"><b style="font-size:21px">Iniciar sesión</b><div class="muted" style="margin-top:4px">Ingresa a tu cuenta para continuar.</div></div>
+<div class="inp"><span class="l" data-ic="mail" data-s="20"></span><input id="email" type="email" placeholder="Correo electrónico" autocomplete="email"></div>
+<div class="inp"><span class="l" data-ic="lock" data-s="20"></span><input id="password" type="password" placeholder="Contraseña" autocomplete="current-password"><button type="button" class="r" id="eyeBtn" data-ic="eye" data-s="20"></button></div>
+<button class="btn" id="loginBtn">Ingresar</button>
+<button class="btn o" id="signupBtn">Crear cuenta</button>
+<p id="authMessage" class="muted" style="text-align:center;margin-top:12px"></p>
+<div class="notice">Tus datos y operaciones deben estar protegidos.</div>
+</section>
+<section id="homeScreen" class="hidden">
+<div class="card"><div class="bal"><div><small>Tu saldo</small><div class="n" id="balanceText">S/ 0.00</div><small>Saldo registrado en tu perfil</small></div><button class="btn sm" onclick="alert('Las recargas se activarán cuando EasyPay esté autorizado.')">Recargar</button></div></div>
+<div class="q">
+<button class="qt" onclick="go('buscar')"><span class="i"><span data-ic="cart" data-s="34"></span></span>Comprar</button>
+<button class="qt" onclick="go('publicar')"><span class="i"><span data-ic="swap" data-s="34"></span></span>Vender</button>
+<button class="qt" onclick="go('deals')"><span class="i"><span data-ic="hand" data-s="36"></span></span>Mis tratos</button>
+<button class="qt" onclick="go('guss')"><span class="i" data-ic="bot" data-s="30"></span>Chat con GUSS</button>
+</div>
+<div class="sec" style="margin-top:6px"><b>Tratos recientes</b><a onclick="go('deals')">Ver todos ›</a></div>
+<div class="card" id="recentDeals" style="padding:4px 16px"><div class="empty">Todavía no tienes tratos.</div></div>
+</section>
+<section id="buscarScreen" class="hidden">
+<div class="inp s"><input id="searchInput" placeholder="Buscar producto o servicio"><span class="r" data-ic="search" data-s="20"></span></div>
+<div id="listingResults"></div>
+</section>
+<section id="publicarScreen" class="hidden">
+<div class="card">
+<h2>Publicar producto</h2>
+<label>Nombre del producto</label><input id="listingTitle">
+<label>Descripción</label><textarea id="listingDescription" rows="4"></textarea>
+<label>Precio (S/)</label><input id="listingPrice" type="number" min="0.01" step="0.01">
+<button class="btn" id="publishBtn">Publicar</button>
+<p id="listingMessage" class="muted" style="margin-top:10px"></p>
+</div>
+</section>
+<section id="dealsScreen" class="hidden">
+<div class="tabs"><button class="active" onclick="filterDeals('todos',this)">Todos</button><button onclick="filterDeals('compra',this)">Compras</button><button onclick="filterDeals('venta',this)">Ventas</button></div>
+<div id="dealsList"></div>
+</section>
+<section id="creatorScreen" class="hidden">
+<div class="tg" style="margin-top:0">
+<button class="qt" onclick="go('publicar')"><span class="i" data-ic="edit" data-s="30"></span>Nueva publicación</button>
+<button class="qt" onclick="loadMyListings()"><span class="i" data-ic="receipt" data-s="30"></span>Mis publicaciones</button>
+</div>
+<div class="card" id="myListings" style="margin-top:12px"></div>
+</section>
+<section id="profileScreen" class="hidden">
+<div class="card">
+<div class="profile-top">
+<div class="av"><img id="avatar" alt=""></div>
+<h2 id="profileDisplayName">Mi perfil</h2>
+<p class="muted" id="profileDisplayEmail"></p>
+</div>
+<label>Nombre completo</label><input id="profileName">
+<label>Teléfono</label><input id="profileTel" type="tel">
+<label>Foto de perfil</label><input id="avatarFile" type="file" accept="image/*">
+<button class="btn" id="saveProfileBtn">Guardar cambios</button>
+<p id="profileMessage" class="muted" style="margin-top:10px"></p>
+</div>
+<div class="card" style="padding:4px 16px">
+<button class="lst" onclick="go('deals')"><span data-ic="receipt" data-s="22"></span><span class="t">Mis tratos</span><span class="c" data-ic="chev" data-s="18"></span></button>
+<button class="lst" onclick="go('creator')"><span data-ic="edit" data-s="22"></span><span class="t">Panel de creador</span><span class="c" data-ic="chev" data-s="18"></span></button>
+<button class="lst" onclick="go('config')"><span data-ic="gear" data-s="22"></span><span class="t">Configuración</span><span class="c" data-ic="chev" data-s="18"></span></button>
+<button class="lst" onclick="go('guss')"><span data-ic="help" data-s="22"></span><span class="t">Ayuda y soporte</span><span class="c" data-ic="chev" data-s="18"></span></button>
+</div>
+<button class="btn" onclick="logout()">Cerrar sesión</button>
+</section>
+<section id="configScreen" class="hidden">
+<div class="card">
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px"><span data-ic="pct" data-s="34"></span><b style="font-size:20px">Comisión por trato</b></div>
+<p class="muted">La comisión se divide en partes iguales: 50% comprador y 50% vendedor.</p>
+<div class="notice info">La comisión debe configurarse en el servidor para aplicarse a operaciones reales.</div>
+</div>
+<div class="card">
+<h2>Pagos</h2>
+<div class="notice">EasyPay está pendiente de autorización y credenciales oficiales. Los pagos reales permanecen desactivados.</div>
+</div>
+</section>
+<section id="gussScreen" class="hidden">
+<div class="card">
+<p class="muted" style="margin-bottom:8px">Tu asistente para resolver dudas y ayudarte con tus tratos.</p>
+<div class="chatlog" id="chatLog"></div>
+<div class="chatform"><textarea id="chatInput" rows="2" placeholder="Escribe tu mensaje..."></textarea><button class="btn" id="sendChat" data-ic="send" data-s="22"></button></div>
+<p id="chatStatus" class="muted" style="margin-top:8px"></p>
+</div>
+</section>
+<section id="adminScreen" class="hidden">
+<div class="card">
+<b style="font-size:18px">Panel de Control</b>
+<div class="tg">
+<button class="qt" onclick="adminUsers()"><span class="i"><span data-ic="users" data-s="36"></span></span>Gestionar Usuarios</button>
+<button class="qt" onclick="go('deals')"><span class="i"><span data-ic="hand" data-s="36"></span></span>Gestionar Tratos</button>
+<button class="qt" onclick="go('config')"><span class="i"><span data-ic="pct" data-s="36"></span></span>Configurar Comisión</button>
+<button class="qt" onclick="adminReports()"><span class="i"><span data-ic="chart" data-s="36"></span></span>Reportes</button>
+</div>
+</div>
+<div class="sec"><b>Estadísticas</b></div>
+<div class="statgrid">
+<div class="stat"><small>Usuarios</small><strong id="statUsers">—</strong></div>
+<div class="stat"><small>Tratos</small><strong id="statDeals">—</strong></div>
+<div class="stat"><small>Volumen S/</small><strong id="statIncome">—</strong></div>
+</div>
+<p id="adminMessage" class="muted" style="margin-top:10px"></p>
+</section>
+<section id="adminUsersScreen" class="hidden"><div id="usersList"></div></section>
+<section id="reportsScreen" class="hidden"><div class="card" id="reportContent"></div></section>
+</main>
+<nav id="bottomNav">
+<button data-page="home" onclick="go('home')"><span data-ic="home" data-s="24"></span>Inicio</button>
+<button data-page="deals" onclick="go('deals')"><span data-ic="receipt" data-s="24"></span>Tratos</button>
+<button data-page="publicar" onclick="go('publicar')"><span data-ic="edit" data-s="24"></span>Publicar</button>
+<button data-page="guss" onclick="go('guss')"><span data-ic="bot" data-s="24"></span>GUSS</button>
+<button data-page="profile" onclick="go('profile')"><span data-ic="user" data-s="24"></span>Perfil</button>
+</nav>
+</div>
+<script>
+"use strict";
+const P={cart:'<path d="M3 4h2l2 12h11l2-8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',swap:'<path d="M4 8h14l-3-3M20 16H6l3 3"/>',pct:'<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',chart:'<path d="M5 20V10M12 20V4M19 20v-7"/>',hand:'<g transform="scale(.5)" stroke-width="3.4"><path d="M5 18l8-7 9 7-7 8-10-8zM43 18l-8-7-9 7 7 8 10-8z"/><path d="M15 25l7 7a3 3 0 004 0l7-7M20 20l8 8M17 23l8 9M31 23l-6 8"/></g>',home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',bot:'<rect x="4" y="7" width="16" height="12" rx="4"/><circle cx="9" cy="13" r="1.3"/><circle cx="15" cy="13" r="1.3"/><path d="M12 3v4"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2.5.7 4 2.3 4 5"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.1"/>',send:'<path d="M3 11l18-8-8 18-2-8z"/>',back:'<path d="M15 5l-7 7 7 7"/>',chev:'<path d="M9 5l7 7-7 7"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'};
+const ic=(k,s)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${P[k]}</svg>`;
+const chk=c=>`<svg viewBox="0 0 24 24" width="30" height="30" style="flex:none"><circle cx="12" cy="12" r="11" fill="${c}"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const clk=()=>`<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#f0a020" stroke-width="2.2" stroke-linecap="round" style="flex:none"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>`;
+const DEF="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f7e4e9'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23c98aa2'/%3E%3Cpath d='M14 100c0-24 16-38 36-38s36 14 36 38z' fill='%23c98aa2'/%3E%3C/svg%3E";
+const done=s=>/complet|pagad|finaliz/i.test(s||"");
+function paint(){
+ document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic,+e.dataset.s||22));
+ $("hdrAvatar").src=DEF;$("avatar").src=DEF;
+}
+
+const cfg=window.GUSGUS_CONFIG||{};
+const sb=cfg.supabaseUrl&&cfg.supabaseAnonKey&&window.supabase?window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey):null;
+let currentUser=null,currentProfile=null,allDeals=[];
+const $=id=>document.getElementById(id);
+const money=n=>"S/ "+Number(n||0).toFixed(2);
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pages=["home","buscar","publicar","deals","creator","profile","config","guss","admin","adminUsers","reports"];
+const TITLES={buscar:"Comprar",publicar:"Vender",deals:"Mis Tratos",creator:"Panel de Creador",profile:"Mi Perfil",config:"Configuración",guss:"Chat con GusGus",adminUsers:"Gestionar Usuarios",reports:"Reportes"};
+function msg(id,t){if($(id))$(id).textContent=t}
+function show(id,v){if($(id))$(id).classList.toggle("hidden",!v)}
+function setHeader(id){
+ const h=id==="home"||id==="admin";
+ $("top").classList.toggle("compact",!h);$("who").classList.toggle("hidden",!h);
+ $("pageTitle").textContent=h?"":(TITLES[id]||"");$("backBtn").style.visibility=h?"hidden":"visible";
+ const back=(id==="adminUsers"||id==="reports")?"admin":(currentProfile&&currentProfile.isAdmin?"admin":"home");
+ $("backBtn").onclick=()=>go(back);
+}
+function page(id){pages.forEach(p=>show(p+"Screen",p===id));setHeader(id);$("app").querySelector(".sheet").scrollTop=0}
+function go(id){
+ if(!currentUser)return;
+ page(id);
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="deals")loadDeals();
+ if(id==="buscar")loadListings();
+ if(id==="creator")loadMyListings();
+ if(id==="guss")renderChat();
+ if(id==="admin")loadAdmin();
+}
+function authView(){$("app").classList.add("auth");show("authScreen",true);pages.forEach(p=>show(p+"Screen",false))}
+async function refreshSession(){
+ if(!sb){msg("authMessage","Revisa la configuración de Supabase.");return}
+ try{
+  const {data,error}=await sb.auth.getSession();if(error)throw error;
+  if(data.session){currentUser=data.session.user;await enterApp()}else authView();
+ }catch(e){authView();msg("authMessage",e.message)}
+}
+async function enterApp(){
+ $("app").classList.remove("auth");show("authScreen",false);$("headerStatus").textContent="Conectado";
+ $("profileDisplayEmail").textContent=currentUser.email||"";
+ const {data,error}=await sb.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(error)msg("profileMessage",error.message);
+ currentProfile=data||{};
+ $("profileName").value=currentProfile.name||"";
+ $("profileTel").value=currentProfile.tel||"";
+ $("profileDisplayName").textContent=currentProfile.name||"Mi perfil";
+ $("balanceText").textContent=money(currentProfile.balance);
+ $("avatar").src=currentProfile.avatar_url||DEF;$("hdrAvatar").src=currentProfile.avatar_url||DEF;
+ $("greeting").textContent="Hola, "+(currentProfile.name||currentUser.email?.split("@")[0]||"Usuario");
+ const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",currentUser.id);
+ const admin=!!roles?.some(r=>r.role==="owner"||r.role==="admin");
+ currentProfile.isAdmin=admin;
+ $("roleText").textContent=admin?"Creador / Administrador":"Usuario";
+ const old=document.querySelector('nav [data-page="admin"]');if(old)old.remove();
+ if(admin){
+  const b=document.createElement("button");b.dataset.page="admin";b.onclick=()=>go("admin");b.innerHTML=ic("shield",24)+"Admin";
+  document.querySelector("nav").insertBefore(b,document.querySelector('nav [data-page="profile"]'));
+ }
+ go(admin?"admin":"home");
+}
+$("eyeBtn").onclick=()=>{const p=$("password");p.type=p.type==="password"?"text":"password"};
+$("loginBtn").onclick=async()=>{
+ if(!sb)return msg("authMessage","Falta configuración de Supabase.");
+ const email=$("email").value.trim(),password=$("password").value;
+ if(!email||!password)return msg("authMessage","Ingresa correo y contraseña.");
+ $("loginBtn").disabled=true;
+ try{const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;await refreshSession()}
+ catch(e){msg("authMessage",e.message)}
+ finally{$("loginBtn").disabled=false}
+};
+$("signupBtn").onclick=async()=>{
+ if(!sb)return msg("authMessage","Falta configuración de Supabase.");
+ const email=$("email").value.trim(),password=$("password").value;
+ if(!email||password.length<6)return msg("authMessage","Ingresa correo y contraseña de al menos 6 caracteres.");
+ try{const {data,error}=await sb.auth.signUp({email,password});if(error)throw error;msg("authMessage",data.session?"Cuenta creada.":"Revisa tu correo para confirmar la cuenta.");if(data.session)await refreshSession()}
+ catch(e){msg("authMessage",e.message)}
+};
+async function logout(){await sb.auth.signOut();currentUser=null;currentProfile=null;authView();$("headerStatus").textContent="Bienvenido"}
+$("saveProfileBtn").onclick=async()=>{
+ const name=$("profileName").value.trim(),tel=$("profileTel").value.trim();
+ if(!name)return msg("profileMessage","Escribe tu nombre.");
+ let avatar_url=currentProfile.avatar_url||null;const file=$("avatarFile").files[0];
+ try{
+  if(file){
+   if(file.size>3*1024*1024)return msg("profileMessage","La foto debe pesar menos de 3 MB.");
+   const ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=currentUser.id+"/avatar."+ext;
+   const {error}=await sb.storage.from("avatars").upload(path,file,{upsert:true,contentType:file.type});if(error)throw error;
+   avatar_url=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+  }
+  const payload={id:currentUser.id,name,tel};if(avatar_url)payload.avatar_url=avatar_url;
+  const {error}=await sb.from("profiles").upsert(payload);if(error)throw error;
+  currentProfile={...currentProfile,...payload};$("profileDisplayName").textContent=name;
+  if(avatar_url){$("avatar").src=avatar_url;$("hdrAvatar").src=avatar_url}
+  $("greeting").textContent="Hola, "+name;msg("profileMessage","Perfil guardado correctamente.");
+ }catch(e){msg("profileMessage","Error: "+e.message)}
+};
+$("publishBtn").onclick=async()=>{
+ const title=$("listingTitle").value.trim(),description=$("listingDescription").value.trim(),price=Number($("listingPrice").value);
+ if(!title||!Number.isFinite(price)||price<=0)return msg("listingMessage","Completa los datos y un precio válido.");
+ try{const {error}=await sb.from("listings").insert({user_id:currentUser.id,title,description,price});if(error)throw error;msg("listingMessage","Publicación guardada.");$("listingTitle").value="";$("listingDescription").value="";$("listingPrice").value=""}
+ catch(e){msg("listingMessage","No se pudo publicar: "+e.message)}
+};
+async function loadListings(){
+ const box=$("listingResults");box.innerHTML='<div class="empty">Cargando...</div>';
+ try{let q=sb.from("listings").select("*").order("created_at",{ascending:false}).limit(50);const term=$("searchInput").value.trim();if(term)q=q.ilike("title","%"+term+"%");const {data,error}=await q;if(error)throw error;
+ box.innerHTML=(data||[]).map(x=>`<div class="card"><b style="font-size:16px">${safe(x.title)}</b><p class="muted" style="margin:4px 0 8px">${safe(x.description)}</p><strong style="color:var(--wine);font-size:18px">${money(x.price)}</strong></div>`).join("")||'<div class="empty">No hay publicaciones disponibles.</div>'}
+ catch(e){box.innerHTML='<div class="notice">No se pudieron cargar publicaciones. Revisa la tabla y sus permisos.</div>'}
+}
+$("searchInput").addEventListener("input",()=>{clearTimeout(window.searchTimer);window.searchTimer=setTimeout(loadListings,350)});
+async function loadMyListings(){
+ const box=$("myListings");box.textContent="Cargando...";
+ try{const {data,error}=await sb.from("listings").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false});if(error)throw error;
+ box.innerHTML=(data||[]).map(x=>`<div class="listitem"><div style="flex:1"><b>${safe(x.title)}</b><br><small>${money(x.price)}</small></div><span class="pill ok">Publicado</span></div>`).join("")||'<div class="empty">Aún no tienes publicaciones.</div>'}
+ catch(e){box.textContent="No se pudieron consultar las publicaciones. Revisa la tabla listings."}
+}
+async function loadDeals(){
+ const box=$("dealsList");box.innerHTML='<div class="empty">Cargando tratos...</div>';
+ try{const {data,error}=await sb.from("deals").select("*").or(`buyer.eq.${currentUser.id},seller.eq.${currentUser.id}`).order("created_at",{ascending:false});if(error)throw error;allDeals=data||[];renderDeals("todos");
+ $("recentDeals").innerHTML=allDeals.slice(0,3).map(d=>`<div class="dr">${done(d.status)?chk(d.seller===currentUser.id?"#2f7df6":"#1fa463"):clk()}<div class="m"><b>${safe(d.title||"Trato")}</b><br><small>${safe(d.status||"Pendiente")}</small></div><b>${money(d.amount)}</b></div>`).join("")||'<div class="empty">Todavía no tienes tratos.</div>'}
+ catch(e){box.innerHTML='<div class="notice">No se pudieron cargar los tratos. Comprueba las columnas y permisos de deals.</div>'}
+}
+function renderDeals(filter){
+ const arr=allDeals.filter(d=>filter==="todos"||(filter==="compra"?d.buyer===currentUser.id:d.seller===currentUser.id));
+ $("dealsList").innerHTML=arr.map(d=>`<div class="tcard">${done(d.status)?chk("#1fa463"):clk()}<div class="m"><b>${safe(d.title||"Trato")}</b><span class="st" style="color:${done(d.status)?"var(--ok)":"var(--wait)"}">${safe(d.status||"Pendiente")}</span><small class="muted" style="display:block;font-size:11px">Código: ${safe(d.id)}</small></div><b style="font-variant-numeric:tabular-nums">${money(d.amount)}</b></div>`).join("")||'<div class="empty">No hay tratos en esta sección.</div>';
+}
+function filterDeals(f,el){document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));el.classList.add("active");renderDeals(f)}
+function chatKey(){return "gusgus_chat_"+currentUser.id}
+function getChat(){try{return JSON.parse(localStorage.getItem(chatKey())||"[]")}catch{return []}}
+function saveChat(a){localStorage.setItem(chatKey(),JSON.stringify(a))}
+const botRow=t=>`<div class="mr"><span class="botav">${ic("bot",22)}</span><div class="bb">${safe(t)}</div></div>`;
+function renderChat(){
+ const a=getChat();$("chatLog").innerHTML=a.length?a.map(m=>m.role==="user"?`<div class="mr u"><div class="bb">${safe(m.text)}</div></div>`:botRow(m.text)).join(""):botRow("Hola. Soy GUSS. ¿Cómo puedo ayudarte?");
+ $("chatLog").scrollTop=$("chatLog").scrollHeight;
+}
+$("sendChat").onclick=sendGuss;
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendGuss()}});
+async function sendGuss(){
+ const text=$("chatInput").value.trim();if(!text)return;
+ const history=getChat();history.push({role:"user",text});saveChat(history);$("chatInput").value="";renderChat();$("sendChat").disabled=true;msg("chatStatus","GUSS está pensando...");
+ try{
+  const {data:s}=await sb.auth.getSession();const token=s.session?.access_token||"";
+  const response=await fetch("/api/guss",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify({messages:history.slice(-20)})});
+  const data=await response.json();if(!response.ok)throw Error(data.error||"No se pudo conectar con GUSS.");
+  history.push({role:"model",text:data.answer||"No recibí respuesta."});saveChat(history);msg("chatStatus","")}
+ catch(e){msg("chatStatus","Error de conexión: "+e.message+". Tu mensaje quedó guardado.")}
+ finally{$("sendChat").disabled=false;renderChat()}
+}
+async function loadAdmin(){
+ try{const [{count:users},{data:deals}]=await Promise.all([sb.from("profiles").select("*",{count:"exact",head:true}),sb.from("deals").select("amount")]);$("statUsers").textContent=users??"—";$("statDeals").textContent=deals?.length??"—";$("statIncome").textContent=(deals||[]).reduce((n,d)=>n+Number(d.amount||0),0).toFixed(2)}
+ catch(e){msg("adminMessage","No se pudieron cargar estadísticas: "+e.message)}
+}
+async function adminUsers(){
+ page("adminUsers");const box=$("usersList");box.innerHTML='<div class="empty">Cargando...</div>';
+ try{const {data,error}=await sb.from("profiles").select("id,name,tel,avatar_url,created_at").order("created_at",{ascending:false}).limit(100);if(error)throw error;
+ box.innerHTML=(data||[]).map(u=>`<div class="tcard"><div class="av" style="width:46px;height:46px;box-shadow:none"><img src="${safe(u.avatar_url||DEF)}" alt=""></div><div class="m"><b>${safe(u.name||"Usuario")}</b><small class="muted">${safe(u.tel||"Sin teléfono")}</small></div></div>`).join("")||'<div class="empty">Sin usuarios.</div>'}
+ catch(e){box.innerHTML='<div class="notice">No se pudieron consultar usuarios: '+safe(e.message)+'</div>'}
+}
+async function adminReports(){
+ page("reports");const box=$("reportContent");
+ try{const {data,error}=await sb.from("deals").select("*").order("created_at",{ascending:false}).limit(100);if(error)throw error;box.innerHTML=`<p>Total de tratos: <b>${data.length}</b></p><p style="margin-top:6px">Volumen registrado: <b>${money(data.reduce((n,d)=>n+Number(d.amount||0),0))}</b></p>`}
+ catch(e){box.textContent="No se pudieron cargar reportes: "+e.message}
+}
+paint();
+refreshSession();
+</script>
+</body>
+</html>
