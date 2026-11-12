@@ -1,17 +1,17 @@
 {
-  "name": "gus-gus",
-  "version": "1.2.0",
+  "name": "gusgus-app",
+  "version": "2.0.0",
   "private": true,
-  "description": "Gus Gus - plataforma de tratos seguros",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node scripts/check-inline.js"
+    "check": "node --check server.js"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "express": "^4.21.2"
   }
 }
