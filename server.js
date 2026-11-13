@@ -1,70 +1,67 @@
-const express = require("express");
-const path = require("path");
-const { createClient } = require("@supabase/supabase-js");
-
+'use strict';
+const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
-const ROOT = __dirname;
+app.disable('x-powered-by');
+app.use(express.json({ limit: '256kb' }));
+app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
+const gussRate = new Map();
 
-app.use(express.json({ limit: "200kb" }));
-// Solo se publican estos dos archivos (el resto del proyecto queda privado)
-app.get(["/", "/index.html"], (req, res) => res.sendFile(path.join(ROOT, "index.html")));
-app.get("/config.js", (req, res) => res.sendFile(path.join(ROOT, "config.js")));
+app.get('/api/status', (_req, res) => res.json({
+  ok: true,
+  aiConfigured: Boolean(process.env.GEMINI_API_KEY),
+  payments: 'disabled_until_provider_authorization'
+}));
 
-app.get("/health", (req, res) => res.status(200).send("GusGus funcionando"));
-
-// Variables de entorno en Render: SUPABASE_URL, SUPABASE_ANON_KEY, GEMINI_API_KEY (opcional: GEMINI_MODEL)
-const sb = process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY
-  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
-  : null;
-
-const SYSTEM = `Eres GUSS, el asistente de GusGus, una app peruana para comprar y vender con confianza (moneda: soles, S/).
-Responde siempre en español, breve y claro. Ayudas con publicar productos, tratos, saldo y comisiones.
-La comisión por trato se divide en partes iguales: 50% comprador y 50% vendedor.
-Los pagos reales con EasyPay todavía están desactivados. No inventes datos de cuentas ni saldos de usuarios.`;
-
-const hits = new Map();
-function limited(id) {
-  const now = Date.now();
-  const list = (hits.get(id) || []).filter(t => now - t < 60000);
-  list.push(now);
-  hits.set(id, list);
-  return list.length > 10;
-}
-
-app.post("/api/guss", async (req, res) => {
+// La clave de Gemini solo existe en el servidor (variable GEMINI_API_KEY).
+// El historial lo conserva el cliente y envía una ventana limitada para mantener continuidad.
+app.post('/api/guss', async (req, res) => {
   try {
-    if (!sb || !process.env.GEMINI_API_KEY) {
-      return res.status(503).json({ error: "GUSS no está configurado en el servidor." });
+    const auth = req.get('authorization') || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+    if (!token) return res.status(401).json({ error: 'Inicia sesión para usar GUSS.' });
+    if (!supabaseUrl || !supabaseAnonKey) return res.status(503).json({ error: 'Falta configurar SUPABASE_URL y SUPABASE_ANON_KEY en el servidor.' });
+    const authResponse = await fetch(`${supabaseUrl.replace(/\/$/, '')}/auth/v1/user`, { headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` } });
+    if (!authResponse.ok) return res.status(401).json({ error: 'Tu sesión no es válida. Vuelve a iniciar sesión.' });
+    const authUser = await authResponse.json();
+    const now = Date.now();
+    const bucket = gussRate.get(authUser.id) || { start: now, count: 0 };
+    if (now - bucket.start > 60000) { bucket.start = now; bucket.count = 0; }
+    bucket.count += 1; gussRate.set(authUser.id, bucket);
+    if (bucket.count > 30) return res.status(429).json({ error: 'Has enviado muchos mensajes. Espera un minuto e inténtalo otra vez.' });
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(503).json({ error: 'GUSS no está conectado: falta GEMINI_API_KEY en el servidor.' });
+    const input = Array.isArray(req.body?.messages) ? req.body.messages.slice(-24) : [];
+    const contents = input.map(m => ({
+      role: m.role === 'model' ? 'model' : 'user',
+      parts: [{ text: String(m.text || '').slice(0, 3500) }]
+    })).filter(m => m.parts[0].text.trim());
+    if (!contents.length || contents[contents.length - 1].role !== 'user') {
+      return res.status(400).json({ error: 'Escribe un mensaje para GUSS.' });
     }
-    const token = (req.headers.authorization || "").replace(/^Bearer /, "");
-    const { data, error } = await sb.auth.getUser(token);
-    if (error || !data || !data.user) return res.status(401).json({ error: "Sesión no válida." });
-    if (limited(data.user.id)) return res.status(429).json({ error: "Demasiados mensajes. Espera un minuto." });
-
-    const msgs = Array.isArray(req.body.messages) ? req.body.messages.slice(-20) : [];
-    const contents = msgs
-      .filter(m => m && typeof m.text === "string" && m.text.trim())
-      .map(m => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 2000) }] }));
-    while (contents.length && contents[0].role === "model") contents.shift();
-    if (!contents.length || contents[contents.length - 1].role !== "user") {
-      return res.status(400).json({ error: "Mensaje vacío." });
-    }
-
-    const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: SYSTEM }] }, contents })
+    const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: 'Eres GUSS, el asistente oficial de GusGus. Habla siempre en español, conserva el contexto de la conversación, explica cómo comprar, vender y crear tratos, aclara la comisión configurada y ayuda a detectar señales de estafa. No afirmes que un pago, custodia o transferencia real ocurrió sin confirmación del proveedor. En GusGus, el vendedor envía una propuesta con foto, precio, categoría, descripción y moneda PEN o USD; el comprador debe revisarla y aceptarla antes de crear el trato. La comisión total es configurable y se divide 50/50. Nunca pidas contraseñas, códigos OTP ni claves privadas. Si no sabes algo, dilo claramente.' }] },
+        contents,
+        generationConfig: { temperature: 0.6, maxOutputTokens: 900 }
+      })
     });
-    const j = await r.json();
-    if (!r.ok) return res.status(502).json({ error: "El asistente no respondió." });
-    const answer = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
-    res.json({ answer: answer || "No pude generar una respuesta." });
-  } catch (e) {
-    console.error("GUSS error:", e.message);
-    res.status(500).json({ error: "Error interno." });
+    const data = await upstream.json();
+    if (!upstream.ok) return res.status(502).json({ error: data?.error?.message || 'Google AI no pudo responder.' });
+    const answer = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('').trim();
+    if (!answer) return res.status(502).json({ error: 'GUSS no recibió una respuesta válida.' });
+    res.json({ answer });
+  } catch (error) {
+    console.error('GUSS error:', error);
+    res.status(500).json({ error: 'Error temporal de GUSS. El historial de esta conversación permanece guardado en este dispositivo.' });
   }
 });
 
-app.listen(PORT, "0.0.0.0", () => console.log("GusGus en puerto", PORT));
+app.get('/api/payments/status', (_req, res) => res.json({ enabled: false, message: 'Los pagos reales se habilitarán después de integrar y autorizar un proveedor.' }));
+app.post('/api/payments/checkout', (_req, res) => res.status(503).json({ error: 'Los pagos reales todavía no están habilitados.' }));
+app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.listen(PORT, '0.0.0.0', () => console.log(`GusGus iniciado en puerto ${PORT}`));
